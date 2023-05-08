@@ -143,7 +143,7 @@ static Analysis_result process_stream(
 	std::istream &dag_in,
 	std::istream &aborts_in)
 {
-	/*if (!want_dense && want_priority_por && want_multiprocessor)
+	if (!want_dense && want_priority_por && want_multiprocessor)
 		return analyze<dtime_t, NP::Global::Por_state_space<dtime_t, NP::Global::Null_IIP<dtime_t>, NP::Global::POR_priority_order<dtime_t>>>(in, dag_in, aborts_in);
 	else if (!want_dense && want_release_por && want_multiprocessor)
 		return analyze<dtime_t, NP::Global::Por_state_space<dtime_t, NP::Global::Null_IIP<dtime_t>, NP::Global::POR_release_order<dtime_t>>>(in, dag_in, aborts_in);
@@ -151,8 +151,7 @@ static Analysis_result process_stream(
 		return analyze<dense_t, NP::Global::Por_state_space<dense_t, NP::Global::Null_IIP<dense_t>, NP::Global::POR_priority_order<dense_t>>>(in, dag_in, aborts_in);
 	else if (want_dense && want_release_por && want_multiprocessor)
 		return analyze<dense_t, NP::Global::Por_state_space<dense_t, NP::Global::Null_IIP<dense_t>, NP::Global::POR_release_order<dense_t>>>(in, dag_in, aborts_in);
-	else*/
-	if (want_multiprocessor && want_dense)
+	else if (want_multiprocessor && want_dense)
 		return analyze<dense_t, NP::Global::State_space<dense_t>>(in, dag_in, aborts_in);
 	else if (want_multiprocessor && !want_dense)
 		return analyze<dtime_t, NP::Global::State_space<dtime_t>>(in, dag_in, aborts_in);
@@ -417,10 +416,12 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	/*
+	Andre: Not when i'm done with it
 	if ((want_priority_por || want_release_por) && num_processors > 1) {
 		std::cerr << "Error: partial-order reduction is currently only available for uniprocessor\n" << std::endl;
 		return 1;
-	}
+	}*/
 
 	if ((want_priority_por || want_release_por) && (want_prm_iip || want_cw_iip)) {
 		std::cerr << "Error: partial-order reduction currently does not support idle-time insertion policies\n" << std::endl;

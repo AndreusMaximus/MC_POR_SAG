@@ -115,6 +115,11 @@ namespace NP
 			{
 			}
 
+
+			hash_value_t get_key() const {
+				return key;
+			}
+
 			bool has_potential_deadline_misses() const {
 				for (const Job<Time>* job : jobs) {
 					if (job->exceeds_deadline(get_latest_start_time(*job) + job->maximal_cost())) {
@@ -191,6 +196,15 @@ namespace NP
 			{
 				auto iterator = latest_start_times.find(job.get_id());
 				return iterator == latest_start_times.end() ? -1 : iterator->second;
+			}
+
+
+			Time earliest_finish_time(const Job<Time> &job) const {
+				return std::max(cpu_availability[0].min(), job.earliest_arrival()) + job.least_cost();
+			}
+
+			Time latest_finish_time(const Job<Time> &job) const {
+				return get_latest_start_time(job) + job.maximal_cost();
 			}
 
 			Priority compute_max_priority() const

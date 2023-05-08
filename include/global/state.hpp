@@ -40,6 +40,7 @@ namespace NP {
 
 			// transition: new state by scheduling a job in an existing state,
 			//             by replacing a given running job.
+			// we cannot use this Schedule_state() for MC POR as we have m values for the PA and CA values
 			Schedule_state(
 				const Schedule_state& from,
 				Job_index j,
@@ -111,6 +112,75 @@ namespace NP {
 				assert(core_avail.size() > 0);
 				DM("*** new state: constructed " << *this << std::endl);
 			}
+
+
+			Schedule_state(
+				const Schedule_state& from,
+				std::vector<std::size_t> j_set,
+				std::vector<Time> CA,
+				std::vector<Time> PA,
+				hash_value_t key)
+			: num_jobs_scheduled(from.num_jobs_scheduled + j_set.size())
+			, lookup_key{from.lookup_key ^ key}
+			{
+
+				for(std::size_t index : j_set){
+					scheduled_jobs.add(index);
+				}
+				//all i do at this moment is updating the PA and CA values.
+				//Certainly running jobs will be something new later... i hope	
+				std::vector<Time> ca, pa;
+
+				// sort in non-decreasing order
+				std::sort(PA.begin(), PA.end());
+				std::sort(CA.begin(), CA.end());
+
+				// skip first element in from.core_avail
+				for (int i = 0; i < from.core_avail.size(); i++) {
+					pa.push_back(std::max(PA[i], from.core_avail[i].min()));
+					ca.push_back(std::max(CA[i], from.core_avail[i].max()));
+				}
+
+				/*
+				ToDo: Certainly running jobs update, this is necessary to allow merges to happen
+				
+				// update scheduled jobs
+				// keep it sorted to make it easier to merge
+				bool added_j = false;
+				for (const auto& rj : from.certain_jobs) {
+					auto x = rj.first;
+					auto x_eft = rj.second.min();
+					auto x_lft = rj.second.max();
+					if (contains(predecessors, x)) {
+						if (lst < x_lft) {
+							auto pos = std::find(ca.begin(), ca.end(), x_lft);
+							if (pos != ca.end())
+								*pos = lst;
+						}
+					} else if (lst <= x_eft) {
+						if (!added_j && rj.first > j) {
+							// right place to add j
+							certain_jobs.emplace_back(j, finish_times);
+							added_j = true;
+						}
+						certain_jobs.emplace_back(rj);
+					}
+				}
+				// if we didn't add it yet, add it at the back
+				if (!added_j)
+					certain_jobs.emplace_back(j, finish_times);
+*/
+
+
+				for (int i = 0; i < from.core_avail.size(); i++) {
+					DM(i << " -> " << pa[i] << ":" << ca[i] << std::endl);
+					core_avail.emplace_back(pa[i], ca[i]);
+				}
+
+				assert(core_avail.size() > 0);
+				std::cout<<"*** new POR state: constructed " << *this << std::endl;
+			}
+
 
 			hash_value_t get_key() const
 			{
@@ -267,7 +337,7 @@ namespace NP {
 			const unsigned int num_jobs_scheduled;
 
 			// set of jobs that have been dispatched (may still be running)
-			const Index_set scheduled_jobs;
+			Index_set scheduled_jobs;
 
 			// imprecise set of certainly running jobs
 			std::vector<std::pair<Job_index, Interval<Time>>> certain_jobs;
@@ -278,7 +348,8 @@ namespace NP {
 			const hash_value_t lookup_key;
 
 			// no accidental copies
-			Schedule_state(const Schedule_state& origin)  = delete;
+			// MC: We need copies though so comment the line below
+			//Schedule_state(const Schedule_state& origin)  = delete;
 		};
 
 	}

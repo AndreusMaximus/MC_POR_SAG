@@ -42,6 +42,8 @@ namespace NP
 			typedef Scheduling_problem<Time> Problem;
 			typedef typename Scheduling_problem<Time>::Workload Workload;
 			typedef Schedule_state<Time> State;
+
+			typedef std::vector<std::size_t> Job_precedence_set;
 			std::vector<Job_precedence_set> job_precedence_sets;
 
 			static State_space explore(
@@ -70,6 +72,7 @@ namespace NP
 				o.be_naive = true;
 				return explore(p, o);
 			}
+
 
 			// convenience interface for tests
 			static State_space explore(
@@ -196,7 +199,7 @@ namespace NP
 			}
 
 #endif
-		private:
+		protected:
 			typedef typename std::deque<State>::iterator State_ref;
 			typedef typename std::forward_list<State_ref> State_refs;
 
@@ -291,7 +294,7 @@ namespace NP
 				}
 			}
 
-		private:
+		protected:
 			void count_edge()
 			{
 #ifdef CONFIG_PARALLEL
@@ -309,8 +312,7 @@ namespace NP
 				return dl;
 			}
 
-			void update_finish_times(Response_times &r, const JobID &id,
-									 Interval<Time> range)
+			void update_finish_times(Response_times &r, const JobID &id, Interval<Time> range)
 			{
 				auto rbounds = r.find(id);
 				if (rbounds == r.end())
@@ -324,8 +326,7 @@ namespace NP
 				DM("RTA " << id << ": " << r.find(id)->second << std::endl);
 			}
 
-			void update_finish_times(
-				Response_times &r, const Job<Time> &j, Interval<Time> range)
+			void update_finish_times(Response_times &r, const Job<Time> &j, Interval<Time> range)
 			{
 				update_finish_times(r, j.get_id(), range);
 				if (j.exceeds_deadline(range.upto()))
@@ -758,7 +759,7 @@ namespace NP
 
 // Iterate over all incomplete jobs in state ppj_macro_local_s.
 // ppj_macro_local_j is of type const Job<Time>*
-#define foreach_possibly_pending_job(ppj_macro_local_s, ppj_macro_local_j)                                               \
+/*#define foreach_possibly_pending_job(ppj_macro_local_s, ppj_macro_local_j)                                               \
 	for (auto ppj_macro_local_it = this->jobs_by_earliest_arrival                                                        \
 									   .lower_bound((ppj_macro_local_s).earliest_job_release());                         \
 		 ppj_macro_local_it != this->jobs_by_earliest_arrival.end() && (ppj_macro_local_j = ppj_macro_local_it->second); \
@@ -777,7 +778,7 @@ namespace NP
 // cpju_macro_local_until
 #define foreach_certainly_pending_job_until(cpju_macro_local_s, cpju_macro_local_j, cpju_macro_local_until) \
 	foreach_possbly_pending_job_until(cpju_macro_local_s, cpju_macro_local_j, (cpju_macro_local_until)) if (cpju_macro_local_j->latest_arrival() <= (cpju_macro_local_until))
-
+*/
 			// andre: this function will be able to see if we can make a reduction set from the current state s
 			Reduction_set<Time> reduction_set_available(const State &s, Time t_min)
 			{
@@ -876,7 +877,7 @@ namespace NP
 			}
 
 			//=====================> Hier start de explore, vanuit hier gaan we dus dingen moeten aanpassen
-			void explore(const State &s)
+			virtual void explore(const State &s)
 			{
 				bool found_one = false;
 
@@ -905,7 +906,7 @@ namespace NP
 				Als we die kunnen maken dan doen we dat dus ipv de normale explore zoals hij hier nu werd gedaan
 				*/
 
-				reduction_set_available(s, t_min);
+				//reduction_set_available(s, t_min);
 
 				DM("==== [1] ====" << std::endl);
 				// (1) first check jobs that may be already pending
@@ -978,6 +979,7 @@ namespace NP
 
 					// minimal states
 					int minimal_scheduled_jobs = exploration_front.front().number_of_scheduled_jobs();
+					std::cout<<"\t minimal scheduled jobs: " << minimal_scheduled_jobs<<std::endl;
 					for (const State &s : exploration_front)
 					{
 						minimal_scheduled_jobs = (s.number_of_scheduled_jobs() < minimal_scheduled_jobs) ? s.number_of_scheduled_jobs() : minimal_scheduled_jobs;
