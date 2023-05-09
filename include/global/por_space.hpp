@@ -45,7 +45,7 @@ namespace NP
 				const Problem &prob,
 				const Analysis_options &opts)
 			{
-				std::cout<<"!! MULTI PROCESSOR POR SAG !!"<<std::endl;
+				DM("!! MULTI PROCESSOR POR SAG !!"<<std::endl);
 				// this is a multiprocessor analysis
 				assert(prob.num_processors > 1);
 
@@ -57,7 +57,7 @@ namespace NP
 													opts.num_buckets);
 				s.cpu_time.start();
 				if (opts.be_naive){
-					std::cout<<"\texploring naively"<<std::endl;
+					DM("\texploring naively"<<std::endl);
 					s.explore_naively();}
 				else
 					s.explore();
@@ -174,9 +174,8 @@ namespace NP
 					{
 						j = it->second;
 						const Job<Time> &j_i = *j;
-						std::cout << "Lets see if " << j_i.get_id() << " is an interfering job" << std::endl;
 						const Job_precedence_set &preds = this->job_precedence_sets[this->index_of(j_i)];
-						if (reduction_set.can_interfere(*j))
+						if (reduction_set.can_interfere(*j) && s.job_incomplete(this->index_of(j_i)))
 						{
 							interfering_jobs.push_back(j);
 						}
@@ -200,7 +199,6 @@ namespace NP
 					else
 					{
 						// no more interfering jobs so we can return the reduction set.
-						reduction_set.created_set();
 						return reduction_set;
 					}
 				}
@@ -243,7 +241,6 @@ namespace NP
 			// Here we explore our current state where we also try to make our reduction set, this is why this is placed in this file
 			void explore(const State &s) override
 			{
-				std::cout<<"exploring in the por file now, so thats something i guess :l"<<std::endl;
 				bool found_one = false;
 
 				DM("----" << std::endl);
@@ -260,11 +257,11 @@ namespace NP
 				// certainly schedules some job
 				auto t_wc = std::max(t_core, t_job);
 
-				std::cout << s << std::endl
+				DM(s << std::endl
 				<<"t_min: " << t_min << std::endl
 							 << "t_job: " << t_job << std::endl
 							 << "t_core: " << t_core << std::endl
-							 << "t_wc: " << t_wc << std::endl;
+							 << "t_wc: " << t_wc << std::endl);
 
 				/*
 				Hier zien we dat we ze voor iedere soort available job ze dispatchen, maar we moeten dus eerst ook kijken of we een reductie set kunnen maken
@@ -303,7 +300,6 @@ namespace NP
 					j = it->second;
 					if (this->ready(s, *j))
 					{
-						std::cout << "FOUND JOB:" << j->get_job_id() << "-" << j->get_task_id() << std::endl;
 						eligible_successors.push_back(j);
 					}else{
 						//std::cout<< "Found a job but its not ready"<<std::endl;
@@ -347,12 +343,12 @@ namespace NP
 						reduction_set.created_set();
 						//now we must create something to properly schedule the set
 						dispatch_reduction_set_naive(s, reduction_set);
-						this->current_job_count += reduction_set.get_jobs().size();
-						//found_at_least_one = true;
+						//this->current_job_count += reduction_set.get_jobs().size();
+						found_one = true;
 						//if there were no deadline misses and we were able to dispatch it normally, then we can return here.
 						return;
 					}else{
-						std::cout<<"\tPartial order reduction is not safe"<<std::endl;
+						DM("\tPartial order reduction is not safe"<<std::endl);
 					}
 				}
 
@@ -365,9 +361,11 @@ namespace NP
 				
 
 				// check for a dead end
-				if (!found_one && !this->all_jobs_scheduled(s))
+				if (!found_one && !this->all_jobs_scheduled(s)){
 					// out of options and we didn't schedule all jobs
+					std::cout<<"POR dead end abortion"<<std::endl;
 					this->aborted = true;
+				}
 			}
 
 			Time earliest_possible_job_release(const State &s, const Reduction_set<Time> &ignored_set)

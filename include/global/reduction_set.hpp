@@ -105,14 +105,27 @@ namespace NP
 				latest_idle_time = compute_latest_idle_time();
 				latest_start_times = compute_latest_start_times();
 				max_priority = compute_max_priority();
-				// initialize_key();
-				std::cout << "Candidate reduction set contains " << jobs.size() << " jobs" << std::endl;
+				 initialize_key();
+				//std::cout << "Candidate reduction set contains " << jobs.size() << " jobs" << std::endl;
+				std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
+				
+				for (const Job<Time>* j : jobs) {
+					std::cout<<j->get_id()<<" ";
+				}
+				std::cout<<std::endl;
 			}
 
 			// For test purposes
 			Reduction_set(std::vector<Interval<Time>> cpu_availability, const Job_set &jobs, std::vector<std::size_t> indices)
 				: Reduction_set(cpu_availability, jobs, indices, {})
 			{
+			}
+
+
+			void initialize_key() {
+				for (const Job<Time>* j : jobs) {
+					key = key ^ j->get_key();
+				}
 			}
 
 
@@ -238,7 +251,7 @@ namespace NP
 
 			Time compute_latest_start_time(const Job<Time> *j_i)
 			{
-				std::cout << "Computing LST for " << j_i->get_id() << std::endl;
+				//std::cout << "Computing LST for " << j_i->get_id() << std::endl;
 				// Blocking interfering workload for job j_i
 				Time BIW = compute_blocking_interfering_workload(j_i);
 				Time LST = j_i->latest_arrival() + floor(BIW / cpu_availability.size());
@@ -257,13 +270,13 @@ namespace NP
 						}
 						else
 						{
-							std::cout << "\t LST for Job " << j_i->get_id() << " = " << LST << std::endl;
+							//std::cout << "\t LST for Job " << j_i->get_id() << " = " << LST << std::endl;
 							return LST;
 						}
 					}
 				}
 
-				std::cout << "\t UB on LST for Job " << j_i->get_id() << " = " << LST << std::endl;
+				//std::cout << "\t UB on LST for Job " << j_i->get_id() << " = " << LST << std::endl;
 				latest_LST = std::max(latest_LST, LST);
 				return LST;
 			}
@@ -365,12 +378,12 @@ namespace NP
 				// for convenience sake, remember the earliest time a core might become free
 				Time Amin = cpu_availability.front().min();
 
-				std::cout << "Finding idle intervals..." << std::endl;
-				std::cout << jobs_by_latest_arrival.size() << std::endl;
+				//std::cout << "Finding idle intervals..." << std::endl;
+				//std::cout << jobs_by_latest_arrival.size() << std::endl;
 				for (auto it_x = jobs_by_latest_arrival.rbegin(); it_x != jobs_by_latest_arrival.rend(); it_x++)
 				{
 					const Job<Time> *j_x = *it_x;
-					std::cout << "Looking for idle interval for job " << j_x->get_id() << " possibly ending at " << j_x->latest_arrival() << std::endl;
+					//std::cout << "Looking for idle interval for job " << j_x->get_id() << " possibly ending at " << j_x->latest_arrival() << std::endl;
 					// reset the overflow and Crest values for each job under investigation
 					overflow = 0;
 					Crest = 0;
@@ -383,7 +396,7 @@ namespace NP
 						{
 							// Save the interfering workloads as the initial "highest workloads"
 							Cmax[A_i - 1] = A.min() - Amin;
-							std::cout << "\t" << Cmax[A_i - 1] << std::endl;
+							//std::cout << "\t" << Cmax[A_i - 1] << std::endl;
 						}
 						A_i++;
 					}
@@ -434,12 +447,12 @@ namespace NP
 					if (Amin + ceil(Crest / cpu_availability.size()) < j_x->latest_arrival() && overflow < cpu_availability.size())
 					{
 
-						std::cout << "\t Latest interval might end at:" << j_x->latest_arrival() << std::endl;
+						//std::cout << "\t Latest interval might end at:" << j_x->latest_arrival() << std::endl;
 						return j_x->latest_arrival();
 					}
 				}
 
-				std::cout << "\t No interval possible in this set" << std::endl;
+				//std::cout << "\t No interval possible in this set" << std::endl;
 				// no jobs can be released at -1 so we can safely return 0 if there is no interval anywhere.
 				return 0;
 			}
@@ -458,7 +471,7 @@ namespace NP
 				// als die pointer naar de laatste plek wijst, dan betekent dat dat deze dus nog niet in de lijst zit en daarom dus.. buiten de lijst zit
 				if (pos != jobs.end())
 				{
-					std::cout << "i already use job " << job.get_id() << std::endl;
+					//std::cout << "i already use job " << job.get_id() << std::endl;
 					return false;
 				}
 
@@ -467,7 +480,7 @@ namespace NP
 				// worden voor we nieuwe interfering jobs gaan zoekn
 				if (job.earliest_arrival() <= latest_idle_time)
 				{
-					std::cout << "Interference due to idle period " << job.get_id() << std::endl;
+					//std::cout << "Interference due to idle period " << job.get_id() << std::endl;
 					return true;
 				}
 
@@ -489,7 +502,7 @@ namespace NP
 					// Voor iedere job, kijk of de huidige job een hogere prio heeft dan de job en of ie een hogere prio heeft dan de huidige job
 					if (job.higher_priority_than(*j) && job.earliest_arrival() <= get_latest_start_time(*j))
 					{
-						std::cout << "Job " << job.get_id() << " can be an interfering job for " << j->get_id() << std::endl;
+						//std::cout << "Job " << job.get_id() << " can be an interfering job for " << j->get_id() << std::endl;
 						return true;
 					}
 				}

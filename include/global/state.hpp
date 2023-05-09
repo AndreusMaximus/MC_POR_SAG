@@ -121,8 +121,10 @@ namespace NP {
 				std::vector<Time> PA,
 				hash_value_t key)
 			: num_jobs_scheduled(from.num_jobs_scheduled + j_set.size())
-			, lookup_key{from.lookup_key ^ key}
+			, lookup_key{from.lookup_key ^ key},
+			scheduled_jobs{from.scheduled_jobs}
 			{
+				
 
 				for(std::size_t index : j_set){
 					scheduled_jobs.add(index);

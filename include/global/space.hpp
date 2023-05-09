@@ -942,9 +942,11 @@ namespace NP
 				}
 
 				// check for a dead end
-				if (!found_one && !all_jobs_scheduled(s))
+				if (!found_one && !all_jobs_scheduled(s)){
 					// out of options and we didn't schedule all jobs
+					std::cout<<"dead end abortions"<<std::endl;
 					aborted = true;
+				}
 			}
 
 			// naive: no state merging
@@ -986,6 +988,7 @@ namespace NP
 					{
 						minimal_scheduled_jobs = (s.number_of_scheduled_jobs() < minimal_scheduled_jobs) ? s.number_of_scheduled_jobs() : minimal_scheduled_jobs;
 					}
+					std::cout<<"\t minimal scheduled jobs: " << minimal_scheduled_jobs<<std::endl;
 					// dus n geeft hier de grootte van de voorkant van de states aan
 					n = exploration_front.size();
 					//std::cout<<"Exploration front size :" << n <<std::endl;
