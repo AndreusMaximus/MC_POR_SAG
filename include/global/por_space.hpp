@@ -292,9 +292,8 @@ namespace NP
 						//cannot push back &j eligible_successors.push_back(j);
 					}
 				*/
-				//i think this yields the same jobs as the commented piece above
-
-				std::cout<<"\tI've got "<<this->jobs_by_earliest_arrival.size()<<" jobs to choose from" << std::endl;
+				//This for loop starts from the beginning, but i think that can be improved upon.
+				//std::cout<<"\tI've got "<<this->jobs_by_earliest_arrival.size()<<" jobs to choose from" << std::endl;
 				const Job<Time> *j;
 				for (auto it = this->jobs_by_earliest_arrival.begin(); it != this->jobs_by_earliest_arrival.upper_bound(t_min); it++)
 				{
@@ -307,7 +306,7 @@ namespace NP
 						std::cout << "FOUND JOB:" << j->get_job_id() << "-" << j->get_task_id() << std::endl;
 						eligible_successors.push_back(j);
 					}else{
-						std::cout<< "Found a job but its not ready"<<std::endl;
+						//std::cout<< "Found a job but its not ready"<<std::endl;
 					}
 				}
 
@@ -348,9 +347,12 @@ namespace NP
 						reduction_set.created_set();
 						//now we must create something to properly schedule the set
 						dispatch_reduction_set_naive(s, reduction_set);
+						this->current_job_count += reduction_set.get_jobs().size();
 						//found_at_least_one = true;
 						//if there were no deadline misses and we were able to dispatch it normally, then we can return here.
 						return;
+					}else{
+						std::cout<<"\tPartial order reduction is not safe"<<std::endl;
 					}
 				}
 

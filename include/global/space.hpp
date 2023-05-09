@@ -751,6 +751,7 @@ namespace NP
 				edges.emplace_back(&j, &s, &next, ftimes);
 #endif
 				count_edge();
+						current_job_count++;
 
 				return true;
 			}
@@ -911,8 +912,9 @@ namespace NP
 				DM("==== [1] ====" << std::endl);
 				// (1) first check jobs that may be already pending
 				for (const Job<Time> &j : jobs_by_win.lookup(t_min))
-					if (j.earliest_arrival() <= t_min && ready(s, j))
+					if (j.earliest_arrival() <= t_min && ready(s, j)){
 						found_one |= dispatch(s, j, t_wc);
+					}
 
 				DM("==== [2] ====" << std::endl);
 				// (2) check jobs that are released only later in the interval
@@ -986,6 +988,7 @@ namespace NP
 					}
 					// dus n geeft hier de grootte van de voorkant van de states aan
 					n = exploration_front.size();
+					//std::cout<<"Exploration front size :" << n <<std::endl;
 #endif
 
 					// allocate states space for next depth
@@ -994,7 +997,8 @@ namespace NP
 
 					// keep track of exploration front width
 					width = std::max(width, n);
-
+					
+					//Moved this to where we explore, since we do not explore states that have a depth > minimal_scheduled_jobs
 					num_states += n;
 
 					check_depth_abort();
@@ -1028,11 +1032,14 @@ namespace NP
 					{
 						if (s.number_of_scheduled_jobs() == minimal_scheduled_jobs)
 						{
+							//num_states ++;
+							//std::cout<<"exploring state: "<<s<<std::endl;
 							explore(s);
 							check_cpu_timeout();
 							if (aborted)
 								break;
 						}else{
+							num_states--;
 							states_storage.back().push_back(s);
 						}
 					}
@@ -1042,8 +1049,7 @@ namespace NP
 					if (!be_naive)
 						states_by_key.clear();
 
-					current_job_count++;
-
+					current_job_count = minimal_scheduled_jobs;
 #ifdef CONFIG_PARALLEL
 					// propagate any updates to the response-time estimates
 					for (auto &r : partial_rta)

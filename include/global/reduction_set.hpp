@@ -779,9 +779,6 @@ namespace NP
 				std::cout << std::endl;
 			}
 
-			bool has_potential_deadline_misses(){
-				return false;
-			}
 
 			void created_set(){
 				std::cout<<"I would create the reduction set using the following jobs:"<<std::endl;
