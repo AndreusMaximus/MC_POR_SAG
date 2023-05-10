@@ -180,7 +180,7 @@ namespace NP {
 				}
 
 				assert(core_avail.size() > 0);
-				std::cout<<"*** new POR state: constructed " << *this << std::endl;
+				//std::cout<<"*** new POR state: constructed " << *this << std::endl;
 			}
 
 
@@ -210,6 +210,7 @@ namespace NP {
 
 			bool try_to_merge(const Schedule_state<Time>& other)
 			{
+				//std::cout<<"actually trying to merge two states"<<std::endl;
 				if (!can_merge_with(other))
 					return false;
 
@@ -311,7 +312,8 @@ namespace NP {
 				for (const auto& rj : s.certain_jobs)
 					stream << rj.first << "";
 				stream << ") " << s.scheduled_jobs << ")";
-				stream << " @ " << &s;
+				stream << " @ " << &s
+				<< "key" << s.get_key();
 				return stream;
 			}
 

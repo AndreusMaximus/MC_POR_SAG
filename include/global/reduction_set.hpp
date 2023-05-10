@@ -107,12 +107,12 @@ namespace NP
 				max_priority = compute_max_priority();
 				 initialize_key();
 				//std::cout << "Candidate reduction set contains " << jobs.size() << " jobs" << std::endl;
-				std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
+				/*std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
 				
 				for (const Job<Time>* j : jobs) {
 					std::cout<<j->get_id()<<" ";
 				}
-				std::cout<<std::endl;
+				std::cout<<std::endl;*/
 			}
 
 			// For test purposes
@@ -528,7 +528,6 @@ namespace NP
 						deltaC[delta_i] = Chigh[delta_i + 1] - Chigh[delta_i];
 						//std::cout << Chigh[delta_i + 1] <<"-"<< Chigh[delta_i]<< "=" <<Chigh[delta_i + 1] - Chigh[delta_i] << deltaC[delta_i] << std::endl;;
 					}
-
 					for (int i = 1; i <= cpu_availability.size(); i++)
 					{
 						Time eq = Clow;
@@ -548,6 +547,7 @@ namespace NP
 							}
 						}
 
+				//std::cout<<"\t seg fault tester"<<std::endl;
 						if (eq > 0)
 						{
 							// we have enough to properly equalize at this point
@@ -560,6 +560,7 @@ namespace NP
 
 			std::vector<Time> compute_certainly_available()
 			{
+				//std::cout<<"\ncomputing CA"<<std::endl;
 				std::vector<Time> CA_values;
 				Time Chigh[cpu_availability.size()];
 				Time Clow = 0;
@@ -568,12 +569,14 @@ namespace NP
 				Time last_event = -1;
 				Time s = cpu_availability[0].max();
 
+				//for some reason i need to have this print otherwise i have a seg fault?!?
+				//std::cout<<"\t seg fault prevention?!?"<<std::endl;
 				// initialize the chigh values for the first iterative step
 				for (int Chigh_i = 0; Chigh_i < cpu_availability.size(); Chigh_i++)
 				{
 					Chigh[Chigh_i] = cpu_availability[Chigh_i].max() - cpu_availability[0].max();
 				}
-
+				//std::cout<<"\tChihgh Filled"<<std::endl;
 				for (const Job<Time> *j_x : jobs_by_latest_arrival)
 				{
 					if (j_x->latest_arrival() <= event && j_x->latest_arrival() > last_event)
@@ -583,7 +586,8 @@ namespace NP
 							Clow += Chigh[0];
 							Chigh[0] = j_x->maximal_cost();
 							Time swap;
-							for (int i = 0; i < cpu_availability.size(); i++)
+							//its in this point i think,
+							for (int i = 0; i < cpu_availability.size()-1; i++)
 							{
 								if (Chigh[i] > Chigh[i + 1])
 								{
@@ -640,6 +644,7 @@ namespace NP
 						event = s;
 					}
 				}
+				//std::cout<<"\t arrived at last step"<<std::endl;
 				certainly_available_i(Chigh, Clow, s, &CA_values);
 				return CA_values;
 			}

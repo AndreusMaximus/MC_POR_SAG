@@ -73,7 +73,6 @@ namespace NP
 				return explore(p, o);
 			}
 
-
 			// convenience interface for tests
 			static State_space explore(
 				const Workload &jobs,
@@ -445,6 +444,7 @@ namespace NP
 			template <typename... Args>
 			State &new_or_merged_state(Args &&...args)
 			{
+				//std::cout << "Trying to merge two states" << std::endl;
 				State_ref s_ref = alloc_state(std::forward<Args>(args)...);
 
 				// try to merge the new state into an existing state
@@ -453,6 +453,10 @@ namespace NP
 				{
 					// great, we merged!
 					// clean up the just-created state that we no longer need
+					std::cout << "We merged the states:" << std::endl;
+					std::cout << "\t" << *s << std::endl;
+					std::cout << "\t\tand" << std::endl;
+					std::cout << "\t" << *s_ref << std::endl;
 					dealloc_state(s_ref);
 				}
 				return *s;
@@ -506,6 +510,8 @@ namespace NP
 				// create a new list if needed, or lookup if already existing
 				auto res = states_by_key.emplace(
 					std::make_pair(s->get_key(), State_refs()));
+				
+				//std::cout<<"Cached state: "<<*s<<std::endl;
 
 				auto pair_it = res.first;
 				State_refs &list = pair_it->second;
@@ -517,14 +523,18 @@ namespace NP
 			State_ref merge_or_cache(State_ref s_ref)
 			{
 				State &s = *s_ref;
-
+				//std::cout<<"looking for "<<s.get_key()<<std::endl;
 				const auto pair_it = states_by_key.find(s.get_key());
 
 				// cannot merge if key doesn't exist
 				if (pair_it != states_by_key.end())
+				{
 					for (State_ref other : pair_it->second)
 						if (other->try_to_merge(*s_ref))
 							return other;
+				}else{
+					//std::cout<<"\tapparently nothing with the same key"<<std::endl;
+				}
 				// if we reach here, we failed to merge
 				cache_state(s_ref);
 				return s_ref;
@@ -751,35 +761,35 @@ namespace NP
 				edges.emplace_back(&j, &s, &next, ftimes);
 #endif
 				count_edge();
-						current_job_count++;
+				current_job_count++;
 
 				return true;
 			}
 
-// define a couple of iteration helpers
+			// define a couple of iteration helpers
 
-// Iterate over all incomplete jobs in state ppj_macro_local_s.
-// ppj_macro_local_j is of type const Job<Time>*
-/*#define foreach_possibly_pending_job(ppj_macro_local_s, ppj_macro_local_j)                                               \
-	for (auto ppj_macro_local_it = this->jobs_by_earliest_arrival                                                        \
-									   .lower_bound((ppj_macro_local_s).earliest_job_release());                         \
-		 ppj_macro_local_it != this->jobs_by_earliest_arrival.end() && (ppj_macro_local_j = ppj_macro_local_it->second); \
-		 ppj_macro_local_it++)                                                                                           \
-		if (this->incomplete(ppj_macro_local_s, *ppj_macro_local_j))
+			// Iterate over all incomplete jobs in state ppj_macro_local_s.
+			// ppj_macro_local_j is of type const Job<Time>*
+			/*#define foreach_possibly_pending_job(ppj_macro_local_s, ppj_macro_local_j)                                               \
+				for (auto ppj_macro_local_it = this->jobs_by_earliest_arrival                                                        \
+												   .lower_bound((ppj_macro_local_s).earliest_job_release());                         \
+					 ppj_macro_local_it != this->jobs_by_earliest_arrival.end() && (ppj_macro_local_j = ppj_macro_local_it->second); \
+					 ppj_macro_local_it++)                                                                                           \
+					if (this->incomplete(ppj_macro_local_s, *ppj_macro_local_j))
 
-// Iterate over all incomplete jobs that are released no later than ppju_macro_local_until
-#define foreach_possbly_pending_job_until(ppju_macro_local_s, ppju_macro_local_j, ppju_macro_local_until)                                                                                       \
-	for (auto ppju_macro_local_it = this->jobs_by_earliest_arrival                                                                                                                              \
-										.lower_bound((ppju_macro_local_s).earliest_job_release());                                                                                              \
-		 ppju_macro_local_it != this->jobs_by_earliest_arrival.end() && (ppju_macro_local_j = ppju_macro_local_it->second, ppju_macro_local_j->earliest_arrival() <= (ppju_macro_local_until)); \
-		 ppju_macro_local_it++)                                                                                                                                                                 \
-		if (this->incomplete(ppju_macro_local_s, *ppju_macro_local_j))
+			// Iterate over all incomplete jobs that are released no later than ppju_macro_local_until
+			#define foreach_possbly_pending_job_until(ppju_macro_local_s, ppju_macro_local_j, ppju_macro_local_until)                                                                                       \
+				for (auto ppju_macro_local_it = this->jobs_by_earliest_arrival                                                                                                                              \
+													.lower_bound((ppju_macro_local_s).earliest_job_release());                                                                                              \
+					 ppju_macro_local_it != this->jobs_by_earliest_arrival.end() && (ppju_macro_local_j = ppju_macro_local_it->second, ppju_macro_local_j->earliest_arrival() <= (ppju_macro_local_until)); \
+					 ppju_macro_local_it++)                                                                                                                                                                 \
+					if (this->incomplete(ppju_macro_local_s, *ppju_macro_local_j))
 
-// Iterare over all incomplete jobs that are certainly released no later than
-// cpju_macro_local_until
-#define foreach_certainly_pending_job_until(cpju_macro_local_s, cpju_macro_local_j, cpju_macro_local_until) \
-	foreach_possbly_pending_job_until(cpju_macro_local_s, cpju_macro_local_j, (cpju_macro_local_until)) if (cpju_macro_local_j->latest_arrival() <= (cpju_macro_local_until))
-*/
+			// Iterare over all incomplete jobs that are certainly released no later than
+			// cpju_macro_local_until
+			#define foreach_certainly_pending_job_until(cpju_macro_local_s, cpju_macro_local_j, cpju_macro_local_until) \
+				foreach_possbly_pending_job_until(cpju_macro_local_s, cpju_macro_local_j, (cpju_macro_local_until)) if (cpju_macro_local_j->latest_arrival() <= (cpju_macro_local_until))
+			*/
 			// andre: this function will be able to see if we can make a reduction set from the current state s
 			Reduction_set<Time> reduction_set_available(const State &s, Time t_min)
 			{
@@ -907,12 +917,13 @@ namespace NP
 				Als we die kunnen maken dan doen we dat dus ipv de normale explore zoals hij hier nu werd gedaan
 				*/
 
-				//reduction_set_available(s, t_min);
+				// reduction_set_available(s, t_min);
 
 				DM("==== [1] ====" << std::endl);
 				// (1) first check jobs that may be already pending
 				for (const Job<Time> &j : jobs_by_win.lookup(t_min))
-					if (j.earliest_arrival() <= t_min && ready(s, j)){
+					if (j.earliest_arrival() <= t_min && ready(s, j))
+					{
 						found_one |= dispatch(s, j, t_wc);
 					}
 
@@ -942,9 +953,10 @@ namespace NP
 				}
 
 				// check for a dead end
-				if (!found_one && !all_jobs_scheduled(s)){
+				if (!found_one && !all_jobs_scheduled(s))
+				{
 					// out of options and we didn't schedule all jobs
-					std::cout<<"dead end abortions"<<std::endl;
+					DM("dead end abortions" << std::endl);
 					aborted = true;
 				}
 			}
@@ -956,7 +968,6 @@ namespace NP
 				be_naive = true;
 				explore();
 			}
-
 
 			//============================================================== Normale explore =============================================================//
 			void explore()
@@ -983,15 +994,13 @@ namespace NP
 
 					// minimal states
 					int minimal_scheduled_jobs = exploration_front.front().number_of_scheduled_jobs();
-					std::cout<<"\t minimal scheduled jobs: " << minimal_scheduled_jobs<<std::endl;
 					for (const State &s : exploration_front)
 					{
 						minimal_scheduled_jobs = (s.number_of_scheduled_jobs() < minimal_scheduled_jobs) ? s.number_of_scheduled_jobs() : minimal_scheduled_jobs;
 					}
-					std::cout<<"\t minimal scheduled jobs: " << minimal_scheduled_jobs<<std::endl;
 					// dus n geeft hier de grootte van de voorkant van de states aan
 					n = exploration_front.size();
-					//std::cout<<"Exploration front size :" << n <<std::endl;
+					// std::cout<<"Exploration front size :" << n <<std::endl;
 #endif
 
 					// allocate states space for next depth
@@ -1000,8 +1009,8 @@ namespace NP
 
 					// keep track of exploration front width
 					width = std::max(width, n);
-					
-					//Moved this to where we explore, since we do not explore states that have a depth > minimal_scheduled_jobs
+
+					// Moved this to where we explore, since we do not explore states that have a depth > minimal_scheduled_jobs
 					num_states += n;
 
 					check_depth_abort();
@@ -1030,18 +1039,20 @@ namespace NP
 #else
 					// and: Dit is een explore zonder parallelizatie mbv tbb
 					// Voor iedere state s i n de exploratie front, doe ze explroen
-					//states_storage.back().push_back(exploration_front.begin());
+					// states_storage.back().push_back(exploration_front.begin());
 					for (const State &s : exploration_front)
 					{
 						if (s.number_of_scheduled_jobs() == minimal_scheduled_jobs)
 						{
-							//num_states ++;
-							//std::cout<<"exploring state: "<<s<<std::endl;
+							// num_states ++;
+							// std::cout<<"exploring state: "<<s<<std::endl;
 							explore(s);
 							check_cpu_timeout();
 							if (aborted)
 								break;
-						}else{
+						}
+						else
+						{
 							num_states--;
 							states_storage.back().push_back(s);
 						}

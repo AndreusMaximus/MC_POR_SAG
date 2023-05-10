@@ -45,20 +45,22 @@ namespace NP
 				const Problem &prob,
 				const Analysis_options &opts)
 			{
-				DM("!! MULTI PROCESSOR POR SAG !!"<<std::endl);
+				DM("!! MULTI PROCESSOR POR SAG !!" << std::endl);
 				// this is a multiprocessor analysis
 				assert(prob.num_processors > 1);
 
 				// Preprocess the job such that they release at or after their predecessors release
 				auto jobs = preprocess_jobs<Time>(prob.dag, prob.jobs);
 
-				Por_state_space s = Por_state_space(jobs, prob.dag,prob.num_processors,
+				Por_state_space s = Por_state_space(jobs, prob.dag, prob.num_processors,
 													opts.timeout, opts.max_depth,
 													opts.num_buckets);
 				s.cpu_time.start();
-				if (opts.be_naive){
-					DM("\texploring naively"<<std::endl);
-					s.explore_naively();}
+				if (opts.be_naive)
+				{
+					DM("\texploring naively" << std::endl);
+					s.explore_naively();
+				}
 				else
 					s.explore();
 				s.cpu_time.stop();
@@ -137,7 +139,7 @@ namespace NP
 				//========================Creating reduction set===========================//
 				Reduction_set<Time> reduction_set = Reduction_set<Time>(s.get_all_core_availabilities(), eligible_successors, indices);
 
-					const Job<Time> *j;
+				const Job<Time> *j;
 				while (true)
 				{
 					// nu hebben we een reductie set, fine
@@ -168,7 +170,7 @@ namespace NP
 						}
 					}*/
 
-					//i aint using the macros as they require a lot of additions to the states etc
+					// i aint using the macros as they require a lot of additions to the states etc
 					std::vector<const Job<Time> *> interfering_jobs{};
 					for (auto it = this->jobs_by_earliest_arrival.begin(); it != this->jobs_by_earliest_arrival.upper_bound(reduction_set.get_latest_LST()); it++)
 					{
@@ -204,15 +206,15 @@ namespace NP
 				}
 			}
 
-
 			void process_new_edge(
-					const State& from,
-					const State& to,
-					const Reduction_set<Time>& reduction_set,
-					const Interval<Time>& finish_range)
+				const State &from,
+				const State &to,
+				const Reduction_set<Time> &reduction_set,
+				const Interval<Time> &finish_range)
 			{
 				// update response times
-				for (const Job<Time>* j : reduction_set.get_jobs()) {
+				for (const Job<Time> *j : reduction_set.get_jobs())
+				{
 					this->update_finish_times(*j, Interval<Time>{reduction_set.earliest_finish_time(*j), reduction_set.latest_finish_time(*j)});
 				}
 				// update statistics
@@ -222,20 +224,39 @@ namespace NP
 #endif
 			}
 
-			void dispatch_reduction_set_naive(const State &s,  Reduction_set<Time> &reduction_set){
-				
-				//Interval<Time> finish_range = next_finish_times(reduction_set);
-				
+			void dispatch_reduction_set_merge(const State &current_state, Reduction_set<Time> &reduction_set)
+			{
 				std::vector<std::size_t> indices{};
-				for (const Job<Time>* j : reduction_set.get_jobs()) {
+				for (const Job<Time> *j : reduction_set.get_jobs())
+				{
+					indices.push_back(this->index_of(*j));
+				}
+
+				std::vector<Time> PA = reduction_set.compute_possibly_available();
+				std::vector<Time> CA = reduction_set.compute_certainly_available();
+
+				const State &next = this->new_or_merged_state(current_state, indices, PA, CA, reduction_set.get_key());
+
+				process_new_edge(current_state, next, reduction_set, {0, 0});
+			}
+
+			void dispatch_reduction_set_naive(const State &current_state, Reduction_set<Time> &reduction_set)
+			{
+
+				// Interval<Time> finish_range = next_finish_times(reduction_set);
+
+				std::vector<std::size_t> indices{};
+				for (const Job<Time> *j : reduction_set.get_jobs())
+				{
 					indices.push_back(this->index_of(*j));
 				}
 				std::vector<Time> PA = reduction_set.compute_possibly_available();
 				std::vector<Time> CA = reduction_set.compute_certainly_available();
-				const State &next = this->new_state(s, indices, PA, CA, reduction_set.get_key());
-			//	DM("      -----> S" << (states.end() - states.begin()) << std::endl);
-			// At this point its an edge with 0,0 but there needs to be a new 
-				process_new_edge(s, next, reduction_set, {0,0});
+
+				const State &next = this->new_state(current_state, indices, PA, CA, reduction_set.get_key());
+				//	DM("      -----> S" << (states.end() - states.begin()) << std::endl);
+				// At this point its an edge with 0,0 but there needs to be a new
+				process_new_edge(current_state, next, reduction_set, {0, 0});
 			}
 
 			// Here we explore our current state where we also try to make our reduction set, this is why this is placed in this file
@@ -258,10 +279,10 @@ namespace NP
 				auto t_wc = std::max(t_core, t_job);
 
 				DM(s << std::endl
-				<<"t_min: " << t_min << std::endl
-							 << "t_job: " << t_job << std::endl
-							 << "t_core: " << t_core << std::endl
-							 << "t_wc: " << t_wc << std::endl);
+					 << "t_min: " << t_min << std::endl
+					 << "t_job: " << t_job << std::endl
+					 << "t_core: " << t_core << std::endl
+					 << "t_wc: " << t_wc << std::endl);
 
 				/*
 				Hier zien we dat we ze voor iedere soort available job ze dispatchen, maar we moeten dus eerst ook kijken of we een reductie set kunnen maken
@@ -270,13 +291,13 @@ namespace NP
 				// We have to find all elligible succesors here first.
 
 				typename Reduction_set<Time>::Job_set eligible_successors{};
-				
+
 				/*
 				eligible successors are:
 				1. all jobs that can start before t_min, aka. A_min
 				2. all jobs that can start before the first job in the first set is CERTAINLY released
 				*/
-				//so first all jobs that might be pending before A_min
+				// so first all jobs that might be pending before A_min
 
 				// (1) first check jobs that may be already pending
 				DM("==== [1] ====" << std::endl);
@@ -289,20 +310,23 @@ namespace NP
 						//cannot push back &j eligible_successors.push_back(j);
 					}
 				*/
-				//This for loop starts from the beginning, but i think that can be improved upon.
-				//std::cout<<"\tI've got "<<this->jobs_by_earliest_arrival.size()<<" jobs to choose from" << std::endl;
+				// This for loop starts from the beginning, but i think that can be improved upon.
+				// std::cout<<"\tI've got "<<this->jobs_by_earliest_arrival.size()<<" jobs to choose from" << std::endl;
 				const Job<Time> *j;
 				for (auto it = this->jobs_by_earliest_arrival.begin(); it != this->jobs_by_earliest_arrival.upper_bound(t_min); it++)
 				{
-					if(it == this->jobs_by_earliest_arrival.upper_bound(t_min)){
+					if (it == this->jobs_by_earliest_arrival.upper_bound(t_min))
+					{
 						break;
 					}
 					j = it->second;
 					if (this->ready(s, *j))
 					{
 						eligible_successors.push_back(j);
-					}else{
-						//std::cout<< "Found a job but its not ready"<<std::endl;
+					}
+					else
+					{
+						// std::cout<< "Found a job but its not ready"<<std::endl;
 					}
 				}
 
@@ -328,42 +352,54 @@ namespace NP
 
 					// Hier gaan we dispatchen dus moet er erna gemerged worden
 					// Dispatch vanaf de huidige state s, job j, met een worst-case computation time t_wc
-					//found_one |= dispatch(s, j, t_wc);
-					//now we dont dispatch, but we create the eligible successors so just add it to that set
+					// found_one |= dispatch(s, j, t_wc);
+					// now we dont dispatch, but we create the eligible successors so just add it to that set
 					eligible_successors.push_back(it->second);
 				}
-				//now we can finially create a proper reduction set
+				// now we can finially create a proper reduction set
 
-				//if the size is 1 then just do a normal schedule
-				if (eligible_successors.size() > 1) {
+				// if the size is 1 then just do a normal schedule
+				if (eligible_successors.size() > 1)
+				{
 					Reduction_set<Time> reduction_set = create_reduction_set(s, eligible_successors);
 
-					if (!reduction_set.has_potential_deadline_misses()) {
+					if (!reduction_set.has_potential_deadline_misses())
+					{
 						DM("\n---\nPartial-order reduction is safe" << std::endl);
-						reduction_set.created_set();
-						//now we must create something to properly schedule the set
-						dispatch_reduction_set_naive(s, reduction_set);
-						//this->current_job_count += reduction_set.get_jobs().size();
+						//uncomment to print the CA and PA values
+						//reduction_set.created_set();
+						// now we must create something to properly schedule the set
+						if (this->be_naive)
+						{
+							dispatch_reduction_set_naive(s, reduction_set);
+						}
+						else
+						{
+							dispatch_reduction_set_merge(s, reduction_set);
+						}
+						// this->current_job_count += reduction_set.get_jobs().size();
 						found_one = true;
-						//if there were no deadline misses and we were able to dispatch it normally, then we can return here.
+						// if there were no deadline misses and we were able to dispatch it normally, then we can return here.
 						return;
-					}else{
-						DM("\tPartial order reduction is not safe"<<std::endl);
+					}
+					else
+					{
+						DM("\tPartial order reduction is not safe" << std::endl);
 					}
 				}
 
 				DM("\n---\nPartial-order reduction is not safe, or just one job" << std::endl);
-				for (const Job<Time>* j: eligible_successors) {
-					//we can use the normal dispatch now so no worries
+				for (const Job<Time> *j : eligible_successors)
+				{
+					// we can use the normal dispatch now so no worries
 					found_one |= dispatch(s, *j, t_wc);
 				}
 
-				
-
 				// check for a dead end
-				if (!found_one && !this->all_jobs_scheduled(s)){
+				if (!found_one && !this->all_jobs_scheduled(s))
+				{
 					// out of options and we didn't schedule all jobs
-					std::cout<<"POR dead end abortion"<<std::endl;
+					DM("POR dead end abortion" << std::endl);
 					this->aborted = true;
 				}
 			}
@@ -410,7 +446,6 @@ namespace NP
 					reduction_set.earliest_finish_time(),
 					reduction_set.get_latest_busy_time()};
 			}
-
 
 #ifdef CONFIG_COLLECT_SCHEDULE_GRAPH
 
