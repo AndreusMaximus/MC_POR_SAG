@@ -4,10 +4,12 @@ t_mem_reduction = 0
 t_false_positive = 0
 t_false_negative = 0
 t_correct = 0
+t_s_por = 0
+t_f_por = 0
 
 with open('result.txt','r') as f:
     lines = f.readlines()
-t_tested = 0;
+t_tested = 0
 for i in range(0,len(lines),2):
     t_tested += 1
     line_normal = lines[i].split(",")
@@ -33,6 +35,9 @@ for i in range(0,len(lines),2):
     t_cpu_reduction += cpu_reduction
     t_mem_reduction += mem_reduction
 
+    t_s_por += int(line_por[10])
+    t_f_por += int(line_por[11])
+
 print("||============================results============================||")
 print("|| Correct results:             " + str(t_correct))
 print("|| False negatives results:     " + str(t_false_negative))
@@ -40,6 +45,8 @@ print("|| Incrorrect results:          " + str(t_false_positive))
 print("|| average state reduction:     " + str(t_state_reduction/t_tested) + "%")
 print("|| average cpu difference:    +-" + str(t_cpu_reduction/t_tested) + "%")
 print("|| average memory difference: +-" + str(t_mem_reduction/t_tested) + "%")
+print("|| total successfull por:       " + str(t_s_por))
+print("|| total failed por:            " + str(t_f_por))
 
 
 

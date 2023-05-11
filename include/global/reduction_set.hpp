@@ -280,8 +280,9 @@ namespace NP
 					if (j_i->earliest_arrival() <= j->latest_arrival())
 					{
 						// if the new job can start executing before j, then we shall recalculate the LST for that job
+
 						start_times.emplace(j->get_id(), compute_latest_start_time(j));
-						//check if the newly computed LST gives a deadline miss
+						// check if the newly computed LST gives a deadline miss
 						if (j->exceeds_deadline(get_latest_start_time(*j) + j->maximal_cost()))
 						{
 							deadline_miss = true;
@@ -298,7 +299,7 @@ namespace NP
 				return start_times;
 			}
 
-			Time compute_latest_start_time(const Job<Time> *j_i)
+			Time compute_latest_start_time_old(const Job<Time> *j_i)
 			{
 				// std::cout << "Computing LST for " << j_i->get_id() << std::endl;
 				//  Blocking interfering workload for job j_i
@@ -329,6 +330,137 @@ namespace NP
 				// std::cout << "\t UB on LST for Job " << j_i->get_id() << " = " << LST << std::endl;
 				latest_LST = std::max(latest_LST, LST);
 				return LST;
+			}
+
+			Time compute_latest_start_time(const Job<Time> *j_i)
+			{
+
+				//  Blocking interfering workload for job j_i
+
+				Time Cmax[cpu_availability.size()-1];
+				Time BIW[cpu_availability.size()];
+				compute_m_blocking_interfering_workload(j_i, BIW);
+				Time ref = BIW[0];
+				for (int i = 1; i < cpu_availability.size(); i++)
+				{
+					Cmax[i - 1] = BIW[i] - ref;
+				}
+
+				Time LST = ref;
+				// High priority interfering workload for job j_i
+				Time HPIW = 0;
+
+				// here we calculate the interference caused by jobs with a higher priority than j_i
+				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
+				{
+					if (j_j != j_i && j_j->get_priority() <= j_i->get_priority())
+					{
+						if (j_j->earliest_arrival() <= LST)
+						{
+							// Linear insert if it is larger than the smallest value in the LPIW array
+							if (j_j->maximal_cost() > Cmax[0])
+							{
+								Time swap = 0;
+								HPIW += Cmax[0];
+								Cmax[0] = j_j->maximal_cost();
+								for (int Cmax_i = 0; Cmax_i < cpu_availability.size() - 1; Cmax_i++)
+								{
+									if (Cmax[Cmax_i] > Cmax[Cmax_i + 1])
+									{
+										swap = Cmax[Cmax_i + 1];
+										Cmax[Cmax_i + 1] = Cmax[Cmax_i];
+										Cmax[Cmax_i] = swap;
+									}
+									else
+									{
+										break;
+									}
+								}
+							}
+							else
+							{
+								HPIW += j_j->maximal_cost();
+							}
+							LST = ref + ceil((HPIW) / cpu_availability.size());
+						}
+						else
+						{
+							// std::cout << "\t LST for Job " << j_i->get_id() << " = " << LST << std::endl;
+							latest_LST = std::max(latest_LST, LST);
+							return LST;
+						}
+					}
+				}
+
+				// std::cout << "\t UB on LST for Job " << j_i->get_id() << " = " << LST << std::endl;
+				latest_LST = std::max(latest_LST, LST);
+				return LST;
+
+				return 0;
+			}
+
+			// Compute the blocking interfering workload as described in the paper
+			void compute_m_blocking_interfering_workload(const Job<Time> *j_i, Time LPIW[])
+			{
+				// we need to remember the m largest values for the Low Priority Interfering Workload (LPIW)
+				//static Time LPIW[cpu_availability.size()];
+				for (int i = 0; i < cpu_availability.size(); i++)
+				{
+					LPIW[i] = 0;
+				}
+
+				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
+				{
+					// Continue if we have the same job
+					if (j_j == j_i)
+					{
+						continue;
+					}
+					// Since the list is sorted by earliest arrival we know that all jobs after this one will also no longer influence the BIW, so we can break here
+					if (j_j->earliest_arrival() > j_i->latest_arrival())
+					{
+						break;
+					}
+					// If the j_j can arrive before j_i and has a lower priority then we consider it for LPIW
+					// we only use the lower prio jobs here as the higher priority jobs are used later
+					if (j_j->earliest_arrival() < j_i->latest_arrival() && j_j->get_priority() > j_i->get_priority())
+					{
+
+						// Linear insert if it is larger than the smallest value in the LPIW array
+						if (j_j->maximal_cost() > LPIW[0])
+						{
+							Time swap = 0;
+							LPIW[0] = j_j->maximal_cost();
+							for (int LPIW_i = 0; LPIW_i < cpu_availability.size() - 1; LPIW_i++)
+							{
+								if (LPIW[LPIW_i] > LPIW[LPIW_i + 1])
+								{
+									swap = LPIW[LPIW_i + 1];
+									LPIW[LPIW_i + 1] = LPIW[LPIW_i];
+									LPIW[LPIW_i] = swap;
+								}
+								else
+								{
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				// iterator integer for the array
+				int LPIW_i = 0;
+				// Calculate the blocking interfering workload using:
+				// BIW_i = max(A_i^max, r_i^max, r_i^max -1 + LP_i)-r_i^max
+				// as described in the paper
+				for (Interval<Time> it : cpu_availability)
+				{
+					// it.max is the max of the interval, so A_x^max
+					// std::cout<<it.max()<<" - "<< j_i->latest_arrival() << " - " <<j_i->latest_arrival() - 1 + LPIW[LPIW_i]<<std::endl;
+					LPIW[LPIW_i] = std::max(it.max(), std::max(j_i->latest_arrival(), j_i->latest_arrival() - 1 + LPIW[LPIW_i])) - j_i->latest_arrival();
+					LPIW_i++;
+				}
+				//return LPIW;
 			}
 
 			// Compute the blocking interfering workload as described in the paper
@@ -535,7 +667,7 @@ namespace NP
 				}
 
 				// min_wcet wordt hier niet gebruikt dus waarom doen we dit?
-				Time min_wcet = min_lower_priority_wcet(job);
+				//Time min_wcet = min_lower_priority_wcet(job);
 
 				// Zoek de laatste arrival time van deze set om snel te kijken of je daarbuiten valt
 				Time max_arrival = jobs_by_latest_arrival.back()->latest_arrival();
