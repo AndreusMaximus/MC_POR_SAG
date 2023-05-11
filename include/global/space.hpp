@@ -328,8 +328,10 @@ namespace NP
 			void update_finish_times(Response_times &r, const Job<Time> &j, Interval<Time> range)
 			{
 				update_finish_times(r, j.get_id(), range);
-				if (j.exceeds_deadline(range.upto()))
+				if (j.exceeds_deadline(range.upto())){
 					aborted = true;
+					DM("aborted due to " << j.get_id() << " exceeding deadline"<<std::endl);
+					}
 			}
 
 			void update_finish_times(const Job<Time> &j, Interval<Time> range)
@@ -453,10 +455,10 @@ namespace NP
 				{
 					// great, we merged!
 					// clean up the just-created state that we no longer need
-					std::cout << "We merged the states:" << std::endl;
-					std::cout << "\t" << *s << std::endl;
-					std::cout << "\t\tand" << std::endl;
-					std::cout << "\t" << *s_ref << std::endl;
+					DM( << "We merged the states:" << std::endl
+					<< "\t" << *s << std::endl
+					<< "\t\tand" << std::endl
+					<< "\t" << *s_ref << std::endl);
 					dealloc_state(s_ref);
 				}
 				return *s;
@@ -547,13 +549,16 @@ namespace NP
 				{
 					aborted = true;
 					timed_out = true;
+					DM("cpu timeout abort"<<std::endl);
 				}
 			}
 
 			void check_depth_abort()
 			{
-				if (max_depth && current_job_count > max_depth)
+				if (max_depth && current_job_count > max_depth){
 					aborted = true;
+					DM("aborted due to exceeding max depth"<<std::endl);
+				}
 			}
 
 			bool unfinished(const State &s, const Job<Time> &j) const

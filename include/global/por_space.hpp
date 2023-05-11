@@ -186,7 +186,6 @@ namespace NP
 					// Now we have a (possible) set of interfering jobs
 					if (!interfering_jobs.empty())
 					{
-						reduction_successes++;
 						reduction_set_statistics.push_back(Reduction_set_statistics<Time>{true, reduction_set});
 						// if we have at least one element in it, we must select it to add it to the redution set.
 						// This must be done under a criteria, these criteria now are the same as for uniproc, but may change in the future
@@ -200,6 +199,7 @@ namespace NP
 					}
 					else
 					{
+						reduction_successes++;
 						// no more interfering jobs so we can return the reduction set.
 						return reduction_set;
 					}
