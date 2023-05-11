@@ -255,13 +255,9 @@ namespace NP
 				Job_map start_times{};
 				for (const Job<Time> *j : jobs)
 				{
-					start_times.emplace(j->get_id(), compute_latest_start_time(j));
+					start_times.emplace(j->get_id(), compute_latest_start_time_old(j));
 					// check if the current computed LST is a deadline miss, if so set the deadline miss flag high and return
-					if (j->exceeds_deadline(get_latest_start_time(*j) + j->maximal_cost()))
-					{
-						deadline_miss = true;
-						return start_times;
-					}
+					
 					// std::cout<<"LST for " << j->get_id() <<" = "<< compute_latest_start_time(j) << std::endl;
 					// std::cout<<"\td = " << j->get_deadline() << std::endl;
 				}
@@ -280,14 +276,9 @@ namespace NP
 					if (j_i->earliest_arrival() <= j->latest_arrival())
 					{
 						// if the new job can start executing before j, then we shall recalculate the LST for that job
-
 						start_times.emplace(j->get_id(), compute_latest_start_time(j));
 						// check if the newly computed LST gives a deadline miss
-						if (j->exceeds_deadline(get_latest_start_time(*j) + j->maximal_cost()))
-						{
-							deadline_miss = true;
-							return start_times;
-						}
+						
 					}
 					else
 					{
@@ -336,7 +327,7 @@ namespace NP
 			{
 
 				//  Blocking interfering workload for job j_i
-
+ 
 				Time Cmax[cpu_availability.size()-1];
 				Time BIW[cpu_availability.size()];
 				compute_m_blocking_interfering_workload(j_i, BIW);
@@ -667,7 +658,7 @@ namespace NP
 				}
 
 				// min_wcet wordt hier niet gebruikt dus waarom doen we dit?
-				//Time min_wcet = min_lower_priority_wcet(job);
+				Time min_wcet = min_lower_priority_wcet(job);
 
 				// Zoek de laatste arrival time van deze set om snel te kijken of je daarbuiten valt
 				Time max_arrival = jobs_by_latest_arrival.back()->latest_arrival();

@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/nptest.dir/src/nptest.cpp.o CMakeFiles/nptest.dir/lib/src/OptionParser.cpp.o -o nptest  -Wl,-rpath,/usr/local/lib /usr/local/lib/libtbbmalloc_proxy.so 

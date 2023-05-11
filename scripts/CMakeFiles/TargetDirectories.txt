@@ -1,0 +1,4 @@
+/home/sag/Downloads/np-schedulability-analysis-partial_order_reduction/scripts/CMakeFiles/rebuild_cache.dir
+/home/sag/Downloads/np-schedulability-analysis-partial_order_reduction/scripts/CMakeFiles/edit_cache.dir
+/home/sag/Downloads/np-schedulability-analysis-partial_order_reduction/scripts/CMakeFiles/nptest.dir
+/home/sag/Downloads/np-schedulability-analysis-partial_order_reduction/scripts/CMakeFiles/runtests.dir
