@@ -172,7 +172,8 @@ namespace NP
 
 					// i aint using the macros as they require a lot of additions to the states etc
 					std::vector<const Job<Time> *> interfering_jobs{};
-					for (auto it = this->jobs_by_earliest_arrival.begin(); it != this->jobs_by_earliest_arrival.upper_bound(reduction_set.get_latest_LST()); it++)
+					//adding the lower bound here does work, but it was not really that much of a time save
+					for (auto it = this->jobs_by_earliest_arrival.lower_bound(s.core_availability().min()); it != this->jobs_by_earliest_arrival.upper_bound(reduction_set.get_latest_LST()); it++)
 					{
 						j = it->second;
 						const Job<Time> &j_i = *j;
