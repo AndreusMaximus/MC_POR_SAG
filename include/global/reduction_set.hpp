@@ -110,9 +110,9 @@ namespace NP
 				max_priority = compute_max_priority();
 				initialize_key();
 				// std::cout << "Candidate reduction set contains " << jobs.size() << " jobs" << std::endl;
-				/*std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
+				//std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
 
-				for (const Job<Time>* j : jobs) {
+				/*for (const Job<Time>* j : jobs) {
 					std::cout<<j->get_id()<<" ";
 				}
 				std::cout<<std::endl;*/
@@ -180,7 +180,7 @@ namespace NP
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
 							  { return i->earliest_arrival() + i->minimal_cost() < j->earliest_arrival() + j->minimal_cost(); });
 
-				// latest_busy_time = compute_latest_busy_time();
+				//latest_busy_time = compute_latest_busy_time();
 				latest_idle_time = compute_latest_idle_time();
 				latest_start_times = compute_latest_start_times(jx);
 				key = key ^ jx->get_key();
@@ -255,9 +255,12 @@ namespace NP
 				Job_map start_times{};
 				for (const Job<Time> *j : jobs)
 				{
-					start_times.emplace(j->get_id(), compute_latest_start_time(j));
-					// check if the current computed LST is a deadline miss, if so set the deadline miss flag high and return
-					if (j->exceeds_deadline(get_latest_start_time(*j) + j->maximal_cost()))
+					Time LST_j = compute_latest_start_time(j);
+					start_times.emplace(j->get_id(), LST_j);
+
+					//std::cout<<j->get_id()<< " LST computed: "<<LST_j<<" "<<j->latest_arrival()<< " LFT "<<LST_j + j->maximal_cost() << " deadline "<<j->get_deadline() <<std::endl;
+					//  check if the current computed LST is a deadline miss, if so set the deadline miss flag high and return
+					if (j->exceeds_deadline(LST_j + j->maximal_cost()))
 					{
 						deadline_miss = true;
 						return start_times;
@@ -281,7 +284,7 @@ namespace NP
 					{
 						// if the new job can start executing before j, then we shall recalculate the LST for that job
 						start_times.emplace(j->get_id(), compute_latest_start_time(j));
-						//check if the newly computed LST gives a deadline miss
+						// check if the newly computed LST gives a deadline miss
 						if (j->exceeds_deadline(get_latest_start_time(*j) + j->maximal_cost()))
 						{
 							deadline_miss = true;
@@ -300,11 +303,22 @@ namespace NP
 
 			Time compute_latest_start_time(const Job<Time> *j_i)
 			{
-				// std::cout << "Computing LST for " << j_i->get_id() << std::endl;
+
 				//  Blocking interfering workload for job j_i
-				Time BIW = compute_blocking_interfering_workload(j_i);
-				// std::cout<<"BIW for " << j_i->get_id() << " = " << BIW << std::endl;
-				Time LST = j_i->latest_arrival() + floor(BIW / cpu_availability.size());
+
+				Time Cmax[cpu_availability.size() - 1];
+				Time BIW[cpu_availability.size()];
+				compute_m_blocking_interfering_workload(j_i, BIW);
+
+				// std::cout<<"managed to do BIW"<<std::endl;
+				Time ref = BIW[cpu_availability.size() - 1];
+				//std::cout<<"REFERENCE POINT = " <<ref<<std::endl;
+				for (int i = 1; i < cpu_availability.size(); i++)
+				{
+					Cmax[i - 1] = BIW[i] - ref;
+				}
+
+				Time LST = j_i->latest_arrival() + ref;
 				// High priority interfering workload for job j_i
 				Time HPIW = 0;
 
@@ -315,12 +329,36 @@ namespace NP
 					{
 						if (j_j->earliest_arrival() <= LST)
 						{
-							HPIW += j_j->maximal_cost();
-							LST = j_i->latest_arrival() + floor((BIW + HPIW) / cpu_availability.size());
+							// Linear insert if it is larger than the smallest value in the LPIW array
+							if (j_j->maximal_cost() > Cmax[0] && cpu_availability.size() > 1)
+							{
+								Time swap = 0;
+								HPIW += Cmax[0];
+								Cmax[0] = j_j->maximal_cost();
+								for (int Cmax_i = 0; Cmax_i < cpu_availability.size() - 2; Cmax_i++)
+								{
+									if (Cmax[Cmax_i] > Cmax[Cmax_i + 1])
+									{
+										swap = Cmax[Cmax_i + 1];
+										Cmax[Cmax_i + 1] = Cmax[Cmax_i];
+										Cmax[Cmax_i] = swap;
+									}
+									else
+									{
+										break;
+									}
+								}
+							}
+							else
+							{
+								HPIW += j_j->maximal_cost();
+							}
+							LST = j_i->latest_arrival() + ref + ceil((HPIW) / (double)cpu_availability.size());
 						}
 						else
 						{
 							// std::cout << "\t LST for Job " << j_i->get_id() << " = " << LST << std::endl;
+							latest_LST = std::max(latest_LST, LST);
 							return LST;
 						}
 					}
@@ -332,12 +370,10 @@ namespace NP
 			}
 
 			// Compute the blocking interfering workload as described in the paper
-			Time compute_blocking_interfering_workload(const Job<Time> *j_i)
+			void compute_m_blocking_interfering_workload(const Job<Time> *j_i, Time LPIW[])
 			{
-				// summation for the final value
-				Time BIW = 0;
 				// we need to remember the m largest values for the Low Priority Interfering Workload (LPIW)
-				Time LPIW[cpu_availability.size()];
+				// static Time LPIW[cpu_availability.size()];
 				for (int i = 0; i < cpu_availability.size(); i++)
 				{
 					LPIW[i] = 0;
@@ -348,11 +384,13 @@ namespace NP
 					// Continue if we have the same job
 					if (j_j == j_i)
 					{
+						// std::cout<<"cont."<<std::endl;
 						continue;
 					}
 					// Since the list is sorted by earliest arrival we know that all jobs after this one will also no longer influence the BIW, so we can break here
 					if (j_j->earliest_arrival() > j_i->latest_arrival())
 					{
+						// std::cout<<"earliest arrival from j_j > latest from j_i "<<std::endl;
 						break;
 					}
 					// If the j_j can arrive before j_i and has a lower priority then we consider it for LPIW
@@ -361,23 +399,27 @@ namespace NP
 					{
 
 						// Linear insert if it is larger than the smallest value in the LPIW array
-						if (j_j->maximal_cost() > LPIW[0])
+						if (j_j->maximal_cost() > LPIW[cpu_availability.size() - 1])
 						{
 							Time swap = 0;
-							LPIW[0] = j_j->maximal_cost();
-							for (int LPIW_i = 0; LPIW_i < cpu_availability.size() - 1; LPIW_i++)
+							LPIW[cpu_availability.size() - 1] = j_j->maximal_cost();
+							//std::cout<<"LPIW: ["<<LPIW[0]<<" ";
+							for (int LPIW_i = cpu_availability.size() - 1; LPIW_i > 0; LPIW_i--)
 							{
-								if (LPIW[LPIW_i] > LPIW[LPIW_i + 1])
+								if (LPIW[LPIW_i] > LPIW[LPIW_i - 1])
 								{
-									swap = LPIW[LPIW_i + 1];
-									LPIW[LPIW_i + 1] = LPIW[LPIW_i];
+									swap = LPIW[LPIW_i - 1];
+									LPIW[LPIW_i - 1] = LPIW[LPIW_i];
 									LPIW[LPIW_i] = swap;
 								}
-								else
+								/*else
 								{
 									break;
-								}
+								}*/
+
+								//std::cout<<LPIW[LPIW_i]<<" ";
 							}
+							//std::cout<<"]"<<std::endl;
 						}
 					}
 				}
@@ -390,11 +432,12 @@ namespace NP
 				for (Interval<Time> it : cpu_availability)
 				{
 					// it.max is the max of the interval, so A_x^max
-					// std::cout<<it.max()<<" - "<< j_i->latest_arrival() << " - " <<j_i->latest_arrival() - 1 + LPIW[LPIW_i]<<std::endl;
-					BIW += std::max(it.max(), std::max(j_i->latest_arrival(), j_i->latest_arrival() - 1 + LPIW[LPIW_i])) - j_i->latest_arrival();
+					// std::cout<<it.max()<<" - "<< j_i->latest_arrival() << " - " <<j_i->latest_arrival() - 1 + LPIW[LPIW_i];
+					LPIW[LPIW_i] = std::max(it.max(), std::max(j_i->latest_arrival(), j_i->latest_arrival() - 1 + LPIW[LPIW_i])) - j_i->latest_arrival();
+					// std::cout<<"=>"<<LPIW[LPIW_i]<<std::endl;
 					LPIW_i++;
 				}
-				return BIW;
+				// return LPIW;
 			}
 
 			// Returns the smallest wcet among the jobs with a lower priority than job
@@ -468,7 +511,7 @@ namespace NP
 								Crest += Cmax[0];
 								Cmax[0] = j_y->minimal_cost();
 								Time swap;
-								for (int i = 0; i < cpu_availability.size() - 1; i++)
+								for (int i = 0; i < cpu_availability.size() - 2; i++)
 								{
 									if (Cmax[i] > Cmax[i + 1])
 									{
@@ -493,7 +536,7 @@ namespace NP
 					There is an interval if the workload of all jobs except the m-1 largest jobs spread over all cores
 					is smaller than the latest release time of the current job under investigation
 					*/
-					if (Amin + ceil(Crest / cpu_availability.size()) < j_x->latest_arrival() && overflow < cpu_availability.size())
+					if (Amin + ceil(Crest / (double)cpu_availability.size()) < j_x->latest_arrival() && overflow < cpu_availability.size())
 					{
 
 						// std::cout << "\t Latest interval might end at:" << j_x->latest_arrival() << std::endl;
@@ -563,6 +606,11 @@ namespace NP
 			void certainly_available_i(Time *Chigh, Time Clow, Time s, std::vector<Time> *CA_values)
 			{
 				Time tClow = Clow;
+				if (cpu_availability.size() == 1)
+				{
+					CA_values->emplace_back(s + Clow + Chigh[0]);
+					return;
+				}
 				if (Chigh[0] == 0)
 				{
 					for (int i = 0; i < cpu_availability.size(); i++)
@@ -655,7 +703,7 @@ namespace NP
 						{
 							Clow += j_x->maximal_cost();
 						}
-						event = s + ceil((Clow + Chigh[0]) / cpu_availability.size());
+						event = s + ceil((Clow + Chigh[0]) / (double)cpu_availability.size());
 					}
 					else
 					{
@@ -694,7 +742,6 @@ namespace NP
 						event = s;
 					}
 				}
-				// std::cout<<"\t arrived at last step"<<std::endl;
 				certainly_available_i(Chigh, Clow, s, &CA_values);
 				return CA_values;
 			}
@@ -763,7 +810,7 @@ namespace NP
 					if (j_s->latest_arrival() < LFP[m - i - 1])
 					{
 						// we should also check if A^max is less than that value i think.
-						if (j_s->earliest_arrival() + j_s->minimal_cost() > LEP - ceil(Crest / (m - i)))
+						if (j_s->earliest_arrival() + j_s->minimal_cost() > LEP - ceil(Crest / (double)(m - i)))
 						{
 							// here we have to use the i'th core
 							// std::cout << "\tWe have to use the i^th core at time " << j_s->earliest_arrival() + j_s->minimal_cost() << std::endl;
@@ -817,7 +864,7 @@ namespace NP
 					maxEnd = (maxEnd < j->earliest_arrival() + j->minimal_cost()) ? j->earliest_arrival() + j->minimal_cost() : maxEnd;
 					Ctot += j->minimal_cost();
 				}
-				return (ceil(Ctot / cpu_availability.size()) > maxEnd) ? ceil(Ctot / cpu_availability.size()) : maxEnd;
+				return (ceil(Ctot / cpu_availability.size()) > maxEnd) ? ceil(Ctot / (double)cpu_availability.size()) : maxEnd;
 			}
 
 			std::vector<Time> compute_possibly_available()
@@ -859,6 +906,19 @@ namespace NP
 					std::cout << j->get_id() << " ";
 				}
 				std::cout << std::endl;
+				std::cout << "PA old";
+				for (Interval<Time> it : cpu_availability)
+				{
+					std::cout << it.min() << " ";
+				}
+				std::cout<<std::endl;
+				std::cout << "CA old";
+				for (Interval<Time> it : cpu_availability)
+				{
+					std::cout << it.max() << " ";
+				}
+				std::cout<<std::endl;
+
 				std::cout << "Where the new system states would be:" << std::endl;
 				compute_new_system_states();
 			}

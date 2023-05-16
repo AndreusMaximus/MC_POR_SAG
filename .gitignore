@@ -6,3 +6,4 @@ nptest
 *.dot
 *.pdf
 comparison/
+scripts/results.txt
