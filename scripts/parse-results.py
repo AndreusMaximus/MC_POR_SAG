@@ -24,15 +24,6 @@ for i in range(0,len(lines),2):
     line_normal = lines[i].split(",")
     line_por    = lines[i+1].split(",")
     #print(line_normal[0].split("/")[-1])
-
-    if int(line_normal[1]) < int(line_por[1]):
-        print(line_normal[0])
-        t_false_positive += 1
-    if int(line_normal[1]) == int(line_por[1]):
-        t_correct += 1
-    if int(line_normal[1]) > int(line_por[1]):
-        t_false_negative += 1
-
     t_timeout_normal += int(line_normal[8])
     t_timeout_por += int(line_por[8])
 
@@ -43,13 +34,22 @@ for i in range(0,len(lines),2):
     cpu_reduction = (float(line_por[6])/float(line_normal[6]))*100
     mem_reduction = (float(line_por[7])/float(line_normal[7]))*100
 
+    if int(line_normal[1]) < int(line_por[1]):
+        print(line_normal[0])
+        t_false_positive += 1
+    if int(line_normal[1]) == int(line_por[1]):
+        t_correct += 1
+        t_state_reduction += state_reduction
+        t_cpu_reduction += cpu_reduction
+        t_mem_reduction += mem_reduction
+    if int(line_normal[1]) > int(line_por[1]):
+        t_false_negative += 1
+
+
     #print("\t states reduced by: " + str(state_reduction) + "%")
     #print("\t cpu reduced by   : " + str(cpu_reduction) + "%")
     #print("\t mem reduced by   : " + str(mem_reduction) + "%")
 
-    t_state_reduction += state_reduction
-    t_cpu_reduction += cpu_reduction
-    t_mem_reduction += mem_reduction
     t_s_reductions += int(line_por[10])
     t_f_reductions += int(line_por[11])
 
@@ -59,9 +59,9 @@ print("|| utilization:                 " + sys.argv[2])
 print("|| Correct results:             " + str(t_correct))
 print("|| False negatives results:     " + str(t_false_negative))
 print("|| Incorrect results:           " + str(t_false_positive))
-print("|| average state reduction:     " + str(t_state_reduction/t_tested) + "%")
-print("|| average cpu difference:    +-" + str(t_cpu_reduction/t_tested) + "%")
-print("|| average memory difference: +-" + str(t_mem_reduction/t_tested) + "%")
+print("|| average state reduction:     " + str(t_state_reduction/t_correct) + "%")
+print("|| average cpu difference:    +-" + str(t_cpu_reduction/t_correct) + "%")
+print("|| average memory difference: +-" + str(t_mem_reduction/t_correct) + "%")
 print("|| total successfull reductions " + str(t_s_reductions))
 print("|| total failed reductions      " + str(t_f_reductions))
 print("|| timeouts normal - por:       " + str(t_timeout_normal) + " | " + str(t_timeout_por))
@@ -76,9 +76,9 @@ with open('out.txt','a+') as f:
     f.write("|| Correct results:             " + str(t_correct) + "\n")
     f.write("|| False negatives results:     " + str(t_false_negative) + "\n")
     f.write("|| Incorrect results:           " + str(t_false_positive) + "\n")
-    f.write("|| average state reduction:     " + str(t_state_reduction/t_tested) + "%" + "\n")
-    f.write("|| average cpu difference:    +-" + str(t_cpu_reduction/t_tested) + "%" + "\n")
-    f.write("|| average memory difference: +-" + str(t_mem_reduction/t_tested) + "%" + "\n")
+    f.write("|| average state reduction:     " + str(t_state_reduction/t_correct) + "%" + "\n")
+    f.write("|| average cpu difference:    +-" + str(t_cpu_reduction/t_correct) + "%" + "\n")
+    f.write("|| average memory difference: +-" + str(t_mem_reduction/t_correct) + "%" + "\n")
     f.write("|| total successfull reductions " + str(t_s_reductions) + "\n")
     f.write("|| total failed reductions      " + str(t_f_reductions) + "\n")
     f.write("|| timeouts normal - por:       " + str(t_timeout_normal) + " | " + str(t_timeout_por) + "\n")

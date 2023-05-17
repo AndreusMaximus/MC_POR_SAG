@@ -34,7 +34,7 @@ namespace NP
 			// different sorted sets of jobs
 			Job_set jobs_by_latest_arrival;
 			Job_set jobs_by_earliest_arrival;
-			Job_set jobs_by_wcet;
+			//Job_set jobs_by_wcet;
 
 			// these ordered sets are required for the reverse fill algorithm
 			Job_set jobs_by_rmin_cmin;
@@ -64,7 +64,7 @@ namespace NP
 				  job_precedence_sets{job_precedence_sets},
 				  jobs_by_latest_arrival{jobs},
 				  jobs_by_earliest_arrival{jobs},
-				  jobs_by_wcet{jobs},
+				  //jobs_by_wcet{jobs},
 				  jobs_by_rmax_cmin{jobs},
 				  jobs_by_rmin_cmin{jobs},
 				  key{0},
@@ -81,9 +81,9 @@ namespace NP
 						  [](const Job<Time> *i, const Job<Time> *j) -> bool
 						  { return i->earliest_arrival() < j->earliest_arrival(); });
 
-				std::sort(jobs_by_wcet.begin(), jobs_by_wcet.end(),
-						  [](const Job<Time> *i, const Job<Time> *j) -> bool
-						  { return i->maximal_cost() < j->maximal_cost(); });
+				//std::sort(jobs_by_wcet.begin(), jobs_by_wcet.end(),
+				//		  [](const Job<Time> *i, const Job<Time> *j) -> bool
+				//		  { return i->maximal_cost() < j->maximal_cost(); });
 
 				// these sorts are required for the reverse fill algorithm
 				std::sort(jobs_by_rmin_cmin.begin(), jobs_by_rmin_cmin.end(),
@@ -170,9 +170,9 @@ namespace NP
 				insert_sorted(jobs_by_earliest_arrival, jx,
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
 							  { return i->earliest_arrival() < j->earliest_arrival(); });
-				insert_sorted(jobs_by_wcet, jx,
-							  [](const Job<Time> *i, const Job<Time> *j) -> bool
-							  { return i->maximal_cost() < j->maximal_cost(); });
+				//insert_sorted(jobs_by_wcet, jx,
+				//			  [](const Job<Time> *i, const Job<Time> *j) -> bool
+				//			  { return i->maximal_cost() < j->maximal_cost(); });
 				insert_sorted(jobs_by_rmax_cmin, jx,
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
 							  { return i->latest_arrival() + i->minimal_cost() < j->latest_arrival() + j->minimal_cost(); });
@@ -462,7 +462,7 @@ namespace NP
 			}
 
 			// Returns the smallest wcet among the jobs with a lower priority than job
-			Time min_lower_priority_wcet(const Job<Time> &job) const
+			/*Time min_lower_priority_wcet(const Job<Time> &job) const
 			{
 				auto pos = std::find_if(jobs_by_wcet.begin(), jobs_by_wcet.end(),
 										[&job](const Job<Time> *j)
@@ -476,7 +476,7 @@ namespace NP
 				{
 					return (*pos)->maximal_cost();
 				}
-			}
+			}*/
 
 			Time compute_latest_idle_time()
 			{
@@ -599,7 +599,7 @@ namespace NP
 				}
 
 				// min_wcet wordt hier niet gebruikt dus waarom doen we dit?
-				Time min_wcet = min_lower_priority_wcet(job);
+				//Time min_wcet = min_lower_priority_wcet(job);
 
 				// Zoek de laatste arrival time van deze set om snel te kijken of je daarbuiten valt
 				Time max_arrival = jobs_by_latest_arrival.back()->latest_arrival();
