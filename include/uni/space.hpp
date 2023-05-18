@@ -121,6 +121,11 @@ namespace NP {
 				return 0;
 			}
 
+			unsigned long number_of_jobs_in_por() const
+			{
+				return 0;
+			}
+
 #ifdef CONFIG_COLLECT_SCHEDULE_GRAPH
 
 			struct Edge {

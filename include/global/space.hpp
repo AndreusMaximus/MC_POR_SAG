@@ -136,6 +136,11 @@ namespace NP
 				return 0;
 			}
 
+			unsigned long number_of_jobs_in_por() const
+			{
+				return 0;
+			}
+
 			// std::deque is een double ended queue voor het opslaan van states
 			typedef std::deque<State> States;
 // Dit wordt alleen gebruikt voor het parallelizeren mbv tbb.

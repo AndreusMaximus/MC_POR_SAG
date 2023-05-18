@@ -34,7 +34,7 @@ namespace NP
 			// different sorted sets of jobs
 			Job_set jobs_by_latest_arrival;
 			Job_set jobs_by_earliest_arrival;
-			//Job_set jobs_by_wcet;
+			// Job_set jobs_by_wcet;
 
 			// these ordered sets are required for the reverse fill algorithm
 			Job_set jobs_by_rmin_cmin;
@@ -64,7 +64,7 @@ namespace NP
 				  job_precedence_sets{job_precedence_sets},
 				  jobs_by_latest_arrival{jobs},
 				  jobs_by_earliest_arrival{jobs},
-				  //jobs_by_wcet{jobs},
+				  // jobs_by_wcet{jobs},
 				  jobs_by_rmax_cmin{jobs},
 				  jobs_by_rmin_cmin{jobs},
 				  key{0},
@@ -81,7 +81,7 @@ namespace NP
 						  [](const Job<Time> *i, const Job<Time> *j) -> bool
 						  { return i->earliest_arrival() < j->earliest_arrival(); });
 
-				//std::sort(jobs_by_wcet.begin(), jobs_by_wcet.end(),
+				// std::sort(jobs_by_wcet.begin(), jobs_by_wcet.end(),
 				//		  [](const Job<Time> *i, const Job<Time> *j) -> bool
 				//		  { return i->maximal_cost() < j->maximal_cost(); });
 
@@ -122,6 +122,10 @@ namespace NP
 			Reduction_set(std::vector<Interval<Time>> cpu_availability, const Job_set &jobs, std::vector<std::size_t> indices)
 				: Reduction_set(cpu_availability, jobs, indices, {})
 			{
+			}
+			
+			int get_number_of_jobs(){
+				return jobs.size();
 			}
 
 			void initialize_key()
@@ -170,7 +174,7 @@ namespace NP
 				insert_sorted(jobs_by_earliest_arrival, jx,
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
 							  { return i->earliest_arrival() < j->earliest_arrival(); });
-				//insert_sorted(jobs_by_wcet, jx,
+				// insert_sorted(jobs_by_wcet, jx,
 				//			  [](const Job<Time> *i, const Job<Time> *j) -> bool
 				//			  { return i->maximal_cost() < j->maximal_cost(); });
 				insert_sorted(jobs_by_rmax_cmin, jx,
@@ -309,35 +313,42 @@ namespace NP
 
 				//  Blocking interfering workload for job j_i
 
-				Time Cmax[cpu_availability.size() - 1];
+				Time Ceq[cpu_availability.size() - 1];
 				Time BIW[cpu_availability.size()];
 				compute_m_blocking_interfering_workload(j_i, BIW);
-				std::sort(BIW, BIW+cpu_availability.size());
+				std::sort(BIW, BIW + cpu_availability.size());
 				//  std::cout<<"managed to do BIW"<<std::endl;
-				//Time ref = BIW[cpu_availability.size()-1];
+				// Time ref = BIW[cpu_availability.size()-1];
 				Time ref = BIW[0];
-				//std::cout << "AMAX = [";
-				//for(int i = 0; i < cpu_availability.size(); i ++){
+				// std::cout << "AMAX = [";
+				// for(int i = 0; i < cpu_availability.size(); i ++){
 				//	std::cout<<cpu_availability[i].max()<<" ";
-				//}
-				//std::cout<<"]"<<std::endl;
+				// }
+				// std::cout<<"]"<<std::endl;
 				//std::cout << "REFERENCE POINT = " << ref << std::endl;
-				//std::cout << "[";
+				// std::cout << "[";
 
 				//for (int i = 0; i < cpu_availability.size(); i++)
 				//{
-				//	std::cout << BIW[i] << " ";
+				//std::cout << BIW[i] << " ";
 				//}
 				//std::cout <<"]"<< std::endl;
 
 				//std::cout << "[";
 				for (int i = 1; i < cpu_availability.size(); i++)
 				{
-					Cmax[i - 1] = BIW[i] - ref;
-					//std::cout << Cmax[i-1] << " ";
-
+					Ceq[i - 1] = BIW[i] - BIW[i-1];
+				//	std::cout << Ceq[i-1] << " ";
 				}
-				//std::cout <<"]"<< std::endl;
+				//std::cout << "]" << std::endl;
+				// last value in Ceq is the largest
+				//std::cout << "[";
+				for (int i = 1; i < cpu_availability.size() - 1; i++)
+				{
+					Ceq[i] = Ceq[i]*(1+i) + Ceq[i - 1];
+				//	std::cout << Ceq[i] << " ";
+				}
+				//std::cout << "]" << std::endl;
 
 				Time LST_i = j_i->latest_arrival() + ref;
 				// High priority interfering workload for job j_i
@@ -350,31 +361,20 @@ namespace NP
 					{
 						if (j_j->earliest_arrival() <= LST_i)
 						{
-							// Linear insert if it is larger than the smallest value in the LPIW array
-							if (j_j->maximal_cost() > Cmax[0] && cpu_availability.size() > 1)
+							HPIW += j_j->maximal_cost();
+							// if the high prio interference is larger than the largest eq
+							// Fancy Fill algorithm
+							// see whiteboard :*
+							LST_i = j_i->latest_arrival() + ref + HPIW;
+
+							for (int i = 0; i < cpu_availability.size()-1; i++)
 							{
-								Time swap = 0;
-								HPIW += Cmax[0];
-								Cmax[0] = j_j->maximal_cost();
-								for (int Cmax_i = 0; Cmax_i < cpu_availability.size() - 2; Cmax_i++)
+								if (HPIW >= Ceq[cpu_availability.size() - 2 - i])
 								{
-									if (Cmax[Cmax_i] > Cmax[Cmax_i + 1])
-									{
-										swap = Cmax[Cmax_i + 1];
-										Cmax[Cmax_i + 1] = Cmax[Cmax_i];
-										Cmax[Cmax_i] = swap;
-									}
-									else
-									{
-										break;
-									}
+									LST_i = j_i->latest_arrival() + ref + BIW[cpu_availability.size() - 1 - i] + floor((HPIW - Ceq[cpu_availability.size() - 2 - i]) / (cpu_availability.size() - i));
+									break;
 								}
 							}
-							else
-							{
-								HPIW += j_j->maximal_cost();
-							}
-							LST_i = j_i->latest_arrival() + ref + ceil((double)(HPIW) / (double)cpu_availability.size());
 						}
 						else
 						{
@@ -409,7 +409,7 @@ namespace NP
 						continue;
 					}
 					// Since the list is sorted by earliest arrival we know that all jobs after this one will also no longer influence the BIW, so we can break here
-					if (j_j->earliest_arrival() > j_i->latest_arrival())
+					if (j_j->earliest_arrival() >= j_i->latest_arrival())
 					{
 						// std::cout<<"earliest arrival from j_j > latest from j_i "<<std::endl;
 						break;
@@ -599,7 +599,7 @@ namespace NP
 				}
 
 				// min_wcet wordt hier niet gebruikt dus waarom doen we dit?
-				//Time min_wcet = min_lower_priority_wcet(job);
+				// Time min_wcet = min_lower_priority_wcet(job);
 
 				// Zoek de laatste arrival time van deze set om snel te kijken of je daarbuiten valt
 				Time max_arrival = jobs_by_latest_arrival.back()->latest_arrival();
@@ -632,12 +632,19 @@ namespace NP
 					CA_values->emplace_back(s + Clow + Chigh[0]);
 					return;
 				}
-				
-				if (Chigh[0] == 0)
+
+				if (Chigh[0] <= 0)
 				{
 					for (int i = 0; i < cpu_availability.size(); i++)
 					{
-						CA_values->emplace_back(Chigh[i]);
+						if (Chigh[i] > 0)
+						{
+							CA_values->emplace_back(s + Chigh[i]);
+						}
+						else
+						{
+							CA_values->emplace_back(s);
+						}
 					}
 				}
 				else
@@ -686,27 +693,37 @@ namespace NP
 				Time Clow = 0;
 
 				Time last_event = -1;
-				Time s = std::max(cpu_availability[0].max(),jobs_by_latest_arrival[0]->latest_arrival());
+				Time s = std::max(cpu_availability[0].max(), jobs_by_latest_arrival[0]->latest_arrival());
 
 				Time event = s;
+
+				Time prev = 0;
+				for (int i = 1; i < cpu_availability.size(); i++)
+				{
+					prev += cpu_availability[i].max() - cpu_availability[0].max();
+				}
+				prev = cpu_availability[0].max() + ceil((double)prev / (double)cpu_availability.size());
 
 				// for some reason i need to have this print otherwise i have a seg fault?!?
 				// std::cout<<"\t seg fault prevention?!?"<<std::endl;
 				//  initialize the chigh values for the first iterative step
 				for (int Chigh_i = 0; Chigh_i < cpu_availability.size(); Chigh_i++)
 				{
-					//std::cout<<cpu_availability[Chigh_i].max()<<" - ";
-					Chigh[Chigh_i] = (cpu_availability[Chigh_i].max() - s>0) ?  cpu_availability[Chigh_i].max() - s : 0;
-					//std::cout<<Chigh[Chigh_i]<<std::endl;
+					// std::cout<<cpu_availability[Chigh_i].max()<<" - ";
+					Chigh[Chigh_i] = cpu_availability[Chigh_i].max() - s;
+					// std::cout<<Chigh[Chigh_i]<<std::endl;
 				}
 				// std::cout<<"\tChihgh Filled"<<std::endl;
 				for (const Job<Time> *j_x : jobs_by_latest_arrival)
 				{
+
 					if (j_x->latest_arrival() <= event && j_x->latest_arrival() > last_event)
 					{
+						// std::cout << j_x->get_id() << std::endl;
 						if (j_x->maximal_cost() > Chigh[0])
 						{
-							Clow += Chigh[0];
+							if (Chigh[0] > 0)
+								Clow += Chigh[0];
 							Chigh[0] = j_x->maximal_cost();
 							Time swap;
 							// its in this point i think,
@@ -728,18 +745,47 @@ namespace NP
 						{
 							Clow += j_x->maximal_cost();
 						}
-						event = s + ceil((double)(Clow + Chigh[0]) / (double)cpu_availability.size());
+
+						if (Chigh[0] > 0)
+						{
+							event = s + ceil((double)(Clow + Chigh[0]) / (double)cpu_availability.size());
+						}
+						else
+						{
+							event = s;
+						}
 					}
 					else
 					{
+						// std::cout << "\t new iteration" << std::endl;
 						last_event = event;
+						if (Chigh[0] > 0)
+						{
+							prev = Clow;
+							for (int i = 0; i < cpu_availability.size(); i++)
+							{
+								prev += (Chigh[i] >= 0) ? Chigh[i] : 0;
+							}
+							prev = s + ceil((double)prev / (double(cpu_availability.size())));
+						}
+						// std::cout << "prev" << prev << std::endl;
 						s = j_x->latest_arrival();
 
 						for (int i = 0; i < cpu_availability.size(); i++)
 						{
-							Chigh[i] = (0 > ((event + Chigh[i]) - s)) ? 0 : ((event + Chigh[i]) - s);
+
+							if (Chigh[i] > 0)
+							{
+								Chigh[i] = (0 > ((event + Chigh[i]) - s)) ? prev - s : ((event + Chigh[i]) - s);
+							}
+							else
+							{
+								Chigh[i] = prev - s;
+							}
+							// std::cout << Chigh[i] << " ";
 						}
-						// reset Clow
+						// std::cout << std::endl;
+						//  reset Clow
 						Clow = 0;
 						if (j_x->maximal_cost() > Chigh[0])
 						{

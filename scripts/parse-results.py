@@ -37,7 +37,7 @@ for i in range(0,len(lines),2):
     if int(line_normal[1]) < int(line_por[1]):
         print(line_normal[0])
         t_false_positive += 1
-    if int(line_normal[1]) == int(line_por[1]):
+    if int(line_normal[1]) == int(line_por[1]) & int(line_normal[1]) == 1:
         t_correct += 1
         t_state_reduction += state_reduction
         t_cpu_reduction += cpu_reduction

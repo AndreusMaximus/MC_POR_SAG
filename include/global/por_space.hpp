@@ -94,6 +94,18 @@ namespace NP
 				return reduction_failures;
 			}
 
+
+			unsigned long number_of_jobs_in_por() const
+			{
+				unsigned long jobs_in_por = 0;
+				for(Reduction_set_statistics<Time> rss : reduction_set_statistics){
+					if(rss.reduction_success){
+						jobs_in_por += rss.num_jobs;
+					}
+				}
+				return jobs_in_por;
+			}
+
 			std::vector<Reduction_set_statistics<Time>> get_reduction_set_statistics() const
 			{
 				return reduction_set_statistics;
@@ -105,7 +117,7 @@ namespace NP
 			using State_space<Time, IIP>::dispatch;
 
 			POR_criterion por_criterion;
-			unsigned long reduction_successes, reduction_failures;
+			unsigned long reduction_successes, reduction_failures, jobs_in_por;
 			std::vector<Reduction_set_statistics<Time>> reduction_set_statistics;
 			std::vector<Job_precedence_set> job_precedence_sets;
 
@@ -187,7 +199,6 @@ namespace NP
 					// Now we have a (possible) set of interfering jobs
 					if (!interfering_jobs.empty())
 					{
-						reduction_set_statistics.push_back(Reduction_set_statistics<Time>{true, reduction_set});
 						// if we have at least one element in it, we must select it to add it to the redution set.
 						// This must be done under a criteria, these criteria now are the same as for uniproc, but may change in the future
 						// We also must push this criterion to its own hpp file
@@ -200,7 +211,9 @@ namespace NP
 					}
 					else
 					{
+						reduction_set_statistics.push_back(Reduction_set_statistics<Time>{true, reduction_set});
 						reduction_successes++;
+						jobs_in_por+=reduction_set.get_number_of_jobs();
 						// no more interfering jobs so we can return the reduction set.
 						return reduction_set;
 					}

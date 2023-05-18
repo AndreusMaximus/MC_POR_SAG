@@ -66,7 +66,7 @@ struct Analysis_result {
 	double cpu_time;
 	std::string graph;
 	std::string response_times_csv;
-	unsigned long por_successes, por_failures;
+	unsigned long por_successes, por_failures, jobs_per_por;
 };
 
 template<class Time, class Space>
@@ -122,7 +122,6 @@ static Analysis_result analyze(
 			    << std::endl;
 		}
 	}
-
 	return {
 		space.is_schedulable(),
 		space.was_timed_out(),
@@ -134,7 +133,8 @@ static Analysis_result analyze(
 		graph.str(),
 		rta.str(),
 		space.number_of_por_successes(),
-		space.number_of_por_failures()
+		space.number_of_por_failures(),
+		space.number_of_jobs_in_por()
 	};
 }
 
@@ -257,6 +257,7 @@ static void process_file(const std::string& fname)
 		          << ",  " << num_processors
 		          << ",  " << result.por_successes
 		          << ",  " << result.por_failures
+				  << ",  " << result.jobs_per_por
 		          << std::endl;
 	} catch (std::ios_base::failure& ex) {
 		std::cerr << fname;
@@ -296,6 +297,7 @@ static void print_header(){
 	          << ", #CPUs"
 	          << ", #POR successes"
 	          << ", #POR failures"
+	          << ", #total jobs in POR"
 	          << std::endl;
 }
 

@@ -86,6 +86,18 @@ namespace NP {
 				return reduction_failures;
 			}
 
+
+			unsigned long number_of_jobs_in_por() const
+			{
+				unsigned long jobs_in_por = 0;
+				for(Reduction_set_statistics<Time> rss : reduction_set_statistics){
+					if(rss.reduction_success){
+						jobs_in_por += rss.num_jobs;
+					}
+				}
+				return jobs_in_por;
+			}
+
 			std::vector<Reduction_set_statistics<Time>> get_reduction_set_statistics() const
 			{
 				return reduction_set_statistics;
