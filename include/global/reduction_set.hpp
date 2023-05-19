@@ -110,12 +110,12 @@ namespace NP
 				max_priority = compute_max_priority();
 				initialize_key();
 				// std::cout << "Candidate reduction set contains " << jobs.size() << " jobs" << std::endl;
-				// std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
+				//std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
 
-				/*for (const Job<Time>* j : jobs) {
-					std::cout<<j->get_id()<<" ";
-				}
-				std::cout<<std::endl;*/
+				//for (const Job<Time>* j : jobs) {
+				//	std::cout<<j->get_id()<<" ";
+				//}
+				//std::cout<<std::endl;
 			}
 
 			// For test purposes
@@ -255,7 +255,7 @@ namespace NP
 			Job_map compute_latest_start_times()
 			{
 				Job_map start_times{};
-				for (const Job<Time> *j : jobs)
+				for (const Job<Time> *j : jobs_by_earliest_arrival)
 				{
 					Time LST_j = compute_latest_start_time(j);
 					//std::cout << "LST " << j->get_id() << " " << LST_j << " LFT " << LST_j + j->maximal_cost() << std::endl;
@@ -263,6 +263,7 @@ namespace NP
 
 					if (j->exceeds_deadline(LST_j + j->maximal_cost()))
 					{
+						//std::cout<<"initial deadline miss for " << j->get_id() << std::endl;
 						deadline_miss = true;
 						return start_times;
 					}
@@ -280,10 +281,11 @@ namespace NP
 				start_times.emplace(j_i->get_id(), compute_latest_start_time(j_i));
 				if (j_i->exceeds_deadline(get_latest_start_time(*j_i) + j_i->maximal_cost()))
 				{
+					//std::cout<<"initial deadline miss for " << j_i->get_id() << std::endl;
 					deadline_miss = true;
 					return start_times;
 				}
-				for (const Job<Time> *j : jobs)
+				for (const Job<Time> *j : jobs_by_earliest_arrival)
 				{
 					// we only need to recalculate the LST of j whenever the new job can be released before j's LST
 					if (j_i->earliest_arrival() <= get_latest_start_time(*j))
@@ -291,9 +293,11 @@ namespace NP
 
 						Time LST_new = compute_latest_start_time(j);
 						start_times.emplace(j->get_id(), LST_new);
+						//std::cout << "LST " << j->get_id() << " " << LST_new << " LFT " << LST_new + j->maximal_cost() << std::endl;
 						// check if the newly computed LST gives a deadline miss
 						if (j->exceeds_deadline(get_latest_start_time(*j) + j->maximal_cost()))
 						{
+						//std::cout<<"new deadline miss for " << j->get_id() << std::endl;
 							deadline_miss = true;
 							return start_times;
 						}
@@ -418,12 +422,16 @@ namespace NP
 					// we only use the lower prio jobs here as the higher priority jobs are used later
 					if (j_j->earliest_arrival() < j_i->latest_arrival() && j_j->get_priority() > j_i->get_priority())
 					{
-
+						Time actual_low_prio_interference = (get_latest_start_time(*j_j) + j_j->maximal_cost()) - j_i->latest_arrival() + 1;
+						if(get_latest_start_time(*j_j) >= j_i->latest_arrival() ){
+							actual_low_prio_interference = j_j->maximal_cost();
+						}
+						//std::cout << " actual low prio interference for " << j_j->get_id() << " on " << j_i->get_id() << " = " << actual_low_prio_interference << std::endl;
 						// Linear insert if it is larger than the smallest value in the LPIW array
-						if (j_j->maximal_cost() > LPIW[cpu_availability.size() - 1])
+						if (actual_low_prio_interference > LPIW[cpu_availability.size() - 1])
 						{
 							Time swap = 0;
-							LPIW[cpu_availability.size() - 1] = j_j->maximal_cost();
+							LPIW[cpu_availability.size() - 1] = actual_low_prio_interference;
 							// std::cout<<"LPIW: ["<<LPIW[0]<<" ";
 							for (int LPIW_i = cpu_availability.size() - 1; LPIW_i > 0; LPIW_i--)
 							{
@@ -929,13 +937,18 @@ namespace NP
 			{
 				Time Ctot = 0;
 				Time maxEnd = 0;
+				Time least_start_time = jobs[0]->earliest_arrival();
 
 				for (const Job<Time> *j : jobs)
 				{
 					maxEnd = (maxEnd < j->earliest_arrival() + j->minimal_cost()) ? j->earliest_arrival() + j->minimal_cost() : maxEnd;
 					Ctot += j->minimal_cost();
+					least_start_time = std::min(least_start_time, j->earliest_arrival());
 				}
-				return (ceil((double)Ctot / (double)cpu_availability.size()) > maxEnd) ? ceil((double)Ctot / (double)cpu_availability.size()) : maxEnd;
+				//this returns 0 + that value so the further we go the worse this bound gets
+				//We have two options,  or we do it by setting the value to Amin + bound
+				//						or we determine the earliest time that A job can start in this set and then take the maximum between that and the Amin
+				return std::max(cpu_availability[0].min(),least_start_time) + (ceil((double)Ctot / (double)cpu_availability.size()) > maxEnd) ? ceil((double)Ctot / (double)cpu_availability.size()) : maxEnd;
 			}
 
 			std::vector<Time> compute_possibly_available()

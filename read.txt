@@ -1,0 +1,385 @@
+ actual low prio interference for T1J0 on T0J0 = -45
+ actual low prio interference for T2J0 on T0J0 = -78
+ actual low prio interference for T3J0 on T0J0 = -88
+ actual low prio interference for T4J0 on T0J0 = 71
+ actual low prio interference for T5J0 on T0J0 = 102
+ actual low prio interference for T6J0 on T0J0 = -54
+ actual low prio interference for T7J0 on T0J0 = 36
+ actual low prio interference for T8J0 on T0J0 = 517
+ actual low prio interference for T9J0 on T0J0 = 77
+LST T0J0 616 LFT 670
+ actual low prio interference for T2J0 on T1J0 = -78
+ actual low prio interference for T3J0 on T1J0 = -88
+ actual low prio interference for T4J0 on T1J0 = 71
+ actual low prio interference for T5J0 on T1J0 = 102
+ actual low prio interference for T6J0 on T1J0 = -54
+ actual low prio interference for T7J0 on T1J0 = 36
+ actual low prio interference for T8J0 on T1J0 = 517
+ actual low prio interference for T9J0 on T1J0 = 77
+LST T1J0 670 LFT 725
+ actual low prio interference for T3J0 on T2J0 = -88
+ actual low prio interference for T4J0 on T2J0 = 71
+ actual low prio interference for T5J0 on T2J0 = 102
+ actual low prio interference for T6J0 on T2J0 = -54
+ actual low prio interference for T7J0 on T2J0 = 36
+ actual low prio interference for T8J0 on T2J0 = 517
+ actual low prio interference for T9J0 on T2J0 = 77
+LST T2J0 725 LFT 747
+ actual low prio interference for T4J0 on T3J0 = 71
+ actual low prio interference for T5J0 on T3J0 = 102
+ actual low prio interference for T6J0 on T3J0 = -54
+ actual low prio interference for T7J0 on T3J0 = 36
+ actual low prio interference for T8J0 on T3J0 = 517
+ actual low prio interference for T9J0 on T3J0 = 77
+LST T3J0 747 LFT 759
+ actual low prio interference for T5J0 on T4J0 = 102
+ actual low prio interference for T6J0 on T4J0 = -54
+ actual low prio interference for T7J0 on T4J0 = 36
+ actual low prio interference for T8J0 on T4J0 = 517
+ actual low prio interference for T9J0 on T4J0 = 77
+LST T4J0 759 LFT 930
+ actual low prio interference for T6J0 on T5J0 = -54
+ actual low prio interference for T7J0 on T5J0 = 36
+ actual low prio interference for T8J0 on T5J0 = 517
+ actual low prio interference for T9J0 on T5J0 = 77
+LST T5J0 930 LFT 1132
+ actual low prio interference for T7J0 on T6J0 = 36
+ actual low prio interference for T8J0 on T6J0 = 517
+ actual low prio interference for T9J0 on T6J0 = 77
+LST T6J0 1132 LFT 1178
+ actual low prio interference for T8J0 on T7J0 = 517
+ actual low prio interference for T9J0 on T7J0 = 77
+LST T7J0 1178 LFT 1314
+ actual low prio interference for T9J0 on T8J0 = 77
+LST T8J0 874 LFT 1491
+LST T9J0 1415 LFT 1592
+INITIALIZE NEW REDUCITON SET
+T0J0 T1J0 T2J0 T3J0 T4J0 T5J0 T6J0 T7J0 T8J0 T9J0 
+ actual low prio interference for T1J0 on T0J0 = 55
+ actual low prio interference for T2J0 on T0J0 = 22
+ actual low prio interference for T3J0 on T0J0 = 12
+ actual low prio interference for T4J0 on T0J0 = 171
+ actual low prio interference for T5J0 on T0J0 = 202
+ actual low prio interference for T6J0 on T0J0 = 46
+ actual low prio interference for T7J0 on T0J0 = 136
+ actual low prio interference for T8J0 on T0J0 = 617
+ actual low prio interference for T9J0 on T0J0 = 177
+LST T0J0 716 LFT 770
+ actual low prio interference for T2J0 on T1J0 = 22
+ actual low prio interference for T3J0 on T1J0 = 12
+ actual low prio interference for T4J0 on T1J0 = 171
+ actual low prio interference for T5J0 on T1J0 = 202
+ actual low prio interference for T6J0 on T1J0 = 46
+ actual low prio interference for T7J0 on T1J0 = 136
+ actual low prio interference for T8J0 on T1J0 = 617
+ actual low prio interference for T9J0 on T1J0 = 177
+LST T1J0 770 LFT 825
+ actual low prio interference for T3J0 on T2J0 = 12
+ actual low prio interference for T4J0 on T2J0 = 171
+ actual low prio interference for T5J0 on T2J0 = 202
+ actual low prio interference for T6J0 on T2J0 = 46
+ actual low prio interference for T7J0 on T2J0 = 136
+ actual low prio interference for T8J0 on T2J0 = 617
+ actual low prio interference for T9J0 on T2J0 = 177
+LST T2J0 825 LFT 847
+ actual low prio interference for T4J0 on T3J0 = 171
+ actual low prio interference for T5J0 on T3J0 = 202
+ actual low prio interference for T6J0 on T3J0 = 46
+ actual low prio interference for T7J0 on T3J0 = 136
+ actual low prio interference for T8J0 on T3J0 = 617
+ actual low prio interference for T9J0 on T3J0 = 177
+LST T3J0 847 LFT 859
+ actual low prio interference for T5J0 on T4J0 = 202
+ actual low prio interference for T6J0 on T4J0 = 46
+ actual low prio interference for T7J0 on T4J0 = 136
+ actual low prio interference for T8J0 on T4J0 = 617
+ actual low prio interference for T9J0 on T4J0 = 177
+LST T4J0 859 LFT 1030
+ actual low prio interference for T6J0 on T5J0 = 46
+ actual low prio interference for T7J0 on T5J0 = 136
+ actual low prio interference for T8J0 on T5J0 = 617
+ actual low prio interference for T9J0 on T5J0 = 177
+LST T5J0 1084 LFT 1286
+ actual low prio interference for T7J0 on T6J0 = 136
+ actual low prio interference for T8J0 on T6J0 = 617
+ actual low prio interference for T9J0 on T6J0 = 177
+LST T6J0 1286 LFT 1332
+ actual low prio interference for T8J0 on T7J0 = 617
+ actual low prio interference for T9J0 on T7J0 = 177
+LST T7J0 1332 LFT 1468
+ actual low prio interference for T9J0 on T8J0 = 177
+LST T8J0 974 LFT 1591
+LST T9J0 1469 LFT 1646
+ actual low prio interference for T1J0 on T0J1 = -374
+ actual low prio interference for T2J0 on T0J1 = -352
+ actual low prio interference for T3J0 on T0J1 = -340
+ actual low prio interference for T4J0 on T0J1 = -169
+ actual low prio interference for T5J0 on T0J1 = 33
+ actual low prio interference for T6J0 on T0J1 = 46
+ actual low prio interference for T7J0 on T0J1 = 136
+ actual low prio interference for T8J0 on T0J1 = 392
+ actual low prio interference for T9J0 on T0J1 = 177
+LST T0J1 1545 LFT 1599
+ actual low prio interference for T1J0 on T0J0 = 55
+ actual low prio interference for T2J0 on T0J0 = 22
+ actual low prio interference for T3J0 on T0J0 = 12
+ actual low prio interference for T4J0 on T0J0 = 171
+ actual low prio interference for T5J0 on T0J0 = 202
+ actual low prio interference for T6J0 on T0J0 = 46
+ actual low prio interference for T7J0 on T0J0 = 136
+ actual low prio interference for T8J0 on T0J0 = 617
+ actual low prio interference for T9J0 on T0J0 = 177
+LST T0J0 716 LFT 770
+ actual low prio interference for T2J0 on T1J0 = 22
+ actual low prio interference for T3J0 on T1J0 = 12
+ actual low prio interference for T4J0 on T1J0 = 171
+ actual low prio interference for T5J0 on T1J0 = 202
+ actual low prio interference for T6J0 on T1J0 = 46
+ actual low prio interference for T7J0 on T1J0 = 136
+ actual low prio interference for T8J0 on T1J0 = 617
+ actual low prio interference for T9J0 on T1J0 = 177
+LST T1J0 770 LFT 825
+ actual low prio interference for T3J0 on T2J0 = 12
+ actual low prio interference for T4J0 on T2J0 = 171
+ actual low prio interference for T5J0 on T2J0 = 202
+ actual low prio interference for T6J0 on T2J0 = 46
+ actual low prio interference for T7J0 on T2J0 = 136
+ actual low prio interference for T8J0 on T2J0 = 617
+ actual low prio interference for T9J0 on T2J0 = 177
+LST T2J0 825 LFT 847
+ actual low prio interference for T4J0 on T3J0 = 171
+ actual low prio interference for T5J0 on T3J0 = 202
+ actual low prio interference for T6J0 on T3J0 = 46
+ actual low prio interference for T7J0 on T3J0 = 136
+ actual low prio interference for T8J0 on T3J0 = 617
+ actual low prio interference for T9J0 on T3J0 = 177
+LST T3J0 847 LFT 859
+ actual low prio interference for T5J0 on T4J0 = 202
+ actual low prio interference for T6J0 on T4J0 = 46
+ actual low prio interference for T7J0 on T4J0 = 136
+ actual low prio interference for T8J0 on T4J0 = 617
+ actual low prio interference for T9J0 on T4J0 = 177
+LST T4J0 859 LFT 1030
+ actual low prio interference for T6J0 on T5J0 = 46
+ actual low prio interference for T7J0 on T5J0 = 136
+ actual low prio interference for T8J0 on T5J0 = 617
+ actual low prio interference for T9J0 on T5J0 = 177
+LST T5J0 1139 LFT 1341
+ actual low prio interference for T7J0 on T6J0 = 136
+ actual low prio interference for T8J0 on T6J0 = 617
+ actual low prio interference for T9J0 on T6J0 = 177
+LST T6J0 1341 LFT 1387
+ actual low prio interference for T8J0 on T7J0 = 617
+ actual low prio interference for T9J0 on T7J0 = 177
+LST T7J0 1387 LFT 1523
+ actual low prio interference for T9J0 on T8J0 = 177
+LST T8J0 974 LFT 1591
+LST T9J0 1524 LFT 1701
+ actual low prio interference for T1J0 on T0J1 = -274
+ actual low prio interference for T2J0 on T0J1 = -252
+ actual low prio interference for T3J0 on T0J1 = -240
+ actual low prio interference for T4J0 on T0J1 = -69
+ actual low prio interference for T5J0 on T0J1 = 187
+ actual low prio interference for T6J0 on T0J1 = 46
+ actual low prio interference for T7J0 on T0J1 = 136
+ actual low prio interference for T8J0 on T0J1 = 492
+ actual low prio interference for T9J0 on T0J1 = 177
+ actual low prio interference for T1J1 on T0J1 = -1045
+LST T0J1 1645 LFT 1699
+ actual low prio interference for T2J0 on T1J1 = -252
+ actual low prio interference for T3J0 on T1J1 = -240
+ actual low prio interference for T4J0 on T1J1 = -69
+ actual low prio interference for T5J0 on T1J1 = 187
+ actual low prio interference for T6J0 on T1J1 = 46
+ actual low prio interference for T7J0 on T1J1 = 136
+ actual low prio interference for T8J0 on T1J1 = 492
+ actual low prio interference for T9J0 on T1J1 = 177
+LST T1J1 1754 LFT 1809
+ actual low prio interference for T1J0 on T0J0 = 55
+ actual low prio interference for T2J0 on T0J0 = 22
+ actual low prio interference for T3J0 on T0J0 = 12
+ actual low prio interference for T4J0 on T0J0 = 171
+ actual low prio interference for T5J0 on T0J0 = 202
+ actual low prio interference for T6J0 on T0J0 = 46
+ actual low prio interference for T7J0 on T0J0 = 136
+ actual low prio interference for T8J0 on T0J0 = 617
+ actual low prio interference for T9J0 on T0J0 = 177
+LST T0J0 716 LFT 770
+ actual low prio interference for T2J0 on T1J0 = 22
+ actual low prio interference for T3J0 on T1J0 = 12
+ actual low prio interference for T4J0 on T1J0 = 171
+ actual low prio interference for T5J0 on T1J0 = 202
+ actual low prio interference for T6J0 on T1J0 = 46
+ actual low prio interference for T7J0 on T1J0 = 136
+ actual low prio interference for T8J0 on T1J0 = 617
+ actual low prio interference for T9J0 on T1J0 = 177
+LST T1J0 770 LFT 825
+ actual low prio interference for T3J0 on T2J0 = 12
+ actual low prio interference for T4J0 on T2J0 = 171
+ actual low prio interference for T5J0 on T2J0 = 202
+ actual low prio interference for T6J0 on T2J0 = 46
+ actual low prio interference for T7J0 on T2J0 = 136
+ actual low prio interference for T8J0 on T2J0 = 617
+ actual low prio interference for T9J0 on T2J0 = 177
+LST T2J0 825 LFT 847
+ actual low prio interference for T4J0 on T3J0 = 171
+ actual low prio interference for T5J0 on T3J0 = 202
+ actual low prio interference for T6J0 on T3J0 = 46
+ actual low prio interference for T7J0 on T3J0 = 136
+ actual low prio interference for T8J0 on T3J0 = 617
+ actual low prio interference for T9J0 on T3J0 = 177
+LST T3J0 847 LFT 859
+ actual low prio interference for T5J0 on T4J0 = 202
+ actual low prio interference for T6J0 on T4J0 = 46
+ actual low prio interference for T7J0 on T4J0 = 136
+ actual low prio interference for T8J0 on T4J0 = 617
+ actual low prio interference for T9J0 on T4J0 = 177
+LST T4J0 859 LFT 1030
+ actual low prio interference for T6J0 on T5J0 = 46
+ actual low prio interference for T7J0 on T5J0 = 136
+ actual low prio interference for T8J0 on T5J0 = 617
+ actual low prio interference for T9J0 on T5J0 = 177
+LST T5J0 1161 LFT 1363
+ actual low prio interference for T7J0 on T6J0 = 136
+ actual low prio interference for T8J0 on T6J0 = 617
+ actual low prio interference for T9J0 on T6J0 = 177
+LST T6J0 1363 LFT 1409
+ actual low prio interference for T8J0 on T7J0 = 617
+ actual low prio interference for T9J0 on T7J0 = 177
+LST T7J0 1409 LFT 1545
+ actual low prio interference for T9J0 on T8J0 = 177
+LST T8J0 974 LFT 1591
+LST T9J0 1546 LFT 1723
+ actual low prio interference for T1J0 on T0J1 = -274
+ actual low prio interference for T2J0 on T0J1 = -252
+ actual low prio interference for T3J0 on T0J1 = -240
+ actual low prio interference for T4J0 on T0J1 = -69
+ actual low prio interference for T5J0 on T0J1 = 202
+ actual low prio interference for T6J0 on T0J1 = 46
+ actual low prio interference for T7J0 on T0J1 = 136
+ actual low prio interference for T8J0 on T0J1 = 492
+ actual low prio interference for T9J0 on T0J1 = 177
+ actual low prio interference for T1J1 on T0J1 = 55
+ actual low prio interference for T2J1 on T0J1 = -1078
+LST T0J1 1645 LFT 1699
+ actual low prio interference for T2J0 on T1J1 = -252
+ actual low prio interference for T3J0 on T1J1 = -240
+ actual low prio interference for T4J0 on T1J1 = -69
+ actual low prio interference for T5J0 on T1J1 = 202
+ actual low prio interference for T6J0 on T1J1 = 46
+ actual low prio interference for T7J0 on T1J1 = 136
+ actual low prio interference for T8J0 on T1J1 = 492
+ actual low prio interference for T9J0 on T1J1 = 177
+ actual low prio interference for T2J1 on T1J1 = -1078
+LST T1J1 1754 LFT 1809
+ actual low prio interference for T3J0 on T2J1 = -240
+ actual low prio interference for T4J0 on T2J1 = -69
+ actual low prio interference for T5J0 on T2J1 = 202
+ actual low prio interference for T6J0 on T2J1 = 46
+ actual low prio interference for T7J0 on T2J1 = 136
+ actual low prio interference for T8J0 on T2J1 = 492
+ actual low prio interference for T9J0 on T2J1 = 177
+LST T2J1 1831 LFT 1853
+ actual low prio interference for T1J0 on T0J0 = 55
+ actual low prio interference for T2J0 on T0J0 = 22
+ actual low prio interference for T3J0 on T0J0 = 12
+ actual low prio interference for T4J0 on T0J0 = 171
+ actual low prio interference for T5J0 on T0J0 = 202
+ actual low prio interference for T6J0 on T0J0 = 46
+ actual low prio interference for T7J0 on T0J0 = 136
+ actual low prio interference for T8J0 on T0J0 = 617
+ actual low prio interference for T9J0 on T0J0 = 177
+LST T0J0 716 LFT 770
+ actual low prio interference for T2J0 on T1J0 = 22
+ actual low prio interference for T3J0 on T1J0 = 12
+ actual low prio interference for T4J0 on T1J0 = 171
+ actual low prio interference for T5J0 on T1J0 = 202
+ actual low prio interference for T6J0 on T1J0 = 46
+ actual low prio interference for T7J0 on T1J0 = 136
+ actual low prio interference for T8J0 on T1J0 = 617
+ actual low prio interference for T9J0 on T1J0 = 177
+LST T1J0 770 LFT 825
+ actual low prio interference for T3J0 on T2J0 = 12
+ actual low prio interference for T4J0 on T2J0 = 171
+ actual low prio interference for T5J0 on T2J0 = 202
+ actual low prio interference for T6J0 on T2J0 = 46
+ actual low prio interference for T7J0 on T2J0 = 136
+ actual low prio interference for T8J0 on T2J0 = 617
+ actual low prio interference for T9J0 on T2J0 = 177
+LST T2J0 825 LFT 847
+ actual low prio interference for T4J0 on T3J0 = 171
+ actual low prio interference for T5J0 on T3J0 = 202
+ actual low prio interference for T6J0 on T3J0 = 46
+ actual low prio interference for T7J0 on T3J0 = 136
+ actual low prio interference for T8J0 on T3J0 = 617
+ actual low prio interference for T9J0 on T3J0 = 177
+LST T3J0 847 LFT 859
+ actual low prio interference for T5J0 on T4J0 = 202
+ actual low prio interference for T6J0 on T4J0 = 46
+ actual low prio interference for T7J0 on T4J0 = 136
+ actual low prio interference for T8J0 on T4J0 = 617
+ actual low prio interference for T9J0 on T4J0 = 177
+LST T4J0 859 LFT 1030
+ actual low prio interference for T6J0 on T5J0 = 46
+ actual low prio interference for T7J0 on T5J0 = 136
+ actual low prio interference for T8J0 on T5J0 = 617
+ actual low prio interference for T9J0 on T5J0 = 177
+LST T5J0 1173 LFT 1375
+ actual low prio interference for T7J0 on T6J0 = 136
+ actual low prio interference for T8J0 on T6J0 = 617
+ actual low prio interference for T9J0 on T6J0 = 177
+LST T6J0 1375 LFT 1421
+ actual low prio interference for T8J0 on T7J0 = 617
+ actual low prio interference for T9J0 on T7J0 = 177
+LST T7J0 1421 LFT 1557
+ actual low prio interference for T9J0 on T8J0 = 177
+LST T8J0 974 LFT 1591
+LST T9J0 1558 LFT 1735
+ actual low prio interference for T1J0 on T0J1 = -274
+ actual low prio interference for T2J0 on T0J1 = -252
+ actual low prio interference for T3J0 on T0J1 = -240
+ actual low prio interference for T4J0 on T0J1 = -69
+ actual low prio interference for T5J0 on T0J1 = 202
+ actual low prio interference for T6J0 on T0J1 = 46
+ actual low prio interference for T7J0 on T0J1 = 136
+ actual low prio interference for T8J0 on T0J1 = 492
+ actual low prio interference for T9J0 on T0J1 = 177
+ actual low prio interference for T1J1 on T0J1 = 55
+ actual low prio interference for T2J1 on T0J1 = 22
+ actual low prio interference for T3J1 on T0J1 = -1088
+LST T0J1 1645 LFT 1699
+ actual low prio interference for T2J0 on T1J1 = -252
+ actual low prio interference for T3J0 on T1J1 = -240
+ actual low prio interference for T4J0 on T1J1 = -69
+ actual low prio interference for T5J0 on T1J1 = 202
+ actual low prio interference for T6J0 on T1J1 = 46
+ actual low prio interference for T7J0 on T1J1 = 136
+ actual low prio interference for T8J0 on T1J1 = 492
+ actual low prio interference for T9J0 on T1J1 = 177
+ actual low prio interference for T2J1 on T1J1 = 22
+ actual low prio interference for T3J1 on T1J1 = -1088
+LST T1J1 1754 LFT 1809
+ actual low prio interference for T3J0 on T2J1 = -240
+ actual low prio interference for T4J0 on T2J1 = -69
+ actual low prio interference for T5J0 on T2J1 = 202
+ actual low prio interference for T6J0 on T2J1 = 46
+ actual low prio interference for T7J0 on T2J1 = 136
+ actual low prio interference for T8J0 on T2J1 = 492
+ actual low prio interference for T9J0 on T2J1 = 177
+ actual low prio interference for T3J1 on T2J1 = -1088
+LST T2J1 1831 LFT 1853
+ actual low prio interference for T4J0 on T3J1 = -69
+ actual low prio interference for T5J0 on T3J1 = 202
+ actual low prio interference for T6J0 on T3J1 = 46
+ actual low prio interference for T7J0 on T3J1 = 136
+ actual low prio interference for T8J0 on T3J1 = 492
+ actual low prio interference for T9J0 on T3J1 = 177
+LST T3J1 1865 LFT 1877
+I would create the reduction set using the following jobs:
+	T0J0 T1J0 T2J0 T3J0 T4J0 T5J0 T6J0 T7J0 T8J0 T9J0 T0J1 T1J1 T2J1 T3J1 
+PA old0 
+CA old0 
+Where the new system states would be:
+	Cores are Possibly available at times: 1151 
+	Cores are Certainly available at times: 1735 
+examples/test.csv,  1,  14,  2,  1,  1,  0.001733,  4.121094,  0,  1,  1,  0,  14
