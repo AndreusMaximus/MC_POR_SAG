@@ -359,7 +359,7 @@ namespace NP
 				Time HPIW = 0;
 
 				// here we calculate the interference caused by jobs with a higher priority than j_i
-				for (const Job<Time> *j_j : jobs_by_latest_arrival)
+				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
 				{
 					if (j_j != j_i && j_j->get_priority() <= j_i->get_priority())
 					{
@@ -404,7 +404,7 @@ namespace NP
 					LPIW[i] = 0;
 				}
 
-				for (const Job<Time> *j_j : jobs_by_latest_arrival)
+				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
 				{
 					// Continue if we have the same job
 					if (j_j == j_i)
