@@ -404,7 +404,7 @@ namespace NP
 					LPIW[i] = 0;
 				}
 
-				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
+				for (const Job<Time> *j_j : jobs_by_latest_arrival)
 				{
 					// Continue if we have the same job
 					if (j_j == j_i)
