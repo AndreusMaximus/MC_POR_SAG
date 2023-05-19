@@ -426,6 +426,8 @@ namespace NP
 						if(get_latest_start_time(*j_j) >= j_i->latest_arrival() ){
 							actual_low_prio_interference = j_j->maximal_cost();
 						}
+						//this is the old implementation so comment this out for the improved version
+						actual_low_prio_interference = j_j->maximal_cost();
 						//std::cout << " actual low prio interference for " << j_j->get_id() << " on " << j_i->get_id() << " = " << actual_low_prio_interference << std::endl;
 						// Linear insert if it is larger than the smallest value in the LPIW array
 						if (actual_low_prio_interference > LPIW[cpu_availability.size() - 1])
