@@ -255,7 +255,7 @@ namespace NP
 			Job_map compute_latest_start_times()
 			{
 				Job_map start_times{};
-				for (const Job<Time> *j : jobs_by_earliest_arrival)
+				for (const Job<Time> *j : jobs_by_latest_arrival)
 				{
 					Time LST_j = compute_latest_start_time(j);
 					//std::cout << "LST " << j->get_id() << " " << LST_j << " LFT " << LST_j + j->maximal_cost() << std::endl;
@@ -285,7 +285,7 @@ namespace NP
 					deadline_miss = true;
 					return start_times;
 				}
-				for (const Job<Time> *j : jobs_by_earliest_arrival)
+				for (const Job<Time> *j : jobs_by_latest_arrival)
 				{
 					// we only need to recalculate the LST of j whenever the new job can be released before j's LST
 					if (j_i->earliest_arrival() <= get_latest_start_time(*j))
