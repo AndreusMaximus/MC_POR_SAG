@@ -75,7 +75,13 @@ namespace NP
 				deadline_miss = false;
 				std::sort(jobs_by_latest_arrival.begin(), jobs_by_latest_arrival.end(),
 						  [](const Job<Time> *i, const Job<Time> *j) -> bool
-						  { return i->latest_arrival() < j->latest_arrival(); });
+						  { if(i->latest_arrival() < j->latest_arrival()){
+							return true;
+						  }else if(i->latest_arrival() > j->latest_arrival()){
+							return false;
+						  }else{
+							return i->get_priority() < j->get_priority();
+						  }; });
 
 				std::sort(jobs_by_earliest_arrival.begin(), jobs_by_earliest_arrival.end(),
 						  [](const Job<Time> *i, const Job<Time> *j) -> bool
@@ -161,7 +167,7 @@ namespace NP
 
 			void add_job(const Job<Time> *jx, std::size_t index)
 			{
-
+				deadline_miss = false;
 				num_interfering_jobs_added++;
 				jobs.push_back(jx);
 
@@ -171,7 +177,13 @@ namespace NP
 
 				insert_sorted(jobs_by_latest_arrival, jx,
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
-							  { return i->latest_arrival() < j->latest_arrival(); });
+							  { if(i->latest_arrival() < j->latest_arrival()){
+							return true;
+						  }else if(i->latest_arrival() > j->latest_arrival()){
+							return false;
+						  }else{
+							return i->get_priority() < j->get_priority();
+						  }; });
 				insert_sorted(jobs_by_earliest_arrival, jx,
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
 							  { return i->earliest_arrival() < j->earliest_arrival(); });
@@ -263,59 +275,18 @@ namespace NP
 				for (const Job<Time> *j : jobs_by_latest_arrival)
 				{
 					Time LST_j = compute_latest_start_time(j);
-					// std::cout << "LST " << j->get_id() << " " << LST_j << " LFT " << LST_j + j->maximal_cost() << std::endl;
+					//std::cout << "LST " << j->get_id() << " " << LST_j << " LFT " << LST_j + j->maximal_cost() << std::endl;
 					latest_start_times.emplace(j->get_id(), LST_j);
 
 					if (j->exceeds_deadline(LST_j + j->maximal_cost()))
 					{
 						// std::cout<<"initial deadline miss for " << j->get_id() << std::endl;
 						deadline_miss = true;
-						return ;
+						return;
 					}
 				}
 
 				return;
-			}
-
-			// updated method for computing the latest start times for all jobs, excluding the jobs where the j_i->rmin <= j_rmax
-			void compute_latest_start_times(const Job<Time> *j_i)
-			{
-				// std::unordered_map<JobID, Priority> job_prio_map = preprocess_priorities();
-
-				latest_start_times = {};
-				//i think im still allowed to do this, but i should look back at it when i get errors :)
-				latest_start_times.emplace(j_i->get_id(), compute_latest_start_time(j_i));
-				if (j_i->exceeds_deadline(get_latest_start_time(*j_i) + j_i->maximal_cost()))
-				{
-					// std::cout<<"initial deadline miss for " << j_i->get_id() << std::endl;
-					deadline_miss = true;
-					return;
-				}
-				for (const Job<Time> *j : jobs_by_latest_arrival)
-				{
-					// we only need to recalculate the LST of j whenever the new job can be released before j's LST
-					if (j_i->earliest_arrival() <= get_latest_start_time(*j))
-					{
-
-						Time LST_new = compute_latest_start_time(j);
-						latest_start_times.emplace(j->get_id(), LST_new);
-						// std::cout << "LST " << j->get_id() << " " << LST_new << " LFT " << LST_new + j->maximal_cost() << std::endl;
-						//  check if the newly computed LST gives a deadline miss
-						if (j->exceeds_deadline(get_latest_start_time(*j) + j->maximal_cost()))
-						{
-							// std::cout<<"new deadline miss for " << j->get_id() << std::endl;
-							deadline_miss = true;
-							return ;
-						}
-					}
-					else
-					{
-						// otherwise we will just reuse the previous value
-						latest_start_times.emplace(j->get_id(), latest_start_times[j->get_id()]);
-					}
-				}
-
-				return ;
 			}
 
 			Time compute_latest_start_time(const Job<Time> *j_i)
@@ -335,14 +306,14 @@ namespace NP
 				//	std::cout<<cpu_availability[i].max()<<" ";
 				// }
 				// std::cout<<"]"<<std::endl;
-				// std::cout << "REFERENCE POINT = " << ref << std::endl;
-				// std::cout << "[";
+				//std::cout << "REFERENCE POINT = " << ref << std::endl;
+				//std::cout << "[";
 
-				// for (int i = 0; i < cpu_availability.size(); i++)
+				//for (int i = 0; i < cpu_availability.size(); i++)
 				//{
-				// std::cout << BIW[i] << " ";
-				// }
-				// std::cout <<"]"<< std::endl;
+				//	std::cout << BIW[i] << " ";
+				//}
+				//std::cout << "]" << std::endl;
 
 				// std::cout << "[";
 				for (int i = 1; i < cpu_availability.size(); i++)
@@ -365,26 +336,32 @@ namespace NP
 				Time HPIW = 0;
 
 				// here we calculate the interference caused by jobs with a higher priority than j_i
+				//std::cout << "HPIW: ";
 				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
 				{
 					if (j_j != j_i && j_j->get_priority() <= j_i->get_priority())
 					{
 						// for the improvement we will only count high prio jobs that have a LST >= r_i^max
-						Time current_j_j_lst = (j_j->latest_arrival() >= j_i->latest_arrival()) ? j_j->latest_arrival() : get_latest_start_time(*j_j);
-						if (j_j->earliest_arrival() <= LST_i && current_j_j_lst >= j_i->latest_arrival())
+						Time current_j_j_lst = (j_j->latest_arrival() <= j_i->latest_arrival()) ? j_j->latest_arrival() : get_latest_start_time(*j_j);
+						//std::cout << " | " << current_j_j_lst << " - " << j_j->latest_arrival() << " : " << j_i->latest_arrival();
+						if (j_j->earliest_arrival() <= LST_i)
 						{
-							HPIW += j_j->maximal_cost();
-							// if the high prio interference is larger than the largest eq
-							// Fancy Fill algorithm
-							// see whiteboard :*
-							LST_i = j_i->latest_arrival() + ref + HPIW;
-
-							for (int i = 0; i < cpu_availability.size() - 1; i++)
+							if (current_j_j_lst >= j_i->latest_arrival())
 							{
-								if (HPIW >= Ceq[cpu_availability.size() - 2 - i])
+								// std::cout << j_j->get_id();
+								HPIW += j_j->maximal_cost();
+								// if the high prio interference is larger than the largest eq
+								// Fancy Fill algorithm
+								// see whiteboard :*
+								LST_i = j_i->latest_arrival() + ref + HPIW;
+
+								for (int i = 0; i < cpu_availability.size() - 1; i++)
 								{
-									LST_i = j_i->latest_arrival() + ref + BIW[cpu_availability.size() - 1 - i] + floor((HPIW - Ceq[cpu_availability.size() - 2 - i]) / (cpu_availability.size() - i));
-									break;
+									if (HPIW >= Ceq[cpu_availability.size() - 2 - i])
+									{
+										LST_i = j_i->latest_arrival() + ref + BIW[cpu_availability.size() - 1 - i] + floor((HPIW - Ceq[cpu_availability.size() - 2 - i]) / (cpu_availability.size() - i));
+										break;
+									}
 								}
 							}
 						}
@@ -392,6 +369,7 @@ namespace NP
 						{
 							// std::cout << "\t LST for Job " << j_i->get_id() << " = " << LST << std::endl;
 							latest_LST = std::max(latest_LST, LST_i);
+							//std::cout << std::endl;
 							return LST_i;
 						}
 					}
@@ -399,6 +377,7 @@ namespace NP
 
 				// std::cout << "\t UB on LST for Job " << j_i->get_id() << " = " << LST << std::endl;
 				latest_LST = std::max(latest_LST, LST_i);
+				//std::cout << std::endl;
 				return LST_i;
 			}
 
@@ -433,36 +412,51 @@ namespace NP
 					if (j_j->earliest_arrival() < j_i->latest_arrival())
 					{
 						Time actual_low_prio_interference = 0;
-						//At this point i do not properly switch between calculating for low or high jobs
-						if(j_j->get_priority() <= j_i->get_priority()){
-							//high/equal prio jobs
-							if(j_j->latest_arrival() >= j_i->latest_arrival()){
-								//this means that it will be used for the HPIW calculation so the interference is 0
+						// At this point i do not properly switch between calculating for low or high jobs
+						if (j_j->get_priority() <= j_i->get_priority())
+						{
+							// high/equal prio jobs
+							if (j_j->latest_arrival() >= j_i->latest_arrival())
+							{
+								// this means that it will be used for the HPIW calculation so the interference is 0
 								actual_low_prio_interference = 0;
-							}else{
-								//this means that it has its latest release time before the job j_i
-								//which in turn means that is MUST have an LST
+							}
+							else
+							{
+								// this means that it has its latest release time before the job j_i
+								// which in turn means that is MUST have an LST
 								actual_low_prio_interference = get_latest_start_time(*j_j) + j_j->maximal_cost() - (j_i->latest_arrival() - 1);
 							}
-
-						}else{
-							//low prio jobs
-							if(j_j->latest_arrival() >= j_i->latest_arrival()){
-								//this means that it is able to be released JUST before r_i^max so we suffer maximal interference
+						}
+						else
+						{
+							// low prio jobs
+							if (j_j->latest_arrival() >= j_i->latest_arrival())
+							{
+								// this means that it is able to be released JUST before r_i^max so we suffer maximal interference
 								actual_low_prio_interference = j_j->maximal_cost();
-							}else{
-								//this means that it has its latest release time before the job j_i
-								//which in turn means that is MUST have an LST
-								actual_low_prio_interference = get_latest_start_time(*j_j) + j_j->maximal_cost() - (j_i->latest_arrival() - 1);
 							}
+							else
+							{
+								// this means that it has its latest release time before the job j_i
+								// which in turn means that is MUST have an LST
 
+								if (get_latest_start_time(*j_j) > j_i->latest_arrival())
+								{
+									actual_low_prio_interference = j_j->maximal_cost();
+								}
+								else
+								{
+									actual_low_prio_interference = get_latest_start_time(*j_j) + j_j->maximal_cost() - (j_i->latest_arrival() - 1);
+								}
+							}
 						}
 
-						//std::cout<<actual_low_prio_interference<<std::endl;
-						// this is the old implementation so comment this out for the improved version
-						// actual_low_prio_interference = j_j->maximal_cost();
-						// std::cout << " actual low prio interference for " << j_j->get_id() << " on " << j_i->get_id() << " = " << actual_low_prio_interference << std::endl;
-						//  Linear insert if it is larger than the smallest value in the LPIW array
+						// std::cout<<actual_low_prio_interference<<std::endl;
+						//  this is the old implementation so comment this out for the improved version
+						//  actual_low_prio_interference = j_j->maximal_cost();
+						//  std::cout << " actual low prio interference for " << j_j->get_id() << " on " << j_i->get_id() << " = " << actual_low_prio_interference << std::endl;
+						//   Linear insert if it is larger than the smallest value in the LPIW array
 						if (actual_low_prio_interference > LPIW[cpu_availability.size() - 1])
 						{
 							Time swap = 0;
@@ -504,22 +498,6 @@ namespace NP
 				// return LPIW;
 			}
 
-			// Returns the smallest wcet among the jobs with a lower priority than job
-			/*Time min_lower_priority_wcet(const Job<Time> &job) const
-			{
-				auto pos = std::find_if(jobs_by_wcet.begin(), jobs_by_wcet.end(),
-										[&job](const Job<Time> *j)
-										{ return job.higher_priority_than(*j); });
-
-				if (pos == jobs_by_wcet.end())
-				{
-					return 0;
-				}
-				else
-				{
-					return (*pos)->maximal_cost();
-				}
-			}*/
 
 			Time compute_latest_idle_time()
 			{

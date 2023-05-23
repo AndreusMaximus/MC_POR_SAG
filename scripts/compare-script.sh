@@ -37,7 +37,7 @@ done
 
 if [ $generate_jobsets -eq 1 ]; then
     echo "(1) Making test sets"
-    cd ~/Downloads/real-time-task-generators-main
+    cd ~/Downloads/real-time-task-generators-main/
     mkdir jobsets
     cd jobsets
     rm *
