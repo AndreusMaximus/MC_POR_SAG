@@ -11,6 +11,8 @@
 
 #include "jobs.hpp"
 
+#include <chrono>
+
 namespace NP
 {
 
@@ -54,6 +56,9 @@ namespace NP
 			std::map<std::size_t, const Job<Time> *> job_by_index;
 
 			bool deadline_miss;
+
+			double insert_time;
+			double lst_time;
 
 		public:
 			// CPU availability gaat dus wat anders worden a.d.h.v de meerdere cores
@@ -174,7 +179,7 @@ namespace NP
 				index_by_job.emplace(jx->get_id(), index);
 				job_by_index.emplace(std::make_pair(index, jobs.back()));
 				indices.push_back(index);
-
+				auto s = std::chrono::high_resolution_clock::now();
 				insert_sorted(jobs_by_latest_arrival, jx,
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
 							  { if(i->latest_arrival() < j->latest_arrival()){
@@ -196,16 +201,27 @@ namespace NP
 				insert_sorted(jobs_by_rmin_cmin, jx,
 							  [](const Job<Time> *i, const Job<Time> *j) -> bool
 							  { return i->earliest_arrival() + i->minimal_cost() < j->earliest_arrival() + j->minimal_cost(); });
-
+				//auto e = std::chrono::high_resolution_clock::now();
+				//auto d = std::chrono::duration_cast<std::chrono::milliseconds>(e - s);
+				//insert_time += d.count();
 				// latest_busy_time = compute_latest_busy_time();
 				latest_idle_time = compute_latest_idle_time();
-				compute_latest_start_times();
+				//s = std::chrono::high_resolution_clock::now();
+				compute_latest_start_times(jx);
+				//e = std::chrono::high_resolution_clock::now();
+				//d = std::chrono::duration_cast<std::chrono::milliseconds>(e - s);
+				//lst_time += d.count();
 				key = key ^ jx->get_key();
 
 				if (!jx->priority_at_least(max_priority))
 				{
 					max_priority = jx->get_priority();
 				}
+			}
+
+			void get_timings()
+			{
+				std::cout << " insert: " << insert_time << " lst: " << lst_time << std::endl;
 			}
 
 			Job_set get_jobs() const
@@ -275,7 +291,7 @@ namespace NP
 				for (const Job<Time> *j : jobs_by_latest_arrival)
 				{
 					Time LST_j = compute_latest_start_time(j);
-					//std::cout << "LST " << j->get_id() << " " << LST_j << " LFT " << LST_j + j->maximal_cost() << std::endl;
+					// std::cout << "LST " << j->get_id() << " " << LST_j << " LFT " << LST_j + j->maximal_cost() << std::endl;
 					latest_start_times.emplace(j->get_id(), LST_j);
 
 					if (j->exceeds_deadline(LST_j + j->maximal_cost()))
@@ -289,6 +305,29 @@ namespace NP
 				return;
 			}
 
+			void compute_latest_start_times(const Job<Time> *j_i)
+			{
+				// latest_start_times = {};
+				for (const Job<Time> *j : jobs_by_latest_arrival)
+				{
+					if (j->latest_arrival() >= j_i->latest_arrival())
+					{
+						Time LST_j = compute_latest_start_time(j);
+						// std::cout << "LST " << j->get_id() << " " << LST_j << " LFT " << LST_j + j->maximal_cost() << std::endl;
+						latest_start_times[j->get_id()] = LST_j;
+
+						if (j->exceeds_deadline(LST_j + j->maximal_cost()))
+						{
+							// std::cout<<"initial deadline miss for " << j->get_id() << std::endl;
+							deadline_miss = true;
+							return;
+						}
+					}
+				}
+
+				return;
+			}
+
 			Time compute_latest_start_time(const Job<Time> *j_i)
 			{
 
@@ -296,7 +335,7 @@ namespace NP
 
 				Time Ceq[cpu_availability.size() - 1];
 				Time BIW[cpu_availability.size()];
-				compute_m_blocking_interfering_workload(j_i, BIW);
+				typename std::vector<const Job<Time> *>::const_iterator biw_end_it = compute_m_blocking_interfering_workload(j_i, BIW);
 				std::sort(BIW, BIW + cpu_availability.size());
 				//  std::cout<<"managed to do BIW"<<std::endl;
 				// Time ref = BIW[cpu_availability.size()-1];
@@ -306,14 +345,14 @@ namespace NP
 				//	std::cout<<cpu_availability[i].max()<<" ";
 				// }
 				// std::cout<<"]"<<std::endl;
-				//std::cout << "REFERENCE POINT = " << ref << std::endl;
-				//std::cout << "[";
+				// std::cout << "REFERENCE POINT = " << ref << std::endl;
+				// std::cout << "[";
 
-				//for (int i = 0; i < cpu_availability.size(); i++)
+				// for (int i = 0; i < cpu_availability.size(); i++)
 				//{
 				//	std::cout << BIW[i] << " ";
-				//}
-				//std::cout << "]" << std::endl;
+				// }
+				// std::cout << "]" << std::endl;
 
 				// std::cout << "[";
 				for (int i = 1; i < cpu_availability.size(); i++)
@@ -336,14 +375,16 @@ namespace NP
 				Time HPIW = 0;
 
 				// here we calculate the interference caused by jobs with a higher priority than j_i
-				//std::cout << "HPIW: ";
-				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
+				// std::cout << "HPIW: ";
+				const Job<Time> *j_j;
+				for(auto it = biw_end_it; it != jobs_by_earliest_arrival.end(); it ++)
 				{
+					j_j = *it;
 					if (j_j != j_i && j_j->get_priority() <= j_i->get_priority())
 					{
 						// for the improvement we will only count high prio jobs that have a LST >= r_i^max
 						Time current_j_j_lst = (j_j->latest_arrival() <= j_i->latest_arrival()) ? j_j->latest_arrival() : get_latest_start_time(*j_j);
-						//std::cout << " | " << current_j_j_lst << " - " << j_j->latest_arrival() << " : " << j_i->latest_arrival();
+						// std::cout << " | " << current_j_j_lst << " - " << j_j->latest_arrival() << " : " << j_i->latest_arrival();
 						if (j_j->earliest_arrival() <= LST_i)
 						{
 							if (current_j_j_lst >= j_i->latest_arrival())
@@ -353,36 +394,46 @@ namespace NP
 								// if the high prio interference is larger than the largest eq
 								// Fancy Fill algorithm
 								// see whiteboard :*
-								LST_i = j_i->latest_arrival() + ref + HPIW;
-
-								for (int i = 0; i < cpu_availability.size() - 1; i++)
-								{
-									if (HPIW >= Ceq[cpu_availability.size() - 2 - i])
-									{
-										LST_i = j_i->latest_arrival() + ref + BIW[cpu_availability.size() - 1 - i] + floor((HPIW - Ceq[cpu_availability.size() - 2 - i]) / (cpu_availability.size() - i));
-										break;
-									}
-								}
 							}
 						}
 						else
 						{
-							// std::cout << "\t LST for Job " << j_i->get_id() << " = " << LST << std::endl;
-							latest_LST = std::max(latest_LST, LST_i);
-							//std::cout << std::endl;
-							return LST_i;
+
+							// just recalculate the LST now and not every time within the loop
+							LST_i = j_i->latest_arrival() + ref + HPIW;
+
+							for (int i = 0; i < cpu_availability.size() - 1; i++)
+							{
+								if (HPIW >= Ceq[cpu_availability.size() - 2 - i])
+								{
+									LST_i = j_i->latest_arrival() + ref + BIW[cpu_availability.size() - 1 - i] + floor((HPIW - Ceq[cpu_availability.size() - 2 - i]) / (cpu_availability.size() - i));
+									break;
+								}
+							}
+							// if its still smaller than the LST then we can return.
+							if (j_j->earliest_arrival() > LST_i)
+							{
+								// std::cout << "\t LST for Job " << j_i->get_id() << " = " << LST << std::endl;
+								latest_LST = std::max(latest_LST, LST_i);
+								// std::cout << std::endl;
+								return LST_i;
+							}
+							if(current_j_j_lst >= j_i->latest_arrival())
+							{
+								HPIW += j_j->maximal_cost();
+							}
 						}
 					}
 				}
 
 				// std::cout << "\t UB on LST for Job " << j_i->get_id() << " = " << LST << std::endl;
 				latest_LST = std::max(latest_LST, LST_i);
-				//std::cout << std::endl;
+				// std::cout << std::endl;
 				return LST_i;
 			}
 
 			// Compute the blocking interfering workload as described in the paper
-			void compute_m_blocking_interfering_workload(const Job<Time> *j_i, Time LPIW[])
+			typename std::vector<const Job<Time> *>::const_iterator compute_m_blocking_interfering_workload(const Job<Time> *j_i, Time LPIW[])
 			{
 				// we need to remember the m largest values for the Low Priority Interfering Workload (LPIW)
 				// static Time LPIW[cpu_availability.size()];
@@ -390,9 +441,12 @@ namespace NP
 				{
 					LPIW[i] = 0;
 				}
-
-				for (const Job<Time> *j_j : jobs_by_earliest_arrival)
+				const Job<Time> *j_j;
+				//for (const Job<Time> *j_j : jobs_by_earliest_arrival)
+				typename std::vector<const Job<Time> *>::const_iterator it;
+				for(it = jobs_by_earliest_arrival.begin(); it != jobs_by_earliest_arrival.end(); it ++)
 				{
+					j_j = *it;
 					// Continue if we have the same job
 					if (j_j == j_i)
 					{
@@ -495,9 +549,9 @@ namespace NP
 					// std::cout<<"=>"<<LPIW[LPIW_i]<<std::endl;
 					LPIW_i++;
 				}
+				return it;
 				// return LPIW;
 			}
-
 
 			Time compute_latest_idle_time()
 			{

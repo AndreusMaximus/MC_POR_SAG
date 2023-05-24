@@ -1072,8 +1072,8 @@ namespace NP
 					// clean up the state cache if necessary
 					if (!be_naive)
 						states_by_key.clear();
-
 					current_job_count = minimal_scheduled_jobs;
+					//std::cout << "d: " << current_job_count << " w: " << width << std::endl;
 #ifdef CONFIG_PARALLEL
 					// propagate any updates to the response-time estimates
 					for (auto &r : partial_rta)

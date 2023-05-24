@@ -24,6 +24,8 @@
 #include "global/por_criterion.hpp"
 #include "global/reduction_set.hpp"
 
+#include <chrono>
+
 namespace NP
 {
 
@@ -94,12 +96,13 @@ namespace NP
 				return reduction_failures;
 			}
 
-
 			unsigned long number_of_jobs_in_por() const
 			{
 				unsigned long jobs_in_por = 0;
-				for(Reduction_set_statistics<Time> rss : reduction_set_statistics){
-					if(rss.reduction_success){
+				for (Reduction_set_statistics<Time> rss : reduction_set_statistics)
+				{
+					if (rss.reduction_success)
+					{
 						jobs_in_por += rss.num_jobs;
 					}
 				}
@@ -152,6 +155,7 @@ namespace NP
 				Reduction_set<Time> reduction_set = Reduction_set<Time>(s.get_all_core_availabilities(), eligible_successors, indices);
 
 				const Job<Time> *j;
+				Time lb = s.core_availability().min();
 				while (true)
 				{
 					// nu hebben we een reductie set, fine
@@ -184,17 +188,24 @@ namespace NP
 
 					// i aint using the macros as they require a lot of additions to the states etc
 					std::vector<const Job<Time> *> interfering_jobs{};
-					//adding the lower bound here does work, but it was not really that much of a time save
-					for (auto it = this->jobs_by_earliest_arrival.lower_bound(s.core_availability().min()); it != this->jobs_by_earliest_arrival.upper_bound(reduction_set.get_latest_LST()); it++)
+					bool updated = false;
+					// adding the lower bound here does work, but it was not really that much of a time save
+					for (auto it = this->jobs_by_earliest_arrival.lower_bound(lb); it != this->jobs_by_earliest_arrival.upper_bound(reduction_set.get_latest_LST()); it++)
 					{
 						j = it->second;
 						const Job<Time> &j_i = *j;
 						const Job_precedence_set &preds = this->job_precedence_sets[this->index_of(j_i)];
 						if (reduction_set.can_interfere(*j) && s.job_incomplete(this->index_of(j_i)))
 						{
+							if (!updated)
+							{
+								lb = j->earliest_arrival();
+								updated = true;
+							}
 							interfering_jobs.push_back(j);
 						}
 					}
+
 
 					// Now we have a (possible) set of interfering jobs
 					if (!interfering_jobs.empty())
@@ -213,8 +224,10 @@ namespace NP
 					{
 						reduction_set_statistics.push_back(Reduction_set_statistics<Time>{true, reduction_set});
 						reduction_successes++;
-						jobs_in_por+=reduction_set.get_number_of_jobs();
+						jobs_in_por += reduction_set.get_number_of_jobs();
 						// no more interfering jobs so we can return the reduction set.
+						//std::cout << " interference took in total " << interfering_total << " ns " << std::endl;
+						//reduction_set.get_timings();
 						return reduction_set;
 					}
 				}
@@ -380,9 +393,9 @@ namespace NP
 					if (!reduction_set.has_potential_deadline_misses())
 					{
 						DM("\n---\nPartial-order reduction is safe" << std::endl);
-						//uncomment to print the CA and PA values
-						//reduction_set.created_set();
-						// now we must create something to properly schedule the set
+						// uncomment to print the CA and PA values
+						// reduction_set.created_set();
+						//  now we must create something to properly schedule the set
 						if (this->be_naive)
 						{
 							dispatch_reduction_set_naive(s, reduction_set);
