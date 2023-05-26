@@ -67,6 +67,8 @@ global/por_criterion.hpp
 ../include/global/global/por_criterion.hpp
 global/reduction_set.hpp
 ../include/global/global/reduction_set.hpp
+chrono
+-
 
 ../include/global/reduction_set.hpp
 iostream

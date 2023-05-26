@@ -335,7 +335,7 @@ namespace NP
 				update_finish_times(r, j.get_id(), range);
 				if (j.exceeds_deadline(range.upto())){
 					aborted = true;
-					DM("aborted due to " << j.get_id() << " exceeding deadline"<<std::endl);
+					//std::cout<<"aborted due to " << j.get_id() << " exceeding deadline"<<std::endl;
 					}
 			}
 
@@ -375,7 +375,7 @@ namespace NP
 					{
 						if (unfinished(new_s, j))
 						{
-							DM("deadline miss: " << new_s << " -> " << j << std::endl);
+							//std::cout << "deadline miss: " << new_s << " -> " << j << std::endl;
 							// This job is still incomplete but has no chance
 							// of being scheduled before its deadline anymore.
 							// Abort.
@@ -387,6 +387,7 @@ namespace NP
 										  frange, frange, j.get_key());
 							// update response times
 							update_finish_times(j, frange);
+
 #ifdef CONFIG_COLLECT_SCHEDULE_GRAPH
 							edges.emplace_back(&j, &new_s, &next, frange);
 #endif
@@ -755,7 +756,9 @@ namespace NP
 
 				// update finish-time estimates
 				update_finish_times(j, ftimes);
-
+				//if(aborted){
+				//	std::cout<<"fail trace is " << s << std::endl;
+				//}
 				// expand the graph, merging if possible
 				// met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
 				// dus in de toekomst
@@ -966,7 +969,7 @@ namespace NP
 				if (!found_one && !all_jobs_scheduled(s))
 				{
 					// out of options and we didn't schedule all jobs
-					DM("dead end abortions" << std::endl);
+					//std::cout<<"dead end abortions" << std::endl;
 					aborted = true;
 				}
 			}
@@ -1073,7 +1076,7 @@ namespace NP
 					if (!be_naive)
 						states_by_key.clear();
 					current_job_count = minimal_scheduled_jobs;
-					//std::cout << "d: " << current_job_count << " w: " << width << std::endl;
+					//std::cout << "d: " << current_job_count << " w: " << width <<std::endl;
 #ifdef CONFIG_PARALLEL
 					// propagate any updates to the response-time estimates
 					for (auto &r : partial_rta)

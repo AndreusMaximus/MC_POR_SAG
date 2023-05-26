@@ -206,19 +206,31 @@ namespace NP
 						}
 					}
 
-
 					// Now we have a (possible) set of interfering jobs
 					if (!interfering_jobs.empty())
 					{
 						// if we have at least one element in it, we must select it to add it to the redution set.
 						// This must be done under a criteria, these criteria now are the same as for uniproc, but may change in the future
 						// We also must push this criterion to its own hpp file
-						const Job<Time> *jx = *std::min_element(interfering_jobs.begin(), interfering_jobs.end(),
-																[](const Job<Time> *i, const Job<Time> *j) -> bool
-																{
-																	return i->higher_priority_than(*j);
-																});
-						reduction_set.add_job(jx, this->index_of(*jx));
+						bool bulk_add = true;
+						if (!bulk_add)
+						{
+							const Job<Time> *jx = *std::min_element(interfering_jobs.begin(), interfering_jobs.end(),
+																	[](const Job<Time> *i, const Job<Time> *j) -> bool
+																	{
+																		return i->higher_priority_than(*j);
+																	});
+							reduction_set.add_job(jx, this->index_of(*jx));
+							reduction_set.update_set();
+						}
+						else
+						{
+							for (const Job<Time> *j_i : interfering_jobs)
+							{
+								reduction_set.add_job(j_i, this->index_of(*j_i));
+							}
+							reduction_set.update_set();
+						}
 					}
 					else
 					{
@@ -226,8 +238,8 @@ namespace NP
 						reduction_successes++;
 						jobs_in_por += reduction_set.get_number_of_jobs();
 						// no more interfering jobs so we can return the reduction set.
-						//std::cout << " interference took in total " << interfering_total << " ns " << std::endl;
-						//reduction_set.get_timings();
+						// std::cout << " interference took in total " << interfering_total << " ns " << std::endl;
+						// reduction_set.get_timings();
 						return reduction_set;
 					}
 				}
@@ -396,6 +408,7 @@ namespace NP
 						// uncomment to print the CA and PA values
 						// reduction_set.created_set();
 						//  now we must create something to properly schedule the set
+						// reduction_set.show_time_waste();
 						if (this->be_naive)
 						{
 							dispatch_reduction_set_naive(s, reduction_set);

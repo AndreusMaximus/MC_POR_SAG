@@ -50,7 +50,7 @@ if [ $generate_jobsets -eq 1 ]; then
     cd tasksets
     rm *
     cd ..
-    ./group_generator.sh -s $set_size -c $cores -u $util -p 0 -g 2 -n $set_tasks
+    ./group_generator.sh -s $set_size -c $cores -u $util -p 2 -g 3 -n $set_tasks
 fi
 
 if [ $build -eq 1 ]; then
