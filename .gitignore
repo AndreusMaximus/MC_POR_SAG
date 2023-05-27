@@ -7,3 +7,4 @@ nptest
 *.pdf
 comparison/
 scripts/results.txt
+callgrind.*
