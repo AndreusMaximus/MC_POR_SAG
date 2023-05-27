@@ -335,7 +335,7 @@ namespace NP
 				update_finish_times(r, j.get_id(), range);
 				if (j.exceeds_deadline(range.upto())){
 					aborted = true;
-					//std::cout<<"aborted due to " << j.get_id() << " exceeding deadline"<<std::endl;
+					///std::cout<<"aborted due to " << j.get_id() << " exceeding deadline"<<std::endl;
 					}
 			}
 

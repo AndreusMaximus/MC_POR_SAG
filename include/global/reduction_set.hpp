@@ -213,6 +213,7 @@ namespace NP
 				  job_by_index(),
 				  LST_map()
 			{
+				// std::cout << "INITIALIZE NEW REDUCITON SET" << std::endl;
 				deadline_miss = false;
 				std::sort(jobs_by_latest_arrival.begin(), jobs_by_latest_arrival.end(),
 						  [](const Job<Time> *i, const Job<Time> *j) -> bool
@@ -258,7 +259,6 @@ namespace NP
 				max_priority = compute_max_priority();
 				initialize_key();
 				// std::cout << "Candidate reduction set contains " << jobs.size() << " jobs" << std::endl;
-				// std::cout<<"INITIALIZE NEW REDUCITON SET"<<std::endl;
 
 				// for (const Job<Time>* j : jobs) {
 				//	std::cout<<j->get_id()<<" ";
@@ -333,9 +333,9 @@ namespace NP
 
 				// latest_busy_time = compute_latest_busy_time();
 				key = key ^ jx->get_key();
-				//latest_idle_time = compute_latest_idle_time();
-				// compute_latest_start_times();
-				//compute_latest_start_time_complex();
+				// latest_idle_time = compute_latest_idle_time();
+				//  compute_latest_start_times();
+				// compute_latest_start_time_complex();
 
 				if (!jx->priority_at_least(max_priority))
 				{
@@ -427,6 +427,8 @@ namespace NP
 			{
 				// std::cout << "starting complex calculation :0" << std::endl;
 				latest_start_times = {};
+				// reserve the size for the latest start times preemtively
+				latest_start_times.reserve(jobs.size());
 				std::vector<lst_Job<Time>> LST_list;
 				std::vector<const Job<Time> *> no_LST_list;
 				typename std::vector<const Job<Time> *>::iterator lb_LPIW = jobs_by_earliest_arrival.begin();
@@ -499,6 +501,9 @@ namespace NP
 										break;
 									}
 								}
+								//checking for deadline misses here enables us to discard reduction sets faster
+								if (j_i->exceeds_deadline(LST_i + j_i->maximal_cost()))
+									return LST_i;
 							}
 						}
 						else
@@ -522,11 +527,11 @@ namespace NP
 				for (int i = 0; i < m; i++)
 				{
 					// init this list with only zeroes
-					Cmax.emplace_back(0);
+					Cmax.emplace_back((Time)0);
 				}
 				// first, this list with jobs that we have an LST for
-				// std::cout << "we have " << LST_list.size() << " jobs with a LST" << std::endl;
-				for (auto lst_it = LST_list.begin(); lst_it != LST_list.end(); lst_it++)
+				auto lst_it = LST_list.begin();
+				while (lst_it != LST_list.end())
 				{
 					lst_Job<Time> &lst_job = *lst_it;
 					// we have to go through the entire list, as we cannot sort i properly since that is reliant on the current j_i->latest_arrival value.
@@ -534,10 +539,8 @@ namespace NP
 					// namely jobs that do not cross the current j_i->latest_arrival value anymore.
 					if (lst_job.LST + lst_job.J->maximal_cost() <= j_i->latest_arrival())
 					{
-
-						LST_list.erase(lst_it);
-						if (lst_it == LST_list.end())
-							break;
+						// update the iterator and continue
+						lst_it = LST_list.erase(lst_it);
 						continue;
 					}
 					// okay so now we know that the job still traverses the r_i^max
@@ -569,16 +572,21 @@ namespace NP
 							}
 						}
 					}
+					lst_it++;
 				}
 
 				// okay now we just have to check all jobs that had a higher rmax than the previous job, and thus did not have an LST yet
 				// std::cout << "we have " << LST_list.size() << " jobs without a LST" << std::endl;
-				for (auto no_lst_it = no_LST_list.begin(); no_lst_it != no_LST_list.end(); no_lst_it++)
+				auto no_lst_it = no_LST_list.begin();
+				while (no_lst_it != no_LST_list.end())
 				{
 					const Job<Time> *no_lst_job = *no_lst_it;
 
 					if (no_lst_job == j_i)
+					{
+						no_lst_it++;
 						continue;
+					}
 					// first check if it might have an LST now
 					if (no_lst_job->latest_arrival() >= j_i->latest_arrival())
 					{
@@ -586,6 +594,7 @@ namespace NP
 						if (no_lst_job->get_priority() <= j_i->get_priority())
 						{
 							// so if its a higher prio job, then we can add it to HPIW as well
+
 							pre_calc_high += no_lst_job->maximal_cost();
 						}
 						else
@@ -606,9 +615,7 @@ namespace NP
 						{
 							// if it will never interfere, then just remove it from the list
 
-							no_LST_list.erase(no_lst_it);
-							if (no_lst_it == no_LST_list.end())
-								break;
+							no_lst_it = no_LST_list.erase(no_lst_it);
 							continue;
 						}
 						if (no_lst_job->get_priority() <= j_i->get_priority())
@@ -620,9 +627,8 @@ namespace NP
 								// and higher prio jobs also have an LST already so lets move it to the other list
 								LST_list.emplace_back(lst_Job<Time>(no_lst_job, lst));
 								// and remove it from the current
-								no_LST_list.erase(no_lst_it);
-								if (no_lst_it == no_LST_list.end())
-									break;
+
+								no_lst_it = no_LST_list.erase(no_lst_it);
 								continue;
 							}
 							else
@@ -657,9 +663,9 @@ namespace NP
 							}
 						}
 					}
+					no_lst_it++;
 				}
 
-				// std::cout << "looking at: ";
 				while (it_LPIW != jobs_by_earliest_arrival.end())
 				{
 					const Job<Time> *LPIW_job = *it_LPIW;
@@ -671,7 +677,6 @@ namespace NP
 						it_LPIW++;
 						continue;
 					}
-					// std::cout << LPIW_job->get_id() << " ";
 					if (LPIW_job->earliest_arrival() >= j_i->latest_arrival())
 					{
 						// return where we've ended in this exploration so we can continue further at a later stage
@@ -765,7 +770,6 @@ namespace NP
 
 					it_LPIW++;
 				}
-				// std::cout << std::endl;
 				//  okay now we have the maximum interference that can be caused by jobs that start before j_i
 				//  we just need to take the system availabilites into consideration now.
 				//  Cmax  is sorted low -> high
@@ -789,7 +793,8 @@ namespace NP
 			{
 				Time swap;
 				list[0] = object;
-				for (int i = 0; i < list.size() - 2; i++)
+				int m = cpu_availability.size() - 1;
+				for (int i = 0; i < m; i++)
 				{
 					if (list[i] > list[i + 1])
 					{
@@ -1392,7 +1397,7 @@ namespace NP
 						{
 							Clow += Chigh[0];
 							Chigh[0] = j_x->maximal_cost();
-							Time swap;
+							Time swap = 0;
 							for (int i = 0; i < cpu_availability.size() - 1; i++)
 							{
 								if (Chigh[i] > Chigh[i + 1])
@@ -1423,6 +1428,12 @@ namespace NP
 				// create an empty temporary set
 				Job_set J_temp{};
 				int m = cpu_availability.size();
+
+				// Initialize the LFP array
+				for (int j = 0; j < m; j++)
+				{
+					LFP[j] = 0; // Set a default value here, or you can choose any appropriate initial value
+				}
 				// std::cout << "\t PA_" << i << " for " << m << " cores i have " << jobs_by_rmax_cmin.size() << " jobs to use" << std::endl;
 				for (auto it_x = jobs_by_rmax_cmin.rbegin(); it_x != jobs_by_rmax_cmin.rend(); it_x++)
 				{
@@ -1547,7 +1558,7 @@ namespace NP
 			std::vector<Time> compute_possibly_available()
 			{
 				int LFP[cpu_availability.size()];
-				std::vector<Time> PA_values;
+				std::vector<Time> PA_values{};
 				for (int i = 1; i < cpu_availability.size(); i++)
 				{
 					possibly_available_pre_filter(LFP, i);
