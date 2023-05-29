@@ -371,7 +371,7 @@ int main(int argc, char** argv)
 		  .help("the type of partial-order reduction to use (default: none)");
 
 	parser.add_option("--interfering").dest("interfering")
-		  .choices({"group", "once"}).set_default("once")
+		  .choices({"one", "all"}).set_default("one")
 		  .help("only works with --por, add one or all possible interfering jobs (default: one)");
 
 
@@ -389,7 +389,7 @@ int main(int argc, char** argv)
 	want_release_por = por == "release";
 
 	const std::string& interfering = options.get("interfering");
-	want_group = interfering == "one";
+	want_group = interfering == "all";
 
 
 	want_naive = options.get("naive");
