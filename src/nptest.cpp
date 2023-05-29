@@ -372,7 +372,7 @@ int main(int argc, char** argv)
 
 	parser.add_option("--interfering").dest("interfering")
 		  .choices({"group", "once"}).set_default("once")
-		  .help("only works with --por, add possible interfering jobs once per cycle or as a group (default: once)");
+		  .help("only works with --por, add one or all possible interfering jobs (default: one)");
 
 
 	auto options = parser.parse_args(argc, argv);
@@ -389,7 +389,7 @@ int main(int argc, char** argv)
 	want_release_por = por == "release";
 
 	const std::string& interfering = options.get("interfering");
-	want_group = interfering == "group";
+	want_group = interfering == "one";
 
 
 	want_naive = options.get("naive");
