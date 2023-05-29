@@ -240,6 +240,8 @@ namespace NP
 
 			bool be_naive;
 
+			bool group_add;
+
 			const Workload &jobs;
 
 			// not touched after initialization
@@ -333,10 +335,11 @@ namespace NP
 			void update_finish_times(Response_times &r, const Job<Time> &j, Interval<Time> range)
 			{
 				update_finish_times(r, j.get_id(), range);
-				if (j.exceeds_deadline(range.upto())){
+				if (j.exceeds_deadline(range.upto()))
+				{
 					aborted = true;
-					///std::cout<<"aborted due to " << j.get_id() << " exceeding deadline"<<std::endl;
-					}
+					/// std::cout<<"aborted due to " << j.get_id() << " exceeding deadline"<<std::endl;
+				}
 			}
 
 			void update_finish_times(const Job<Time> &j, Interval<Time> range)
@@ -375,10 +378,10 @@ namespace NP
 					{
 						if (unfinished(new_s, j))
 						{
-							//std::cout << "deadline miss: " << new_s << " -> " << j << std::endl;
-							// This job is still incomplete but has no chance
-							// of being scheduled before its deadline anymore.
-							// Abort.
+							// std::cout << "deadline miss: " << new_s << " -> " << j << std::endl;
+							//  This job is still incomplete but has no chance
+							//  of being scheduled before its deadline anymore.
+							//  Abort.
 							aborted = true;
 							// create a dummy state for explanation purposes
 							auto frange = new_s.core_availability() + j.get_cost();
@@ -452,7 +455,7 @@ namespace NP
 			template <typename... Args>
 			State &new_or_merged_state(Args &&...args)
 			{
-				//std::cout << "Trying to merge two states" << std::endl;
+				// std::cout << "Trying to merge two states" << std::endl;
 				State_ref s_ref = alloc_state(std::forward<Args>(args)...);
 
 				// try to merge the new state into an existing state
@@ -461,10 +464,10 @@ namespace NP
 				{
 					// great, we merged!
 					// clean up the just-created state that we no longer need
-					DM( << "We merged the states:" << std::endl
-					<< "\t" << *s << std::endl
-					<< "\t\tand" << std::endl
-					<< "\t" << *s_ref << std::endl);
+					DM(<< "We merged the states:" << std::endl
+					   << "\t" << *s << std::endl
+					   << "\t\tand" << std::endl
+					   << "\t" << *s_ref << std::endl);
 					dealloc_state(s_ref);
 				}
 				return *s;
@@ -518,8 +521,8 @@ namespace NP
 				// create a new list if needed, or lookup if already existing
 				auto res = states_by_key.emplace(
 					std::make_pair(s->get_key(), State_refs()));
-				
-				//std::cout<<"Cached state: "<<*s<<std::endl;
+
+				// std::cout<<"Cached state: "<<*s<<std::endl;
 
 				auto pair_it = res.first;
 				State_refs &list = pair_it->second;
@@ -531,7 +534,7 @@ namespace NP
 			State_ref merge_or_cache(State_ref s_ref)
 			{
 				State &s = *s_ref;
-				//std::cout<<"looking for "<<s.get_key()<<std::endl;
+				// std::cout<<"looking for "<<s.get_key()<<std::endl;
 				const auto pair_it = states_by_key.find(s.get_key());
 
 				// cannot merge if key doesn't exist
@@ -540,8 +543,10 @@ namespace NP
 					for (State_ref other : pair_it->second)
 						if (other->try_to_merge(*s_ref))
 							return other;
-				}else{
-					//std::cout<<"\tapparently nothing with the same key"<<std::endl;
+				}
+				else
+				{
+					// std::cout<<"\tapparently nothing with the same key"<<std::endl;
 				}
 				// if we reach here, we failed to merge
 				cache_state(s_ref);
@@ -555,15 +560,16 @@ namespace NP
 				{
 					aborted = true;
 					timed_out = true;
-					DM("cpu timeout abort"<<std::endl);
+					DM("cpu timeout abort" << std::endl);
 				}
 			}
 
 			void check_depth_abort()
 			{
-				if (max_depth && current_job_count > max_depth){
+				if (max_depth && current_job_count > max_depth)
+				{
 					aborted = true;
-					DM("aborted due to exceeding max depth"<<std::endl);
+					DM("aborted due to exceeding max depth" << std::endl);
 				}
 			}
 
@@ -756,12 +762,12 @@ namespace NP
 
 				// update finish-time estimates
 				update_finish_times(j, ftimes);
-				//if(aborted){
+				// if(aborted){
 				//	std::cout<<"fail trace is " << s << std::endl;
-				//}
-				// expand the graph, merging if possible
-				// met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
-				// dus in de toekomst
+				// }
+				//  expand the graph, merging if possible
+				//  met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
+				//  dus in de toekomst
 				const State &next = be_naive ? new_state(s, index_of(j), predecessors_of(j),
 														 st, ftimes, j.get_key())
 											 : new_or_merged_state(s, index_of(j), predecessors_of(j),
@@ -969,7 +975,7 @@ namespace NP
 				if (!found_one && !all_jobs_scheduled(s))
 				{
 					// out of options and we didn't schedule all jobs
-					//std::cout<<"dead end abortions" << std::endl;
+					// std::cout<<"dead end abortions" << std::endl;
 					aborted = true;
 				}
 			}
@@ -1076,7 +1082,7 @@ namespace NP
 					if (!be_naive)
 						states_by_key.clear();
 					current_job_count = minimal_scheduled_jobs;
-					//std::cout << "d: " << current_job_count << " w: " << width <<std::endl;
+					// std::cout << "d: " << current_job_count << " w: " << width <<std::endl;
 #ifdef CONFIG_PARALLEL
 					// propagate any updates to the response-time estimates
 					for (auto &r : partial_rta)

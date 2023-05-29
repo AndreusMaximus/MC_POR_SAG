@@ -86,12 +86,17 @@ namespace NP {
 		// of the main workload index be?
 		std::size_t num_buckets;
 
+		// should we add all possible interfering jobs one by one or as a group
+		// standard should be one by one
+		bool group_add;
+
 		Analysis_options()
 		: timeout(0)
 		, max_depth(0)
 		, early_exit(true)
 		, num_buckets(1000)
-		, be_naive(false)
+		, be_naive(false),
+		  group_add(false)
 		{
 		}
 	};

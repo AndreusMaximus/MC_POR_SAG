@@ -57,6 +57,7 @@ namespace NP
 				Por_state_space s = Por_state_space(jobs, prob.dag, prob.num_processors,
 													opts.timeout, opts.max_depth,
 													opts.num_buckets);
+				s.group_add = opts.group_add;
 				s.cpu_time.start();
 				if (opts.be_naive)
 				{
@@ -212,8 +213,8 @@ namespace NP
 						// if we have at least one element in it, we must select it to add it to the redution set.
 						// This must be done under a criteria, these criteria now are the same as for uniproc, but may change in the future
 						// We also must push this criterion to its own hpp file
-						bool bulk_add = true;
-						if (!bulk_add)
+
+						if (!this->group_add)
 						{
 							const Job<Time> *jx = *std::min_element(interfering_jobs.begin(), interfering_jobs.end(),
 																	[](const Job<Time> *i, const Job<Time> *j) -> bool

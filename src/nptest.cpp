@@ -31,6 +31,7 @@
 // command line options
 static bool want_naive;
 static bool want_dense;
+static bool want_group;
 static bool want_prm_iip;
 static bool want_cw_iip;
 static bool want_priority_por;
@@ -94,6 +95,7 @@ static Analysis_result analyze(
 	opts.early_exit = !continue_after_dl_miss;
 	opts.num_buckets = problem.jobs.size();
 	opts.be_naive = want_naive;
+	opts.group_add = want_group;
 
 	// Actually call the analysis engine
 	auto space = Space::explore(problem, opts);
@@ -368,6 +370,10 @@ int main(int argc, char** argv)
 		  .choices({"none", "priority", "release"}).set_default("none")
 		  .help("the type of partial-order reduction to use (default: none)");
 
+	parser.add_option("--interfering").dest("interfering")
+		  .choices({"group", "once"}).set_default("once")
+		  .help("only works with --por, add possible interfering jobs once per cycle or as a group (default: once)");
+
 
 	auto options = parser.parse_args(argc, argv);
 
@@ -381,6 +387,10 @@ int main(int argc, char** argv)
 	const std::string& por = options.get("por");
 	want_priority_por = por == "priority";
 	want_release_por = por == "release";
+
+	const std::string& interfering = options.get("interfering");
+	want_group = interfering == "group";
+
 
 	want_naive = options.get("naive");
 
