@@ -450,17 +450,19 @@ namespace NP
 
 			Time complexHPIW(Time HPIW, typename std::vector<const Job<Time> *>::iterator it_LPIW, std::vector<Time> BIW, const Job<Time> *j_i)
 			{
-				// ToDo friday:
-				// add the EQ
+				//Vector for to store the differences between the blocking interfering workload
 				std::vector<Time> Ceq;
 				for (int i = 1; i < cpu_availability.size(); i++)
 				{
 					Ceq.emplace_back(BIW[i] - BIW[i - 1]);
 				}
+
+				//make this value cumilative
 				for (int i = 1; i < cpu_availability.size() - 1; i++)
 				{
 					Ceq[i] = Ceq[i] * (1 + i) + Ceq[i - 1];
 				}
+				//our reference point is the lowest value
 				Time ref = BIW[0];
 				Time HPIW_i = HPIW;
 
