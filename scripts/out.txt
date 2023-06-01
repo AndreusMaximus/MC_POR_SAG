@@ -154,3 +154,198 @@
 || total failed reductions      0
 || timeouts normal - por:       0 | 0
 || schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 40
+|| Correct results:             1
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     17.554472308686204%
+|| average cpu difference:    +-148.24238533364152%
+|| average memory difference: +-126.74222929344863%
+|| total successfull reductions 1872
+|| total failed reductions      0
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 40
+|| Correct results:             9
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     24.699422239878437%
+|| average cpu difference:    +-183.47055849941657%
+|| average memory difference: +-103.09040437234671%
+|| total successfull reductions 3017
+|| total failed reductions      0
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 80
+|| Correct results:             8
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     28.430091417185906%
+|| average cpu difference:    +-229.6696067050146%
+|| average memory difference: +-104.32192325844879%
+|| total successfull reductions 9604
+|| total failed reductions      0
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 120
+|| Correct results:             9
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     28.61367092035996%
+|| average cpu difference:    +-271.72619282631047%
+|| average memory difference: +-101.98254309519756%
+|| total successfull reductions 12046
+|| total failed reductions      4
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 160
+|| Correct results:             5
+|| False negatives results:     1
+|| Incorrect results:           0
+|| average state reduction:     24.505117098695763%
+|| average cpu difference:    +-213.37547625048282%
+|| average memory difference: +-100.95423731238502%
+|| total successfull reductions 5254
+|| total failed reductions      8
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 83.33333333333334 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 200
+|| Correct results:             5
+|| False negatives results:     2
+|| Incorrect results:           0
+|| average state reduction:     27.843505121044892%
+|| average cpu difference:    +-231.75555709590685%
+|| average memory difference: +-103.81545994042044%
+|| total successfull reductions 5200
+|| total failed reductions      42
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 71.42857142857143 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 240
+|| Correct results:             1
+|| False negatives results:     3
+|| Incorrect results:           0
+|| average state reduction:     24.489795918367346%
+|| average cpu difference:    +-123.5593220338983%
+|| average memory difference: +-101.26090545034145%
+|| total successfull reductions 602
+|| total failed reductions      533
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    44.44444444444444% | 11.11111111111111 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 280
+|| Correct results:             1
+|| False negatives results:     4
+|| Incorrect results:           0
+|| average state reduction:     38.50574712643678%
+|| average cpu difference:    +-188.96181384248212%
+|| average memory difference: +-98.59154320174534%
+|| total successfull reductions 148
+|| total failed reductions      222
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    55.55555555555556% | 11.11111111111111 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 40
+|| Correct results:             9
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     26.34077911481738%
+|| average cpu difference:    +-246.66312980950948%
+|| average memory difference: +-119.66128888362765%
+|| total successfull reductions 40716
+|| total failed reductions      0
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 80
+|| Correct results:             10
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     25.411176486088998%
+|| average cpu difference:    +-230.51868604797042%
+|| average memory difference: +-111.73913047064714%
+|| total successfull reductions 34238
+|| total failed reductions      0
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 120
+|| Correct results:             10
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     29.9076050079776%
+|| average cpu difference:    +-261.95347863278624%
+|| average memory difference: +-108.61951362362156%
+|| total successfull reductions 19305
+|| total failed reductions      4
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 160
+|| Correct results:             6
+|| False negatives results:     2
+|| Incorrect results:           0
+|| average state reduction:     21.534325489468653%
+|| average cpu difference:    +-209.20251145745087%
+|| average memory difference: +-108.43316137368082%
+|| total successfull reductions 4507
+|| total failed reductions      134
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    88.88888888888889% | 66.66666666666666 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 200
+|| Correct results:             6
+|| False negatives results:     1
+|| Incorrect results:           1
+|| average state reduction:     26.360276279104127%
+|| average cpu difference:    +-291.22373879886953%
+|| average memory difference: +-105.2739329213591%
+|| total successfull reductions 6126
+|| total failed reductions      216
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    77.77777777777779% | 77.77777777777779 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 240
+|| Correct results:             2
+|| False negatives results:     7
+|| Incorrect results:           0
+|| average state reduction:     19.807964333874562%
+|| average cpu difference:    +-209.81216454359446%
+|| average memory difference: +-107.34275956977288%
+|| total successfull reductions 4232
+|| total failed reductions      518
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    90.0% | 20.0 %
+||============================results============================||
+|| cores:                       4
+|| utilization:                 40
+|| Correct results:             9
+|| False negatives results:     0
+|| Incorrect results:           0
+|| average state reduction:     25.556403794117756%
+|| average cpu difference:    +-207.17764168046756%
+|| average memory difference: +-106.69901640112033%
+|| total successfull reductions 15811
+|| total failed reductions      0
+|| timeouts normal - por:       0 | 0
+|| schedulable normal - por:    100.0% | 100.0 %

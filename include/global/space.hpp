@@ -1026,8 +1026,6 @@ namespace NP
 					// In de storage deque, plaats een nieuw object wat de nieuwe front wordt
 					states_storage.emplace_back();
 
-					// keep track of exploration front width
-					width = std::max(width, n);
 
 					// Moved this to where we explore, since we do not explore states that have a depth > minimal_scheduled_jobs
 					num_states += n;
@@ -1073,10 +1071,13 @@ namespace NP
 						else
 						{
 							num_states--;
+							n--;
 							states_storage.back().push_back(s);
 						}
 					}
 #endif
+					// keep track of exploration front width here otherwise POR would get counted which is not wat we want
+					width = std::max(width, n);
 
 					// clean up the state cache if necessary
 					if (!be_naive)

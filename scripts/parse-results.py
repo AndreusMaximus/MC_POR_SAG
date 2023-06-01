@@ -53,6 +53,8 @@ for i in range(0,len(lines),2):
     t_s_reductions += int(line_por[10])
     t_f_reductions += int(line_por[11])
 
+t_correct = max(t_correct, 1)
+t_correct = max(t_tested, 1)
 print("||============================results============================||")
 print("|| cores:                       " + sys.argv[1])
 print("|| utilization:                 " + sys.argv[2])

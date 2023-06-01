@@ -11,7 +11,8 @@ generate_jobsets=0
 set_tasks="1"
 
 build=0
-while getopts "b:c:s:u:j:t:" opt; do
+ex_name="temp"
+while getopts "b:c:s:u:j:t:e:" opt; do
     case ${opt} in
         b )
         build="${OPTARG}"
@@ -30,6 +31,9 @@ while getopts "b:c:s:u:j:t:" opt; do
         ;;
         t)
         set_tasks="${OPTARG}"
+        ;;
+        e)
+        ex_name="${OPTARG}"
         ;;
 
     esac
@@ -66,10 +70,18 @@ cd ~/Downloads/np-schedulability-analysis-partial_order_reduction/scripts
 truncate -s 0 result.txt
 for i in $(seq 0 $(expr $set_size - 1 ));
 do
-    ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv  >> result.txt
-    ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv --por=priority  >> result.txt
+    lc=$(wc -l < ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv)
+    if [ "$lc" -lt "100000" ]; then
+        ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv | tee -a result.txt ../../experiment_results/$ex_name/sag/"$(($util/$cores))"/results.csv
+        
+        mv ../../real-time-task-generators-main/jobsets/jobset-taskset-$i.rta.csv ../../experiment_results/$ex_name/sag/"$(($util/$cores))"/rta
+
+        ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv --por=priority  | tee -a result.txt ../../experiment_results/$ex_name/sag-por/"$(($util/$cores))"/results.csv
+        
+        mv ../../real-time-task-generators-main/jobsets/jobset-taskset-$i.rta.csv ../../experiment_results/$ex_name/sag-por/"$(($util/$cores))"/rta
+    fi
 done
 
-echo "(4) PARSING RESULTS"
-python3 parse-results.py $cores $util
-echo "|| For $cores cores with a utilization of $util"
+#echo "(4) PARSING RESULTS"
+#python3 parse-results.py $cores $util
+#echo "|| For $cores cores with a utilization of $util"

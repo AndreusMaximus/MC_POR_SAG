@@ -341,18 +341,18 @@ namespace NP
 
 				// (1) first check jobs that may be already pending
 				DM("==== [1] ====" << std::endl);
-				/*
-				for (const Job<Time> &j : jobs_by_win.lookup(t_min))
-					if (j.earliest_arrival() <= t_min && ready(s, j))
+
+				for (const Job<Time> &j : this->jobs_by_win.lookup(t_min))
+				{
+					if (j.earliest_arrival() <= t_min && this->ready(s, j))
 					{
-						// previously we did a dispatch immediately, now we add it to the eligible_successors
-						found_one |= dispatch(s, j, t_wc);
-						//cannot push back &j eligible_successors.push_back(j);
+						eligible_successors.push_back(&j);
 					}
-				*/
+				}
+
 				// This for loop starts from the beginning, but i think that can be improved upon.
 				// std::cout<<"\tI've got "<<this->jobs_by_earliest_arrival.size()<<" jobs to choose from" << std::endl;
-				const Job<Time> *j;
+				/*const Job<Time> *j;
 				for (auto it = this->jobs_by_earliest_arrival.begin(); it != this->jobs_by_earliest_arrival.upper_bound(t_min); it++)
 				{
 					if (it == this->jobs_by_earliest_arrival.upper_bound(t_min))
@@ -368,7 +368,7 @@ namespace NP
 					{
 						// std::cout<< "Found a job but its not ready"<<std::endl;
 					}
-				}
+				}*/
 
 				DM("==== [2] ====" << std::endl);
 				// (2) check jobs that are released only later in the interval
