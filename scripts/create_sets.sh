@@ -43,7 +43,7 @@ mkdir tasksets
 cd tasksets
 rm *
 cd ..
-./group_generator.sh -s $set_size -c $cores -u $util -p 0 -g 2 -n $set_tasks
+./group_generator.sh -s $set_size -c $cores -u $util -p 2 -g 0 -n $set_tasks
 
 
 mv tasksets $ex_name/task-sets/$(($util/$cores))

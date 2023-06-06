@@ -32,6 +32,7 @@
 static bool want_naive;
 static bool want_dense;
 static bool want_group;
+static bool want_limit_fail;
 static bool want_prm_iip;
 static bool want_cw_iip;
 static bool want_priority_por;
@@ -96,6 +97,7 @@ static Analysis_result analyze(
 	opts.num_buckets = problem.jobs.size();
 	opts.be_naive = want_naive;
 	opts.group_add = want_group;
+	opts.limit_fail = want_limit_fail;
 
 	// Actually call the analysis engine
 	auto space = Space::explore(problem, opts);
@@ -374,6 +376,10 @@ int main(int argc, char** argv)
 		  .choices({"one", "all"}).set_default("one")
 		  .help("only works with --por, add one or all possible interfering jobs (default: one)");
 
+	parser.add_option("--limit_fail").dest("limit_fail")
+		  .choices({"yes", "no"}).set_default("no")
+		  .help("only works with --por, limits failures by not forming new sets with jobs in the latest rejected set (default: one)");
+
 
 	auto options = parser.parse_args(argc, argv);
 
@@ -390,6 +396,9 @@ int main(int argc, char** argv)
 
 	const std::string& interfering = options.get("interfering");
 	want_group = interfering == "all";
+
+	const std::string& limit_fail = options.get("limit_fail");
+	want_limit_fail = limit_fail == "yes";
 
 
 	want_naive = options.get("naive");

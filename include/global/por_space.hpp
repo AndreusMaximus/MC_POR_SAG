@@ -58,6 +58,7 @@ namespace NP
 													opts.timeout, opts.max_depth,
 													opts.num_buckets);
 				s.group_add = opts.group_add;
+				s.limit_fail = opts.limit_fail;
 				s.cpu_time.start();
 				if (opts.be_naive)
 				{
@@ -118,7 +119,7 @@ namespace NP
 		protected:
 			using State_space<Time, IIP>::explore;
 			using State_space<Time, IIP>::explore_naively;
-			using State_space<Time, IIP>::dispatch;
+			// using State_space<Time, IIP>::dispatch;
 
 			POR_criterion por_criterion;
 			unsigned long reduction_successes, reduction_failures, jobs_in_por;
@@ -159,9 +160,6 @@ namespace NP
 				Time lb = s.core_availability().min();
 				while (true)
 				{
-					// nu hebben we een reductie set, fine
-					// next -> zoeken van interfering jobs
-
 					if (reduction_set.has_potential_deadline_misses())
 					{
 						reduction_failures++;
@@ -299,6 +297,45 @@ namespace NP
 				process_new_edge(current_state, next, reduction_set, {0, 0});
 			}
 
+			bool dispatch(const State &s, const Job<Time> &j, Time t_wc, std::vector<std::size_t> failed_set)
+			{
+				// check if this job has a feasible start-time interval
+				auto _st = this->start_times(s, j, t_wc);
+				if (_st.first > _st.second)
+					return false; // nope
+
+				Interval<Time> st{_st};
+
+				// yep, job j is a feasible successor in state s
+
+				// compute range of possible finish times
+				Interval<Time> ftimes = st + j.get_cost();
+
+				// update finish-time estimates
+				this->update_finish_times(j, ftimes);
+				// if(aborted){
+				//	std::cout<<"fail trace is " << s << std::endl;
+				// }
+				//  expand the graph, merging if possible
+				//  met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
+				//  dus in de toekomst
+				const State &next = this->be_naive ? this->new_state(s, this->index_of(j), this->predecessors_of(j),
+																	 st, ftimes, j.get_key(), failed_set)
+												   : this->new_or_merged_state(s, this->index_of(j), this->predecessors_of(j),
+																			   st, ftimes, j.get_key(), failed_set);
+
+				// make sure we didn't skip any jobs
+				this->check_for_deadline_misses(s, next);
+
+#ifdef CONFIG_COLLECT_SCHEDULE_GRAPH
+				this->edges.emplace_back(&j, &s, &next, ftimes);
+#endif
+				this->count_edge();
+				this->current_job_count++;
+
+				return true;
+			}
+
 			// Here we explore our current state where we also try to make our reduction set, this is why this is placed in this file
 			void explore(const State &s) override
 			{
@@ -341,34 +378,18 @@ namespace NP
 
 				// (1) first check jobs that may be already pending
 				DM("==== [1] ====" << std::endl);
-
+				bool skip_set = true;
 				for (const Job<Time> &j : this->jobs_by_win.lookup(t_min))
 				{
 					if (j.earliest_arrival() <= t_min && this->ready(s, j))
 					{
 						eligible_successors.push_back(&j);
+						if (!s.job_in_failed_set(this->index_of(j)))
+						{
+							skip_set = false;
+						}
 					}
 				}
-
-				// This for loop starts from the beginning, but i think that can be improved upon.
-				// std::cout<<"\tI've got "<<this->jobs_by_earliest_arrival.size()<<" jobs to choose from" << std::endl;
-				/*const Job<Time> *j;
-				for (auto it = this->jobs_by_earliest_arrival.begin(); it != this->jobs_by_earliest_arrival.upper_bound(t_min); it++)
-				{
-					if (it == this->jobs_by_earliest_arrival.upper_bound(t_min))
-					{
-						break;
-					}
-					j = it->second;
-					if (this->ready(s, *j))
-					{
-						eligible_successors.push_back(j);
-					}
-					else
-					{
-						// std::cout<< "Found a job but its not ready"<<std::endl;
-					}
-				}*/
 
 				DM("==== [2] ====" << std::endl);
 				// (2) check jobs that are released only later in the interval
@@ -395,11 +416,30 @@ namespace NP
 					// found_one |= dispatch(s, j, t_wc);
 					// now we dont dispatch, but we create the eligible successors so just add it to that set
 					eligible_successors.push_back(it->second);
+
+					if (!s.job_in_failed_set(this->index_of(j)))
+					{
+						skip_set = false;
+					}
 				}
 				// now we can finially create a proper reduction set
 
+				// look if all eligible successors are present in the previously failed set
+				// if so, lets not make a reduction
+
 				// if the size is 1 then just do a normal schedule
-				if (eligible_successors.size() > 1)
+
+				std::vector<std::size_t> failed_reduction;
+				// if we skip making this set, then keep looking at the previous set in the next state
+				bool limit_failures = this->limit_fail;
+				if (skip_set && limit_failures)
+				{
+					failed_reduction = s.get_previous_failed_set();
+				}
+				if(!limit_failures){
+					skip_set = false;
+				}
+				if (eligible_successors.size() > 1 && !skip_set)
 				{
 					Reduction_set<Time> reduction_set = create_reduction_set(s, eligible_successors);
 
@@ -426,6 +466,13 @@ namespace NP
 					else
 					{
 						DM("\tPartial order reduction is not safe" << std::endl);
+						if (limit_failures)
+						{
+							for (const Job<Time> *j : reduction_set.get_jobs())
+							{
+								failed_reduction.push_back(this->index_of(*j));
+							}
+						}
 					}
 				}
 
@@ -433,7 +480,9 @@ namespace NP
 				for (const Job<Time> *j : eligible_successors)
 				{
 					// we can use the normal dispatch now so no worries
-					found_one |= dispatch(s, *j, t_wc);
+					// maybe we can give some information to the next state if we have a failed reduction, in such a way that it wont try a next reduction
+					//  if that next job was in the failed set.
+					found_one |= dispatch(s, *j, t_wc, failed_reduction);
 				}
 
 				// check for a dead end

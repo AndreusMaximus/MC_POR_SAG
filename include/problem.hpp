@@ -90,13 +90,18 @@ namespace NP {
 		// standard should be one by one
 		bool group_add;
 
+		// should we not allow new reduction sets to form with jobs from the latest rejected set
+		// standard: no 
+		bool limit_fail;
+
 		Analysis_options()
 		: timeout(0)
 		, max_depth(0)
 		, early_exit(true)
 		, num_buckets(1000)
 		, be_naive(false),
-		  group_add(false)
+		  group_add(false),
+		  limit_fail(false)
 		{
 		}
 	};

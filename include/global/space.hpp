@@ -242,6 +242,8 @@ namespace NP
 
 			bool group_add;
 
+			bool limit_fail;
+
 			const Workload &jobs;
 
 			// not touched after initialization
@@ -745,7 +747,7 @@ namespace NP
 
 				return {est, lst};
 			}
-			//=====================> Dispatching, hier checken we voor merges
+
 			bool dispatch(const State &s, const Job<Time> &j, Time t_wc)
 			{
 				// check if this job has a feasible start-time interval
@@ -993,6 +995,7 @@ namespace NP
 			{
 				// make the initial state
 				make_initial_state();
+				int n_depth = 0;
 
 				while (current_job_count < jobs.size())
 				{
@@ -1025,7 +1028,6 @@ namespace NP
 					// allocate states space for next depth
 					// In de storage deque, plaats een nieuw object wat de nieuwe front wordt
 					states_storage.emplace_back();
-
 
 					// Moved this to where we explore, since we do not explore states that have a depth > minimal_scheduled_jobs
 					num_states += n;

@@ -62,7 +62,7 @@ for ((u = 10; u <= 100; u += 10)); do
 
     mkdir ../../experiment_results/$ex_name/task-sets/$u
     if [ $make_set -eq 1 ]; then
-        ./create_sets.sh -c $c -t $(($task_scaler)) -u $(($u*$c)) -s $s -e ../experiment_results/"$ex_name"
+        ./create_sets.sh -c $c -t $(($task_scaler)) -u $(($u*$c)) -s $s -e ../experiment_results/"$ex_name" -g 0 -p 2
     fi
 
     cd ~/Downloads/np-schedulability-analysis-partial_order_reduction/scripts

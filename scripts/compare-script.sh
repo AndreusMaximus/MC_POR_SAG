@@ -54,7 +54,7 @@ if [ $generate_jobsets -eq 1 ]; then
     cd tasksets
     rm *
     cd ..
-    ./group_generator.sh -s $set_size -c $cores -u $util -p 0 -g 2 -n $set_tasks
+    ./group_generator.sh -s $set_size -c $cores -u $util -p 2 -g 2 -n $set_tasks
 fi
 
 if [ $build -eq 1 ]; then
@@ -72,13 +72,10 @@ for i in $(seq 0 $(expr $set_size - 1 ));
 do
     lc=$(wc -l < ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv)
     if [ "$lc" -lt "100000" ]; then
-        ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv | tee -a result.txt ../../experiment_results/$ex_name/sag/"$(($util/$cores))"/results.csv
-        
-        mv ../../real-time-task-generators-main/jobsets/jobset-taskset-$i.rta.csv ../../experiment_results/$ex_name/sag/"$(($util/$cores))"/rta
+        ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv | tee -a result.txt 
+        ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv --por=priority  | tee -a result.txt 
+        ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv --por=priority --interfering=all | tee -a result.txt 
 
-        ../build/nptest -r -m $cores ~/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-$i.csv --por=priority  | tee -a result.txt ../../experiment_results/$ex_name/sag-por/"$(($util/$cores))"/results.csv
-        
-        mv ../../real-time-task-generators-main/jobsets/jobset-taskset-$i.rta.csv ../../experiment_results/$ex_name/sag-por/"$(($util/$cores))"/rta
     fi
 done
 
