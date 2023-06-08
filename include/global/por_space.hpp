@@ -313,9 +313,9 @@ namespace NP
 
 				// update finish-time estimates
 				this->update_finish_times(j, ftimes);
-				// if(aborted){
-				//	std::cout<<"fail trace is " << s << std::endl;
-				// }
+				if(this->aborted){
+					//std::cout<<"fail trace is " << s << std::endl;
+				}
 				//  expand the graph, merging if possible
 				//  met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
 				//  dus in de toekomst
@@ -447,7 +447,7 @@ namespace NP
 					{
 						DM("\n---\nPartial-order reduction is safe" << std::endl);
 						// uncomment to print the CA and PA values
-						// reduction_set.created_set();
+						//reduction_set.created_set();
 						//  now we must create something to properly schedule the set
 						// reduction_set.show_time_waste();
 						if (this->be_naive)

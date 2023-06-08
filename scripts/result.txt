@@ -1,15 +1,125 @@
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	|■■■■■               | 25% 	|■■■■■■              | 30% 	|■■■■■■■             | 35% 	|■■■■■■■■            | 40% 	|■■■■■■■■■           | 45% 	|■■■■■■■■■■          | 50% 	|■■■■■■■■■■■         | 55% 	|■■■■■■■■■■■■        | 60% 	|■■■■■■■■■■■■■       | 65% 	|■■■■■■■■■■■■■■      | 70% 	|■■■■■■■■■■■■■■■     | 75% 	|■■■■■■■■■■■■■■■■    | 80% 	|■■■■■■■■■■■■■■■■■   | 85% 	|■■■■■■■■■■■■■■■■■■  | 90% 	|■■■■■■■■■■■■■■■■■■■ | 95% 	|■■■■■■■■■■■■■■■■■■■■| 100% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-0.csv,  1,  15047,  15070,  15088,  2,  1.943975,  15.027344,  0,  4,  0,  0,  0
-|■                   | 5% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-0.csv,  0,  15047,  48,  51,  3,  0.030535,  16.359375,  0,  4,  11,  26,  35
-|■                   | 5% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-0.csv,  0,  15047,  48,  51,  3,  0.055288,  16.210938,  0,  4,  11,  26,  35
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-1.csv,  0,  3565,  590,  603,  3,  0.027516,  6.863281,  0,  4,  0,  0,  0
-|■                   | 5% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-1.csv,  0,  3565,  25,  25,  3,  0.003309,  6.878906,  0,  4,  9,  12,  34
-|■                   | 5% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-1.csv,  0,  3565,  25,  25,  3,  0.003351,  6.878906,  0,  4,  9,  12,  34
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	|■■■■■               | 25% 	|■■■■■■              | 30% 	|■■■■■■■             | 35% 	|■■■■■■■■            | 40% 	|■■■■■■■■■           | 45% 	|■■■■■■■■■■          | 50% 	|■■■■■■■■■■■         | 55% 	|■■■■■■■■■■■■        | 60% 	|■■■■■■■■■■■■■       | 65% 	|■■■■■■■■■■■■■■      | 70% 	|■■■■■■■■■■■■■■■     | 75% 	|■■■■■■■■■■■■■■■■    | 80% 	|■■■■■■■■■■■■■■■■■   | 85% 	|■■■■■■■■■■■■■■■■■■  | 90% 	|■■■■■■■■■■■■■■■■■■■ | 95% 	|■■■■■■■■■■■■■■■■■■■■| 100% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-2.csv,  1,  6908,  6992,  7067,  2,  0.327001,  9.195312,  0,  4,  0,  0,  0
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	|■■■■■               | 25% 	|■■■■■■              | 30% 	|■■■■■■■             | 35% 	|■■■■■■■■            | 40% 	|■■■■■■■■■           | 45% 	|■■■■■■■■■■          | 50% 	|■■■■■■■■■■■         | 55% 	|■■■■■■■■■■■■        | 60% 	|■■■■■■■■■■■■■       | 65% 	|■■■■■■■■■■■■■■      | 70% 	|■■■■■■■■■■■■■■■     | 75% 	|■■■■■■■■■■■■■■■■    | 80% 	|■■■■■■■■■■■■■■■■■   | 85% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-2.csv,  0,  6908,  2118,  2322,  4,  0.634749,  9.691406,  0,  4,  1092,  629,  5827
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	|■■■■■               | 25% 	|■■■■■■              | 30% 	|■■■■■■■             | 35% 	|■■■■■■■■            | 40% 	|■■■■■■■■■           | 45% 	|■■■■■■■■■■          | 50% 	|■■■■■■■■■■■         | 55% 	|■■■■■■■■■■■■        | 60% 	|■■■■■■■■■■■■■       | 65% 	|■■■■■■■■■■■■■■      | 70% 	|■■■■■■■■■■■■■■■     | 75% 	|■■■■■■■■■■■■■■■■    | 80% 	|■■■■■■■■■■■■■■■■■   | 85% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-2.csv,  0,  6908,  2118,  2322,  4,  0.414555,  9.710938,  0,  4,  1092,  629,  5827
-|■                   | 5% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-3.csv,  0,  22747,  551,  550,  2,  0.181627,  17.500000,  0,  4,  0,  0,  0
-|■                   | 5% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-3.csv,  0,  22747,  36,  36,  2,  0.033081,  19.921875,  0,  4,  11,  19,  33
-|■                   | 5% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-3.csv,  0,  22747,  36,  36,  2,  0.024236,  20.082031,  0,  4,  11,  19,  33
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	|■■■■■               | 25% 	|■■■■■■              | 30% 	|■■■■■■■             | 35% 	|■■■■■■■■            | 40% 	|■■■■■■■■■           | 45% 	|■■■■■■■■■■          | 50% 	|■■■■■■■■■■■         | 55% 	|■■■■■■■■■■■■        | 60% 	|■■■■■■■■■■■■■       | 65% 	|■■■■■■■■■■■■■■      | 70% 	|■■■■■■■■■■■■■■■     | 75% 	|■■■■■■■■■■■■■■■■    | 80% 	|■■■■■■■■■■■■■■■■■   | 85% 	|■■■■■■■■■■■■■■■■■■  | 90% 	|■■■■■■■■■■■■■■■■■■■ | 95% 	|■■■■■■■■■■■■■■■■■■■■| 100% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-4.csv,  1,  568,  569,  568,  1,  0.003634,  4.429688,  0,  4,  0,  0,  0
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	|■■■■■               | 25% 	|■■■■■■              | 30% 	|■■■■■■■             | 35% 	|■■■■■■■■            | 40% 	|■■■■■■■■■           | 45% 	|■■■■■■■■■■          | 50% 	|■■■■■■■■■■■         | 55% 	|■■■■■■■■■■■■        | 60% 	|■■■■■■■■■■■■■       | 65% 	|■■■■■■■■■■■■■■      | 70% 	|■■■■■■■■■■■■■■■     | 75% 	|■■■■■■■■■■■■■■■■    | 80% 	|■■■■■■■■■■■■■■■■■   | 85% 	|■■■■■■■■■■■■■■■■■■  | 90% 	|■■■■■■■■■■■■■■■■■■■ | 95% 	|■■■■■■■■■■■■■■■■■■■■| 100% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-4.csv,  1,  568,  150,  149,  1,  0.002629,  4.875000,  0,  4,  124,  17,  543
-|■                   | 5% 	|■■                  | 10% 	|■■■                 | 15% 	|■■■■                | 20% 	|■■■■■               | 25% 	|■■■■■■              | 30% 	|■■■■■■■             | 35% 	|■■■■■■■■            | 40% 	|■■■■■■■■■           | 45% 	|■■■■■■■■■■          | 50% 	|■■■■■■■■■■■         | 55% 	|■■■■■■■■■■■■        | 60% 	|■■■■■■■■■■■■■       | 65% 	|■■■■■■■■■■■■■■      | 70% 	|■■■■■■■■■■■■■■■     | 75% 	|■■■■■■■■■■■■■■■■    | 80% 	|■■■■■■■■■■■■■■■■■   | 85% 	|■■■■■■■■■■■■■■■■■■  | 90% 	|■■■■■■■■■■■■■■■■■■■ | 95% 	|■■■■■■■■■■■■■■■■■■■■| 100% 	/home/sag/Downloads/real-time-task-generators-main/jobsets/jobset-taskset-4.csv,  1,  568,  150,  149,  1,  0.002484,  4.832031,  0,  4,  124,  17,  543
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-0.csv,  0,  1987,  76,  130,  55,  0.001018,  5.875000,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-0.csv,  0,  1987,  76,  130,  55,  0.001233,  5.914062,  0,  4,  0,  13,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-0.csv,  0,  1987,  76,  130,  55,  0.001154,  5.843750,  0,  4,  0,  13,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-0.csv,  0,  1987,  76,  130,  55,  0.001391,  5.929688,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-0.csv,  0,  1987,  76,  130,  55,  0.001212,  5.910156,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-1.csv,  0,  2987,  864,  2928,  495,  0.050373,  7.132812,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-1.csv,  0,  2987,  864,  2928,  495,  0.048719,  7.429688,  0,  4,  0,  317,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-1.csv,  0,  2987,  864,  2928,  495,  0.045677,  7.375000,  0,  4,  0,  317,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-1.csv,  0,  2987,  864,  2928,  495,  0.048627,  7.812500,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-1.csv,  0,  2987,  864,  2928,  495,  0.048294,  7.652344,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-2.csv,  0,  1987,  12,  11,  1,  0.000113,  5.820312,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-2.csv,  0,  1987,  12,  11,  1,  0.000106,  5.851562,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-2.csv,  0,  1987,  12,  11,  1,  0.000096,  5.839844,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-2.csv,  0,  1987,  12,  11,  1,  0.000084,  5.949219,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-2.csv,  0,  1987,  12,  11,  1,  0.000153,  5.906250,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-3.csv,  0,  2987,  783,  2614,  220,  0.044308,  7.039062,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-3.csv,  0,  2987,  783,  2614,  220,  0.042897,  7.437500,  0,  4,  0,  280,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-3.csv,  0,  2987,  783,  2614,  220,  0.045938,  7.425781,  0,  4,  0,  280,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-3.csv,  0,  2987,  783,  2614,  220,  0.046270,  7.660156,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-3.csv,  0,  2987,  783,  2614,  220,  0.044849,  7.679688,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-4.csv,  0,  2987,  323,  831,  220,  0.011425,  6.851562,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-4.csv,  0,  2987,  323,  831,  220,  0.011869,  6.933594,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-4.csv,  0,  2987,  323,  831,  220,  0.014957,  6.953125,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-4.csv,  0,  2987,  323,  831,  220,  0.011920,  7.203125,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-4.csv,  0,  2987,  323,  831,  220,  0.013373,  7.167969,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-5.csv,  0,  2987,  323,  831,  220,  0.012252,  6.796875,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-5.csv,  0,  2987,  323,  831,  220,  0.011586,  6.898438,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-5.csv,  0,  2987,  323,  831,  220,  0.013243,  6.898438,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-5.csv,  0,  2987,  323,  831,  220,  0.011816,  7.195312,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-5.csv,  0,  2987,  323,  831,  220,  0.012275,  7.214844,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-6.csv,  0,  2987,  864,  2928,  495,  0.044759,  7.019531,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-6.csv,  0,  2987,  864,  2928,  495,  0.050308,  7.312500,  0,  4,  0,  317,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-6.csv,  0,  2987,  864,  2928,  495,  0.049057,  7.382812,  0,  4,  0,  317,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-6.csv,  0,  2987,  864,  2928,  495,  0.050939,  7.937500,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-6.csv,  0,  2987,  864,  2928,  495,  0.053815,  7.578125,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-7.csv,  0,  2987,  323,  831,  220,  0.011530,  6.746094,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-7.csv,  0,  2987,  323,  831,  220,  0.011946,  6.910156,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-7.csv,  0,  2987,  323,  831,  220,  0.011696,  6.953125,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-7.csv,  0,  2987,  323,  831,  220,  0.013363,  7.078125,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-7.csv,  0,  2987,  323,  831,  220,  0.012418,  7.214844,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-8.csv,  0,  2987,  864,  2928,  495,  0.045316,  7.144531,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-8.csv,  0,  2987,  864,  2928,  495,  0.046175,  7.312500,  0,  4,  0,  317,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-8.csv,  0,  2987,  864,  2928,  495,  0.046202,  7.433594,  0,  4,  0,  317,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-8.csv,  0,  2987,  864,  2928,  495,  0.048425,  7.953125,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-8.csv,  0,  2987,  864,  2928,  495,  0.048047,  7.582031,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-9.csv,  0,  2987,  323,  831,  220,  0.011031,  6.824219,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-9.csv,  0,  2987,  323,  831,  220,  0.013705,  6.914062,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-9.csv,  0,  2987,  323,  831,  220,  0.012403,  6.886719,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-9.csv,  0,  2987,  323,  831,  220,  0.016575,  7.089844,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-9.csv,  0,  2987,  323,  831,  220,  0.013321,  7.207031,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-10.csv,  0,  2987,  89,  154,  66,  0.001815,  6.593750,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-10.csv,  0,  2987,  89,  154,  66,  0.002562,  6.867188,  0,  4,  0,  14,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-10.csv,  0,  2987,  89,  154,  66,  0.001981,  6.960938,  0,  4,  0,  14,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-10.csv,  0,  2987,  89,  154,  66,  0.002507,  6.972656,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-10.csv,  0,  2987,  89,  154,  66,  0.001852,  6.941406,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-11.csv,  0,  2987,  323,  831,  220,  0.012048,  6.921875,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-11.csv,  0,  2987,  323,  831,  220,  0.012881,  6.917969,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-11.csv,  0,  2987,  323,  831,  220,  0.012479,  6.847656,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-11.csv,  0,  2987,  323,  831,  220,  0.012672,  7.164062,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-11.csv,  0,  2987,  323,  831,  220,  0.012264,  7.144531,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-12.csv,  0,  1987,  12,  11,  1,  0.000090,  5.777344,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-12.csv,  0,  1987,  12,  11,  1,  0.000078,  5.949219,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-12.csv,  0,  1987,  12,  11,  1,  0.000090,  5.910156,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-12.csv,  0,  1987,  12,  11,  1,  0.000116,  5.898438,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-12.csv,  0,  1987,  12,  11,  1,  0.000088,  5.867188,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-13.csv,  0,  1987,  532,  1665,  165,  0.016773,  6.054688,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-13.csv,  0,  1987,  532,  1665,  165,  0.020357,  6.027344,  0,  4,  0,  198,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-13.csv,  0,  1987,  532,  1665,  165,  0.017749,  6.152344,  0,  4,  0,  198,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-13.csv,  0,  1987,  532,  1665,  165,  0.019586,  6.378906,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-13.csv,  0,  1987,  532,  1665,  165,  0.018172,  6.320312,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-14.csv,  0,  2891,  980,  3703,  330,  0.062269,  7.031250,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-14.csv,  0,  2891,  980,  3703,  330,  0.079900,  7.324219,  0,  4,  0,  529,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-14.csv,  0,  2891,  980,  3703,  330,  0.075469,  7.945312,  0,  4,  0,  529,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-14.csv,  0,  2891,  980,  3703,  330,  0.072288,  7.914062,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-14.csv,  0,  2891,  980,  3703,  330,  0.069094,  7.871094,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-15.csv,  0,  2987,  323,  831,  220,  0.011008,  6.859375,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-15.csv,  0,  2987,  323,  831,  220,  0.012496,  6.953125,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-15.csv,  0,  2987,  323,  831,  220,  0.015310,  6.832031,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-15.csv,  0,  2987,  323,  831,  220,  0.011729,  7.195312,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-15.csv,  0,  2987,  323,  831,  220,  0.013623,  7.164062,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-16.csv,  0,  2891,  596,  1999,  330,  0.031181,  6.875000,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-16.csv,  0,  2891,  596,  1999,  330,  0.032321,  7.195312,  0,  4,  0,  241,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-16.csv,  0,  2891,  596,  1999,  330,  0.032547,  7.160156,  0,  4,  0,  241,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-16.csv,  0,  2891,  596,  1999,  330,  0.034047,  7.417969,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-16.csv,  0,  2891,  596,  1999,  330,  0.034899,  7.406250,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-17.csv,  0,  2987,  323,  831,  220,  0.011124,  6.816406,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-17.csv,  0,  2987,  323,  831,  220,  0.012140,  6.937500,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-17.csv,  0,  2987,  323,  831,  220,  0.011754,  6.875000,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-17.csv,  0,  2987,  323,  831,  220,  0.012128,  7.156250,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-17.csv,  0,  2987,  323,  831,  220,  0.011864,  7.089844,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-18.csv,  0,  2987,  13,  12,  1,  0.000171,  6.546875,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-18.csv,  0,  2987,  13,  12,  1,  0.000091,  6.976562,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-18.csv,  0,  2987,  13,  12,  1,  0.000183,  6.949219,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-18.csv,  0,  2987,  13,  12,  1,  0.000128,  6.937500,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-18.csv,  0,  2987,  13,  12,  1,  0.000353,  6.929688,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-19.csv,  0,  2987,  323,  831,  220,  0.010919,  6.871094,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-19.csv,  0,  2987,  323,  831,  220,  0.012513,  6.855469,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-19.csv,  0,  2987,  323,  831,  220,  0.012560,  6.949219,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-19.csv,  0,  2987,  323,  831,  220,  0.013359,  7.109375,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-19.csv,  0,  2987,  323,  831,  220,  0.012273,  7.183594,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-20.csv,  0,  1987,  22,  21,  11,  0.000102,  5.882812,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-20.csv,  0,  1987,  22,  21,  11,  0.000156,  5.945312,  0,  4,  0,  2,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-20.csv,  0,  1987,  22,  21,  11,  0.000094,  5.839844,  0,  4,  0,  2,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-20.csv,  0,  1987,  22,  21,  11,  0.000102,  5.929688,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-20.csv,  0,  1987,  22,  21,  11,  0.000149,  5.843750,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-21.csv,  0,  2987,  89,  154,  66,  0.002000,  6.507812,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-21.csv,  0,  2987,  89,  154,  66,  0.001799,  6.832031,  0,  4,  0,  14,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-21.csv,  0,  2987,  89,  154,  66,  0.001865,  6.921875,  0,  4,  0,  14,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-21.csv,  0,  2987,  89,  154,  66,  0.002168,  6.839844,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-21.csv,  0,  2987,  89,  154,  66,  0.001855,  6.917969,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-22.csv,  0,  2987,  323,  831,  220,  0.011367,  6.902344,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-22.csv,  0,  2987,  323,  831,  220,  0.013482,  6.917969,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-22.csv,  0,  2987,  323,  831,  220,  0.011734,  6.957031,  0,  4,  0,  82,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-22.csv,  0,  2987,  323,  831,  220,  0.013271,  7.210938,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-22.csv,  0,  2987,  323,  831,  220,  0.012855,  7.171875,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-23.csv,  0,  1987,  247,  632,  165,  0.005656,  5.769531,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-23.csv,  0,  1987,  247,  632,  165,  0.006431,  6.203125,  0,  4,  0,  69,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-23.csv,  0,  1987,  247,  632,  165,  0.006026,  6.082031,  0,  4,  0,  69,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-23.csv,  0,  1987,  247,  632,  165,  0.006170,  6.207031,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-23.csv,  0,  1987,  247,  632,  165,  0.006453,  6.128906,  0,  4,  0,  1,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-24.csv,  0,  2887,  979,  3702,  330,  0.057056,  7.023438,  0,  4,  0,  0,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-24.csv,  0,  2887,  979,  3702,  330,  0.068081,  7.347656,  0,  4,  0,  528,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-24.csv,  0,  2887,  979,  3702,  330,  0.067970,  7.414062,  0,  4,  0,  528,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-24.csv,  0,  2887,  979,  3702,  330,  0.066986,  7.816406,  0,  4,  0,  2,  0
+../../SAG_datasets/rerun_comb_big/task-sets/70/jobsets/jobset-taskset-24.csv,  0,  2887,  979,  3702,  330,  0.063687,  7.808594,  0,  4,  0,  2,  0

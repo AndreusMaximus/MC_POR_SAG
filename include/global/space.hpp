@@ -764,9 +764,9 @@ namespace NP
 
 				// update finish-time estimates
 				update_finish_times(j, ftimes);
-				// if(aborted){
+				//if(aborted){
 				//	std::cout<<"fail trace is " << s << std::endl;
-				// }
+				//}
 				//  expand the graph, merging if possible
 				//  met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
 				//  dus in de toekomst

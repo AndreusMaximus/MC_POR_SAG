@@ -1240,7 +1240,6 @@ namespace NP
 					CA_values->emplace_back(s + Clow + Chigh[0]);
 					return;
 				}
-
 				if (Chigh[0] <= 0)
 				{
 					for (int i = 0; i < cpu_availability.size(); i++)
@@ -1256,7 +1255,8 @@ namespace NP
 					}
 				}
 				else
-				{
+				{	
+
 					Time deltaC[cpu_availability.size() - 1];
 					for (int delta_i = 0; delta_i < cpu_availability.size() - 1; delta_i++)
 					{
@@ -1297,6 +1297,7 @@ namespace NP
 			{
 				// std::cout<<"\ncomputing CA"<<std::endl;
 				std::vector<Time> CA_values;
+				int m = cpu_availability.size();
 				Time Chigh[cpu_availability.size()];
 				Time Clow = 0;
 
@@ -1306,16 +1307,16 @@ namespace NP
 				Time event = s;
 
 				Time prev = 0;
-				for (int i = 1; i < cpu_availability.size(); i++)
+				for (int i = 1; i < m; i++)
 				{
 					prev += cpu_availability[i].max() - cpu_availability[0].max();
 				}
-				prev = cpu_availability[0].max() + ceil((double)prev / (double)cpu_availability.size());
+				prev = cpu_availability[0].max() + ceil((double)prev / (double)m);
 
 				// for some reason i need to have this print otherwise i have a seg fault?!?
 				// std::cout<<"\t seg fault prevention?!?"<<std::endl;
 				//  initialize the chigh values for the first iterative step
-				for (int Chigh_i = 0; Chigh_i < cpu_availability.size(); Chigh_i++)
+				for (int Chigh_i = 0; Chigh_i < m; Chigh_i++)
 				{
 					// std::cout<<cpu_availability[Chigh_i].max()<<" - ";
 					Chigh[Chigh_i] = cpu_availability[Chigh_i].max() - s;
@@ -1332,10 +1333,11 @@ namespace NP
 						{
 							if (Chigh[0] > 0)
 								Clow += Chigh[0];
+								
 							Chigh[0] = j_x->maximal_cost();
 							Time swap;
 							// its in this point i think,
-							for (int i = 0; i < cpu_availability.size() - 1; i++)
+							for (int i = 0; i < m - 1; i++)
 							{
 								if (Chigh[i] > Chigh[i + 1])
 								{
@@ -1356,7 +1358,8 @@ namespace NP
 
 						if (Chigh[0] > 0)
 						{
-							event = s + ceil((double)(Clow + Chigh[0]) / (double)cpu_availability.size());
+							//maybe remove CHigh[0]? why is that there??
+							event = s + ceil((double)(Clow + Chigh[0]) / (double)m);
 						}
 						else
 						{
@@ -1365,26 +1368,27 @@ namespace NP
 					}
 					else
 					{
+						//its out the bounds
 						// std::cout << "\t new iteration" << std::endl;
 						last_event = event;
 						if (Chigh[0] > 0)
 						{
 							prev = Clow;
-							for (int i = 0; i < cpu_availability.size(); i++)
+							for (int i = 0; i < m; i++)
 							{
 								prev += (Chigh[i] >= 0) ? Chigh[i] : 0;
 							}
-							prev = s + ceil((double)prev / (double(cpu_availability.size())));
+							prev = s + ceil((double)prev / (double(m)));
 						}
 						// std::cout << "prev" << prev << std::endl;
 						s = j_x->latest_arrival();
 
-						for (int i = 0; i < cpu_availability.size(); i++)
+						for (int i = 0; i < m; i++)
 						{
 
 							if (Chigh[i] > 0)
 							{
-								Chigh[i] = (0 > ((event + Chigh[i]) - s)) ? prev - s : ((event + Chigh[i]) - s);
+								Chigh[i] = (0 > ((event + Chigh[i]) - s)) ? 0 : ((event + Chigh[i]) - s);
 							}
 							else
 							{
@@ -1392,6 +1396,9 @@ namespace NP
 							}
 							// std::cout << Chigh[i] << " ";
 						}
+
+						//just in case.. have it sorted, can also have a linear check to see if it needs to be sorted tho
+						std::sort(Chigh, Chigh+m);
 						// std::cout << std::endl;
 						//  reset Clow
 						Clow = 0;
@@ -1400,7 +1407,7 @@ namespace NP
 							Clow += Chigh[0];
 							Chigh[0] = j_x->maximal_cost();
 							Time swap = 0;
-							for (int i = 0; i < cpu_availability.size() - 1; i++)
+							for (int i = 0; i < m - 1; i++)
 							{
 								if (Chigh[i] > Chigh[i + 1])
 								{
@@ -1421,6 +1428,13 @@ namespace NP
 						event = s;
 					}
 				}
+				//i think thus should be sorted
+				std::sort(Chigh, Chigh+m);
+				//std::cout <<"s: " << s << "CLow" << Clow << " Chigh: ";
+				//for(int i = 0; i < m; i ++){
+				//	std::cout << Chigh[i] << " ";
+				//}
+				//std::cout << std::endl;
 				certainly_available_i(Chigh, Clow, s, &CA_values);
 				return CA_values;
 			}

@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/sag/Downloads/np-schedulability-analysis-partial_order_reduction/include -I/home/sag/Downloads/np-schedulability-analysis-partial_order_reduction/lib/include
 
-CXX_FLAGS = -O3 -DNDEBUG
+CXX_FLAGS = -O3 -DNDEBUG -g
 
