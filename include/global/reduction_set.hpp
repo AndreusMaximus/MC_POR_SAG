@@ -431,6 +431,9 @@ namespace NP
 				latest_start_times.reserve(jobs.size());
 				std::vector<lst_Job<Time>> LST_list;
 				std::vector<const Job<Time> *> no_LST_list;
+				//possible optimization:
+				//have an input J_new for the new job, iterate over jobs by earliest arrival and find the job whose LST <= r_new^max, 
+				//only update those new LST's and copy the rest of them to the LST list.
 				typename std::vector<const Job<Time> *>::iterator lb_LPIW = jobs_by_earliest_arrival.begin();
 				for (const Job<Time> *j : jobs_by_latest_arrival)
 				{
@@ -487,7 +490,7 @@ namespace NP
 					// only take high/same prio jobs into account
 					if (j_j != j_i && j_j->get_priority() <= j_i->get_priority())
 					{
-						Time current_j_j_lst = j_j->latest_arrival();
+						Time current_j_j_lst = (j_j->latest_arrival() < j_j->latest_arrival()) ? get_latest_start_time(*j_j) : j_j->latest_arrival();
 						if (j_j->earliest_arrival() <= LST_i)
 						{
 							if (current_j_j_lst >= j_i->latest_arrival())

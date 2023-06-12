@@ -127,8 +127,9 @@ namespace NP
 				Interval<Time> start_times,
 				Interval<Time> finish_times,
 				hash_value_t key,
-				std::vector<std::size_t> j_set)
-				: num_jobs_scheduled(from.num_jobs_scheduled + 1), scheduled_jobs{from.scheduled_jobs, j}, lookup_key{from.lookup_key ^ key}, _fr{j_set}
+				std::vector<std::size_t> j_set,
+				int retry_index)
+				: num_jobs_scheduled(from.num_jobs_scheduled + 1), scheduled_jobs{from.scheduled_jobs, j}, lookup_key{from.lookup_key ^ key}, _fr{j_set}, retry_reduction(retry_index)
 			{
 				auto est = start_times.min();
 				auto lst = start_times.max();
@@ -239,6 +240,11 @@ namespace NP
 				}
 
 				assert(core_avail.size() > 0);
+			}
+
+			const int get_retry_reduction() const
+			{ 
+				return retry_reduction;
 			}
 
 			const bool job_in_failed_set(Job_index j) const
@@ -423,6 +429,8 @@ namespace NP
 			std::vector<Interval<Time>> core_avail;
 
 			const hash_value_t lookup_key;
+
+			int retry_reduction;
 
 			// no accidental copies
 			// MC: We need copies though so comment the line below

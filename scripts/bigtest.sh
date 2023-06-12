@@ -8,7 +8,7 @@ base_interfering=1
 limit_por=1
 limit_interfering=1
 task_scaler=8
-make_set=0
+make_set=1
 
 
 while getopts "n:p:i:e:j:" opt; do
@@ -34,6 +34,9 @@ done
 
 
 mkdir ../../SAG_datasets/"$ex_name"
+if [ $make_set -eq 1 ]; then
+    rm -r ../../SAG_datasets/"$ex_name"/task-sets
+fi
 mkdir ../../SAG_datasets/"$ex_name"/task-sets
 if [ $sag -eq 1 ]; then
     rm -r ../../SAG_datasets/"$ex_name"/sag/
@@ -80,9 +83,10 @@ for ((u = 10; u <= 70; u += 10)); do
         mkdir ../../SAG_datasets/"$ex_name"/sag-por-interfering-limit/$u/rta
     fi
 
-    mkdir ../../SAG_datasets/$ex_name/task-sets/$u
+    
     if [ $make_set -eq 1 ]; then
-        ./create_sets.sh -c $c -t $(($task_scaler)) -u $(($u*$c)) -s $s -e ../SAG_datasets/"$ex_name" -g 0 -p 2
+        mkdir ../../SAG_datasets/$ex_name/task-sets/$u
+        ./create_sets.sh -c $c -t $(($task_scaler)) -u $(($u*$c)) -s $s -e ../SAG_datasets/"$ex_name" -g 3 -p 2
     fi
 
     cd ~/Downloads/np-schedulability-analysis-partial_order_reduction/scripts

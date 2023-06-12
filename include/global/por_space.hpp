@@ -101,13 +101,19 @@ namespace NP
 			unsigned long number_of_jobs_in_por() const
 			{
 				unsigned long jobs_in_por = 0;
+				unsigned long largest_fail = 0;
+				unsigned long total_fail = 0;
 				for (Reduction_set_statistics<Time> rss : reduction_set_statistics)
 				{
 					if (rss.reduction_success)
 					{
 						jobs_in_por += rss.num_jobs;
+					}else{
+						largest_fail = (rss.num_jobs > largest_fail) ? rss.num_jobs : largest_fail;
+						total_fail +=  rss.num_jobs;
 					}
 				}
+				//std::cout << "largest fail set was : " << largest_fail << " AVG fail size is : " << total_fail/reduction_failures <<std::endl;
 				return jobs_in_por;
 			}
 
@@ -297,7 +303,7 @@ namespace NP
 				process_new_edge(current_state, next, reduction_set, {0, 0});
 			}
 
-			bool dispatch(const State &s, const Job<Time> &j, Time t_wc, std::vector<std::size_t> failed_set)
+			bool dispatch(const State &s, const Job<Time> &j, Time t_wc, std::vector<std::size_t> failed_set, int retry_depth)
 			{
 				// check if this job has a feasible start-time interval
 				auto _st = this->start_times(s, j, t_wc);
@@ -313,16 +319,17 @@ namespace NP
 
 				// update finish-time estimates
 				this->update_finish_times(j, ftimes);
-				if(this->aborted){
-					//std::cout<<"fail trace is " << s << std::endl;
+				if (this->aborted)
+				{
+					// std::cout<<"fail trace is " << s << std::endl;
 				}
 				//  expand the graph, merging if possible
 				//  met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
 				//  dus in de toekomst
 				const State &next = this->be_naive ? this->new_state(s, this->index_of(j), this->predecessors_of(j),
-																	 st, ftimes, j.get_key(), failed_set)
+																	 st, ftimes, j.get_key(), failed_set,retry_depth)
 												   : this->new_or_merged_state(s, this->index_of(j), this->predecessors_of(j),
-																			   st, ftimes, j.get_key(), failed_set);
+																			   st, ftimes, j.get_key(), failed_set,retry_depth);
 
 				// make sure we didn't skip any jobs
 				this->check_for_deadline_misses(s, next);
@@ -416,10 +423,12 @@ namespace NP
 					// found_one |= dispatch(s, j, t_wc);
 					// now we dont dispatch, but we create the eligible successors so just add it to that set
 					eligible_successors.push_back(it->second);
-
-					if (!s.job_in_failed_set(this->index_of(j)))
+					if (this->limit_fail)
 					{
-						skip_set = false;
+						if (!s.job_in_failed_set(this->index_of(j)))
+						{
+							skip_set = false;
+						}
 					}
 				}
 				// now we can finially create a proper reduction set
@@ -436,9 +445,11 @@ namespace NP
 				{
 					failed_reduction = s.get_previous_failed_set();
 				}
-				if(!limit_failures){
+				if (!limit_failures || s.get_retry_reduction() == 0)
+				{
 					skip_set = false;
 				}
+				int retry_depth = s.get_retry_reduction() - 1;
 				if (eligible_successors.size() > 1 && !skip_set)
 				{
 					Reduction_set<Time> reduction_set = create_reduction_set(s, eligible_successors);
@@ -447,7 +458,7 @@ namespace NP
 					{
 						DM("\n---\nPartial-order reduction is safe" << std::endl);
 						// uncomment to print the CA and PA values
-						//reduction_set.created_set();
+						// reduction_set.created_set();
 						//  now we must create something to properly schedule the set
 						// reduction_set.show_time_waste();
 						if (this->be_naive)
@@ -465,6 +476,7 @@ namespace NP
 					}
 					else
 					{
+						retry_depth = reduction_set.get_jobs().size()/1;
 						DM("\tPartial order reduction is not safe" << std::endl);
 						if (limit_failures)
 						{
@@ -482,7 +494,7 @@ namespace NP
 					// we can use the normal dispatch now so no worries
 					// maybe we can give some information to the next state if we have a failed reduction, in such a way that it wont try a next reduction
 					//  if that next job was in the failed set.
-					found_one |= dispatch(s, *j, t_wc, failed_reduction);
+					found_one |= dispatch(s, *j, t_wc, failed_reduction, retry_depth);
 				}
 
 				// check for a dead end
