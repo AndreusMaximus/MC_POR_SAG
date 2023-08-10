@@ -32,6 +32,10 @@ namespace NP {
 			stream << "T" << id.task << "J" << id.job;
 			return stream;
 		}
+
+		std::string get_id(){
+			return "T"+std::to_string(task)+"J"+std::to_string(job);
+		}
 	};
 
 	template<class Time> class Job {

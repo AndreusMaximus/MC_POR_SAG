@@ -47,7 +47,7 @@ namespace NP
 				Interval<Time> start_times,
 				Interval<Time> finish_times,
 				hash_value_t key)
-				: num_jobs_scheduled(from.num_jobs_scheduled + 1), scheduled_jobs{from.scheduled_jobs, j}, lookup_key{from.lookup_key ^ key}
+				: num_jobs_scheduled(from.num_jobs_scheduled + 1), scheduled_jobs{from.scheduled_jobs, j}, lookup_key{from.lookup_key ^ key}, trace{from.trace + "("+std::to_string(j)+")"}, ss{from.ss}
 			{
 				auto est = start_times.min();
 				auto lst = start_times.max();
@@ -111,7 +111,10 @@ namespace NP
 				{
 					DM(i << " -> " << pa[i] << ":" << ca[i] << std::endl);
 					core_avail.emplace_back(pa[i], ca[i]);
+
+					ss += "|" + std::to_string(ca[i]);
 				}
+				ss += "\n";
 
 				assert(core_avail.size() > 0);
 				DM("*** new state: constructed " << *this << std::endl);
@@ -129,7 +132,7 @@ namespace NP
 				hash_value_t key,
 				std::vector<std::size_t> j_set,
 				int retry_index)
-				: num_jobs_scheduled(from.num_jobs_scheduled + 1), scheduled_jobs{from.scheduled_jobs, j}, lookup_key{from.lookup_key ^ key}, _fr{j_set}, retry_reduction(retry_index)
+				: num_jobs_scheduled(from.num_jobs_scheduled + 1), scheduled_jobs{from.scheduled_jobs, j}, lookup_key{from.lookup_key ^ key}, _fr{j_set}, retry_reduction(retry_index), trace{from.trace + "("+std::to_string(j)+")"},ss{from.ss}
 			{
 				auto est = start_times.min();
 				auto lst = start_times.max();
@@ -145,6 +148,7 @@ namespace NP
 
 				pa.push_back(eft);
 				ca.push_back(lft);
+				
 
 				// skip first element in from.core_avail
 				for (int i = 1; i < from.core_avail.size(); i++)
@@ -152,7 +156,6 @@ namespace NP
 					pa.push_back(std::max(est, from.core_avail[i].min()));
 					ca.push_back(std::max(est, from.core_avail[i].max()));
 				}
-
 				// update scheduled jobs
 				// keep it sorted to make it easier to merge
 				bool added_j = false;
@@ -193,7 +196,9 @@ namespace NP
 				{
 					DM(i << " -> " << pa[i] << ":" << ca[i] << std::endl);
 					core_avail.emplace_back(pa[i], ca[i]);
+					ss += "|" + std::to_string(ca[i]);
 				}
+				ss += "\n";
 
 				assert(core_avail.size() > 0);
 				DM("*** new state: constructed " << *this << std::endl);
@@ -207,17 +212,22 @@ namespace NP
 			Schedule_state(
 				const Schedule_state &from,
 				std::vector<std::size_t> j_set,
-				std::vector<Time> CA,
 				std::vector<Time> PA,
+				std::vector<Time> CA,
 				hash_value_t key)
 				: num_jobs_scheduled(from.num_jobs_scheduled + j_set.size()), lookup_key{from.lookup_key ^ key},
-				  scheduled_jobs{from.scheduled_jobs}
+				  scheduled_jobs{from.scheduled_jobs}, red_trace(from.get_reducions_on_trace() + 1)
 			{
-
+				trace = from.get_trace();
+				trace += "(";
 				for (std::size_t index : j_set)
 				{
 					scheduled_jobs.add(index);
+					trace += std::to_string(index);
+					trace += " ";
 				}
+				trace += ")";
+				
 				// all i do at this moment is updating the PA and CA values.
 				// Certainly running jobs will be something new later... i hope
 				std::vector<Time> ca, pa;
@@ -239,17 +249,28 @@ namespace NP
 					core_avail.emplace_back(pa[i], ca[i]);
 				}
 
+
 				assert(core_avail.size() > 0);
 			}
 
+			const int get_reducions_on_trace() const
+			{
+				return red_trace;
+			}
+
 			const int get_retry_reduction() const
-			{ 
+			{
 				return retry_reduction;
 			}
 
 			const bool job_in_failed_set(Job_index j) const
 			{
 				return failed_reduction.contains(j);
+			}
+
+			const bool job_in_last_set(Job_index j) const
+			{
+				return scheduled_jobs.contains(j);
 			}
 
 			std::vector<std::size_t> get_previous_failed_set() const
@@ -315,7 +336,8 @@ namespace NP
 				certain_jobs.swap(new_cj);
 
 				DM("+++ merged " << other << " into " << *this << std::endl);
-
+				mergers += other.mergers + 1;
+				merge_trace += trace + " <-> " + other.trace + "\n";
 				return true;
 			}
 
@@ -390,7 +412,19 @@ namespace NP
 				stream << ") " << s.scheduled_jobs << ")";
 				stream << " @ " << &s
 					   << "key" << s.get_key();
+				stream << " reductions on trace: " << s.get_reducions_on_trace() << "\n";
+				stream << s.get_trace() << "\n" << s.get_ss() << "\n";
+				stream << "mergers on trace: " << s.mergers<< "\n";
+				stream << s.merge_trace;
+
 				return stream;
+			}
+
+			std::string get_trace() const{
+				return trace;
+			}
+			std::string get_ss()const{
+				return ss;
 			}
 
 			void print_vertex_label(std::ostream &out,
@@ -416,6 +450,8 @@ namespace NP
 		private:
 			const unsigned int num_jobs_scheduled;
 
+			const int red_trace = 0;
+
 			// set of jobs that have been dispatched (may still be running)
 			Index_set scheduled_jobs;
 
@@ -428,6 +464,10 @@ namespace NP
 			// system availability intervals
 			std::vector<Interval<Time>> core_avail;
 
+			std::string trace = "";
+			std::string ss = "";
+			int mergers = 0;
+			std::string merge_trace = "";
 			const hash_value_t lookup_key;
 
 			int retry_reduction;

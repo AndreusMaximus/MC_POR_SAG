@@ -52,4 +52,4 @@ target_link_libraries(runtests ${CORE_LIBS})
 target_compile_features(runtests PUBLIC cxx_std_14)
 target_compile_features(nptest PUBLIC cxx_std_14)
 
-target_compile_options(nptest PUBLIC -g)
+target_compile_options(nptest PUBLIC)

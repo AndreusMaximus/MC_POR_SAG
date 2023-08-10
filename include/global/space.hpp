@@ -764,9 +764,9 @@ namespace NP
 
 				// update finish-time estimates
 				update_finish_times(j, ftimes);
-				//if(aborted){
-				//	std::cout<<"fail trace is " << s << std::endl;
-				//}
+				if(aborted){
+					std::cout<<"fail trace is " << s << std::endl;
+				}
 				//  expand the graph, merging if possible
 				//  met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
 				//  dus in de toekomst
@@ -1019,6 +1019,7 @@ namespace NP
 					for (const State &s : exploration_front)
 					{
 						minimal_scheduled_jobs = (s.number_of_scheduled_jobs() < minimal_scheduled_jobs) ? s.number_of_scheduled_jobs() : minimal_scheduled_jobs;
+					//std::cout<<s<<std::endl;
 					}
 					// dus n geeft hier de grootte van de voorkant van de states aan
 					n = exploration_front.size();

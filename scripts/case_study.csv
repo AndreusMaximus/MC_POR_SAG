@@ -1,0 +1,33 @@
+j0
+SAG
+../../Re Experiment Results/mer-app-frame-job-j0-c0.csv,  1,  4481,  4632,  4731,  2,  0.113248,  10.425781,  0,  4,  0,  0,  0
+SAG-POR
+../../Re Experiment Results/mer-app-frame-job-j0-c0.csv,  1,  4481,  2462,  2461,  1,  0.100468,  10.007812,  0,  4,  390,  150,  2410
+SAG-POR-interfering
+../../Re Experiment Results/mer-app-frame-job-j0-c0.csv,  1,  4481,  2462,  2461,  1,  0.078457,  11.214844,  0,  4,  390,  150,  2410
+SAG-POR-limit-fails
+../../Re Experiment Results/mer-app-frame-job-j0-c0.csv,  1,  4481,  3162,  3211,  2,  0.100328,  9.949219,  0,  4,  290,  50,  1710
+SAG-POR-interfering-limit-fails
+../../Re Experiment Results/mer-app-frame-job-j0-c0.csv,  1,  4481,  3412,  3511,  2,  0.095151,  11.007812,  0,  4,  240,  50,  1460
+j5
+SAG
+../../Re Experiment Results/mer-app-frame-job-j5-c0.csv,  1,  4481,  126138,  412422,  1002,  8.477500,  11.546875,  0,  4,  0,  0,  0
+SAG-POR
+../../Re Experiment Results/mer-app-frame-job-j5-c0.csv,  1,  4481,  91607,  309700,  994,  69.887720,  55.585938,  0,  4,  11851,  78343,  192476
+SAG-POR-interfering
+../../Re Experiment Results/mer-app-frame-job-j5-c0.csv,  1,  4481,  91547,  309513,  994,  9.823905,  71.261719,  0,  4,  11833,  78292,  192428
+SAG-POR-limit-fails
+../../Re Experiment Results/mer-app-frame-job-j5-c0.csv,  1,  4481,  114739,  383129,  1002,  19.175506,  23.925781,  0,  4,  2651,  11594,  41074
+SAG-POR-interfering-limit-fails
+../../Re Experiment Results/mer-app-frame-job-j5-c0.csv,  1,  4481,  116506,  386722,  1002,  8.563022,  18.496094,  0,  4,  3321,  790,  36254
+j10
+SAG
+../../Re Experiment Results/mer-app-frame-job-j10-c0.csv,  0,  4481,  1199,  3772,  319,  0.074469,  11.140625,  0,  4,  0,  0,  0
+SAG-POR
+../../Re Experiment Results/mer-app-frame-job-j10-c0.csv,  0,  4481,  1202,  3770,  319,  0.228859,  10.457031,  0,  4,  4,  824,  9
+SAG-POR-interfering
+../../Re Experiment Results/mer-app-frame-job-j10-c0.csv,  0,  4481,  1202,  3770,  319,  0.097624,  11.386719,  0,  4,  4,  824,  9
+SAG-POR-limit-fails
+../../Re Experiment Results/mer-app-frame-job-j10-c0.csv,  0,  4481,  1199,  3772,  319,  0.111497,  10.671875,  0,  4,  0,  246,  0
+SAG-POR-interfering-limit-fails
+../../Re Experiment Results/mer-app-frame-job-j10-c0.csv,  0,  4481,  1199,  3772,  319,  0.075842,  11.457031,  0,  4,  0,  1,  0

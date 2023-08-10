@@ -108,12 +108,14 @@ namespace NP
 					if (rss.reduction_success)
 					{
 						jobs_in_por += rss.num_jobs;
-					}else{
+					}
+					else
+					{
 						largest_fail = (rss.num_jobs > largest_fail) ? rss.num_jobs : largest_fail;
-						total_fail +=  rss.num_jobs;
+						total_fail += rss.num_jobs;
 					}
 				}
-				//std::cout << "largest fail set was : " << largest_fail << " AVG fail size is : " << total_fail/reduction_failures <<std::endl;
+				// std::cout << "largest fail set was : " << largest_fail << " AVG fail size is : " << total_fail/reduction_failures <<std::endl;
 				return jobs_in_por;
 			}
 
@@ -210,7 +212,6 @@ namespace NP
 							interfering_jobs.push_back(j);
 						}
 					}
-
 					// Now we have a (possible) set of interfering jobs
 					if (!interfering_jobs.empty())
 					{
@@ -319,17 +320,14 @@ namespace NP
 
 				// update finish-time estimates
 				this->update_finish_times(j, ftimes);
-				if (this->aborted)
-				{
-					// std::cout<<"fail trace is " << s << std::endl;
-				}
+				
 				//  expand the graph, merging if possible
 				//  met be_naive wordt bedoelt dat als ie false is dat ie niet gaat mergen
 				//  dus in de toekomst
 				const State &next = this->be_naive ? this->new_state(s, this->index_of(j), this->predecessors_of(j),
-																	 st, ftimes, j.get_key(), failed_set,retry_depth)
+																	 st, ftimes, j.get_key(), failed_set, retry_depth)
 												   : this->new_or_merged_state(s, this->index_of(j), this->predecessors_of(j),
-																			   st, ftimes, j.get_key(), failed_set,retry_depth);
+																			   st, ftimes, j.get_key(), failed_set, retry_depth);
 
 				// make sure we didn't skip any jobs
 				this->check_for_deadline_misses(s, next);
@@ -457,26 +455,31 @@ namespace NP
 					if (!reduction_set.has_potential_deadline_misses())
 					{
 						DM("\n---\nPartial-order reduction is safe" << std::endl);
-						// uncomment to print the CA and PA values
-						// reduction_set.created_set();
-						//  now we must create something to properly schedule the set
-						// reduction_set.show_time_waste();
-						if (this->be_naive)
-						{
-							dispatch_reduction_set_naive(s, reduction_set);
-						}
-						else
-						{
-							dispatch_reduction_set_merge(s, reduction_set);
-						}
-						// this->current_job_count += reduction_set.get_jobs().size();
-						found_one = true;
-						// if there were no deadline misses and we were able to dispatch it normally, then we can return here.
-						return;
+
+					
+							// uncomment to print the CA and PA values
+							// std::cout<<s.number_of_scheduled_jobs() << " + " << eligible_successors.size() << " = " << s.number_of_scheduled_jobs() + eligible_successors.size()  << std::endl;
+
+							// reduction_set.created_set();
+							// this->aborted = true;
+							//   now we must create something to properly schedule the set
+							//  reduction_set.show_time_waste();
+							if (this->be_naive)
+							{
+								dispatch_reduction_set_naive(s, reduction_set);
+							}
+							else
+							{
+								dispatch_reduction_set_merge(s, reduction_set);
+							}
+							// this->current_job_count += reduction_set.get_jobs().size();
+							found_one = true;
+							// if there were no deadline misses and we were able to dispatch it normally, then we can return here.
+							return;
 					}
 					else
 					{
-						retry_depth = reduction_set.get_jobs().size()/1;
+						retry_depth = reduction_set.get_jobs().size() / 1;
 						DM("\tPartial order reduction is not safe" << std::endl);
 						if (limit_failures)
 						{
