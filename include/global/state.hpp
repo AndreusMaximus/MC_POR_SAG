@@ -207,8 +207,8 @@ namespace NP
 			Schedule_state(
 				const Schedule_state &from,
 				std::vector<std::size_t> j_set,
-				std::vector<Time> CA,
 				std::vector<Time> PA,
+				std::vector<Time> CA,
 				hash_value_t key)
 				: num_jobs_scheduled(from.num_jobs_scheduled + j_set.size()), lookup_key{from.lookup_key ^ key},
 				  scheduled_jobs{from.scheduled_jobs}

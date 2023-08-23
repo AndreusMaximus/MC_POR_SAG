@@ -177,20 +177,6 @@ namespace NP
 					// an interfering job can only interfere if it can start before the latest latest start time of all jobs in the current candidate set.
 					// so lets iterate over the list of jobs sorted by the earliest arrival time from Amin to LST_max
 
-					// vector to find all the interfering jobs
-					/*std::vector<const Job<Time> *> interfering_jobs{};
-					for (auto it = jobs_by_earliest_arrival.lower_bound(t_min); it != jobs_by_earliest_arrival.upper_bound(reduction_set.get_latest_LST()); it++)
-					{
-						j = it->second;
-						const Job<Time> &j_i = *j;
-						std::cout << "Lets see if " << j_i.get_id() << " is an interfering job" << std::endl;
-						const Job_precedence_set &preds = this->job_precedence_sets[this->index_of(j_i)];
-						if (reduction_set.can_interfere(*j))
-						{
-							interfering_jobs.push_back(j);
-						}
-					}*/
-
 					// i aint using the macros as they require a lot of additions to the states etc
 					std::vector<const Job<Time> *> interfering_jobs{};
 					bool updated = false;
@@ -214,10 +200,8 @@ namespace NP
 					// Now we have a (possible) set of interfering jobs
 					if (!interfering_jobs.empty())
 					{
-						// if we have at least one element in it, we must select it to add it to the redution set.
-						// This must be done under a criteria, these criteria now are the same as for uniproc, but may change in the future
-						// We also must push this criterion to its own hpp file
-
+						//Group add is optimization 2 where we add one or all interfering jobs
+						//!ALWAYS RUN reduction_set.update_set() AFTER ADDING JOBS!
 						if (!this->group_add)
 						{
 							const Job<Time> *jx = *std::min_element(interfering_jobs.begin(), interfering_jobs.end(),
@@ -234,6 +218,7 @@ namespace NP
 							{
 								reduction_set.add_job(j_i, this->index_of(*j_i));
 							}
+							//So only call update_set after adding ALL jobs otherwise there is no time save
 							reduction_set.update_set();
 						}
 					}
@@ -303,6 +288,10 @@ namespace NP
 				process_new_edge(current_state, next, reduction_set, {0, 0});
 			}
 
+
+			/*
+				Here comes optimization 1 actually into play as we want to give the failed set to the next state as well
+			*/
 			bool dispatch(const State &s, const Job<Time> &j, Time t_wc, std::vector<std::size_t> failed_set, int retry_depth)
 			{
 				// check if this job has a feasible start-time interval
@@ -368,10 +357,7 @@ namespace NP
 					 << "t_core: " << t_core << std::endl
 					 << "t_wc: " << t_wc << std::endl);
 
-				/*
-				Hier zien we dat we ze voor iedere soort available job ze dispatchen, maar we moeten dus eerst ook kijken of we een reductie set kunnen maken
-				Als we die kunnen maken dan doen we dat dus ipv de normale explore zoals hij hier nu werd gedaan
-				*/
+				
 				// We have to find all elligible succesors here first.
 
 				typename Reduction_set<Time>::Job_set eligible_successors{};
@@ -391,6 +377,7 @@ namespace NP
 					if (j.earliest_arrival() <= t_min && this->ready(s, j))
 					{
 						eligible_successors.push_back(&j);
+						//This is optimization 1: where we look if there exists a job which was not in the previous failed set
 						if (!s.job_in_failed_set(this->index_of(j)))
 						{
 							skip_set = false;
@@ -418,10 +405,6 @@ namespace NP
 					// be incomplete...
 					assert(this->unfinished(s, j));
 
-					// Hier gaan we dispatchen dus moet er erna gemerged worden
-					// Dispatch vanaf de huidige state s, job j, met een worst-case computation time t_wc
-					// found_one |= dispatch(s, j, t_wc);
-					// now we dont dispatch, but we create the eligible successors so just add it to that set
 					eligible_successors.push_back(it->second);
 					if (this->limit_fail)
 					{
@@ -441,6 +424,7 @@ namespace NP
 				std::vector<std::size_t> failed_reduction;
 				// if we skip making this set, then keep looking at the previous set in the next state
 				bool limit_failures = this->limit_fail;
+				//Optimization 1:
 				if (skip_set && limit_failures)
 				{
 					failed_reduction = s.get_previous_failed_set();
@@ -449,6 +433,7 @@ namespace NP
 				{
 					skip_set = false;
 				}
+				//retry reduction is WIP such that we might dynamically state when we want to start new reductions again
 				int retry_depth = s.get_retry_reduction() - 1;
 				if (eligible_successors.size() > 1 && !skip_set)
 				{
@@ -478,6 +463,7 @@ namespace NP
 					{
 						retry_depth = reduction_set.get_jobs().size()/1;
 						DM("\tPartial order reduction is not safe" << std::endl);
+						//Copy all jobs from failed set into a smaller list
 						if (limit_failures)
 						{
 							for (const Job<Time> *j : reduction_set.get_jobs())
@@ -506,6 +492,7 @@ namespace NP
 				}
 			}
 
+			/*
 			Time earliest_possible_job_release(const State &s, const Reduction_set<Time> &ignored_set)
 			{
 				DM("      - looking for earliest possible job release starting from: "
@@ -538,7 +525,7 @@ namespace NP
 
 				DM("         * No more future releases" << std::endl);
 				return Time_model::constants<Time>::infinity();
-			}
+			}*/
 
 			Interval<Time> next_finish_times(const Reduction_set<Time> &reduction_set)
 			{
