@@ -1,2 +1,0 @@
-cores, utilization, tasks, correct, true postive, false negative, false positive, true avg state reductio, avg state reduction for true positives, true avg cpu reduction, avg cpu reduction for true positives, true mem reduction, avg mem reduction for true positives, total successfull reductions, total failed reductions, avg jobs in por, timeout normal, timeout por, sched % normal, sched % por
-5,350,5,349,349,651,0,82.6924664108131,82.6924664108131,180.98387159870214,180.98387159870214,100.72903514235327,100.72903514235327,2851,7615,3.9635215713784637,0,0,100.0,34.9
