@@ -171,7 +171,6 @@ examples/fig1a.csv,  1,  9,  9,  9,  1,  0.000379,  1760.000000,  0,  2
 **NOTE**: While invoking `nptest` with `-m 1` specifies a uniprocessor platform, it is *not* the same as running the uniprocessor analysis. The uniprocessor analysis (RTSS'17) is activated *in the absence* of the `-m` option; providing `-m 1` activates the multiprocessor analysis (ECRTS'18) assuming there is a single processor. 
 
 ### Precedence Constraints
-
 To impose precedence constraints on the job set, provide the DAG structure in a separate CSV file via the `-p` option. For example:
 
 ```
@@ -180,6 +179,7 @@ examples/fig1a.csv,  1,  9,  10,  9,  0,  0.000135,  1784.000000,  0,  1
 ```
 
 The tool does not check whether the provided structure actually forms a DAG. If a cycle is (accidentally) introduced, which essentially represents a deadlock as no job that is part of the cycle can be scheduled first, the analysis will simply discover and report that the workload is unschedulable. 
+**NOTE** Precendence constraints are not enabled in combination with partial-order-reduction for multicore
 
 ### Aborting Jobs Past a Certain Point
 
@@ -201,7 +201,7 @@ Without the job abort action specified in [examples/abort.actions.csv](examples/
 
 ### Partial-order reduction
 
-The uniprocessor analysis supports **partial-order reduction**, which avoids combinatorial exploration of possible scheduling decisions by treating particular sets of jobs as a batch of scheduling decisions on a *single edge* in the SAG. To enable partial-order reduction, pass the desired type of partial-order reduction via the `--por` option. For example: 
+Both uni- and multiprocessor analysis supports **partial-order reduction**, which avoids combinatorial exploration of possible scheduling decisions by treating particular sets of jobs as a batch of scheduling decisions on a *single edge* in the SAG. To enable partial-order reduction, pass the desired type of partial-order reduction via the `--por` option. For example: 
 
 ```
 $ build/nptest examples/por.csv --por=priority
@@ -214,6 +214,21 @@ Details on partial-order reduction can be found in the following papers:
 - S. Ranjha, G. Nelissen and M. Nasri, "Partial-Order Reduction for Schedule-Abstraction-based Response-Time Analyses for Non-Preemptive Scheduling", *2022 IEEE 28th Real-Time and Embedded Technology and Applications Symposium (RTAS)*, 2022.
 
 **NOTE**: when using partial-order reduction, the schedulability analysis is exact, whereas the response-time analysis is safe (i.e., the BCRT and WCRT are lower and upper bounds on the response times, respectively).
+
+### Partial-order reduction optimizations
+
+Multiprocessor POR supports two types of optimizations which can be enabled
+
+#### Limiting the creation of reduction sets
+By limiting the creation of reduction sets we disallow new reduction sets to be created when the successors of the current exploration phase are all present in the recently failed set. This improves the accuracy and runtime but at the cost of larger graphs.
+
+This optimization is enabled via `--limit=yes`
+
+#### Computation reduction of reduction sets
+By adding all possible interfering jobs we reduce the total time required to create a reduction set. This decreases the runtime, at the cost of adding possible pessimism to the analysis.
+
+This optimization is enabled via the flag `--interfering=all`
+
 
 ## Output Format
 
