@@ -217,12 +217,12 @@ Details on partial-order reduction can be found in the following papers:
 
 ### Partial-order reduction optimizations
 
-Multiprocessor POR supports two types of optimizations which can be enabled
+Multiprocessor POR supports two types of optimizations which can be enabled. Both optimizations can be enabled at the same time.
 
 #### Limiting the creation of reduction sets
 By limiting the creation of reduction sets we disallow new reduction sets to be created when the successors of the current exploration phase are all present in the recently failed set. This improves the accuracy and runtime but at the cost of larger graphs.
 
-This optimization is enabled via `--limit=yes`
+This optimization is enabled via `--limit_fail=yes`
 
 #### Computation reduction of reduction sets
 By adding all possible interfering jobs we reduce the total time required to create a reduction set. This decreases the runtime, at the cost of adding possible pessimism to the analysis.
